@@ -1,0 +1,177 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 368 480)
+	(text "pci_system" (rect 151 -1 198 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 464 20 476)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "cal_blk_clk_clk" (rect 0 0 60 12)(font "Arial" (font_size 8)))
+		(text "cal_blk_clk_clk" (rect 4 61 94 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 128 72)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "test_in_test_in[39..0]" (rect 0 0 82 12)(font "Arial" (font_size 8)))
+		(text "test_in_test_in[39..0]" (rect 4 101 136 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 128 112)(line_width 3))
+	)
+	(port
+		(pt 0 152)
+		(input)
+		(text "refclk_export" (rect 0 0 53 12)(font "Arial" (font_size 8)))
+		(text "refclk_export" (rect 4 141 82 152)(font "Arial" (font_size 8)))
+		(line (pt 0 152)(pt 128 152)(line_width 1))
+	)
+	(port
+		(pt 0 192)
+		(input)
+		(text "pcie_rstn_export" (rect 0 0 67 12)(font "Arial" (font_size 8)))
+		(text "pcie_rstn_export" (rect 4 181 100 192)(font "Arial" (font_size 8)))
+		(line (pt 0 192)(pt 128 192)(line_width 1))
+	)
+	(port
+		(pt 0 232)
+		(input)
+		(text "rx_in_rx_datain_0" (rect 0 0 73 12)(font "Arial" (font_size 8)))
+		(text "rx_in_rx_datain_0" (rect 4 221 106 232)(font "Arial" (font_size 8)))
+		(line (pt 0 232)(pt 128 232)(line_width 1))
+	)
+	(port
+		(pt 368 72)
+		(input)
+		(text "reconfig_togxb_data[3..0]" (rect 0 0 101 12)(font "Arial" (font_size 8)))
+		(text "reconfig_togxb_data[3..0]" (rect 239 61 389 72)(font "Arial" (font_size 8)))
+		(line (pt 368 72)(pt 224 72)(line_width 3))
+	)
+	(port
+		(pt 368 112)
+		(input)
+		(text "reconfig_gxbclk_clk" (rect 0 0 79 12)(font "Arial" (font_size 8)))
+		(text "reconfig_gxbclk_clk" (rect 267 101 381 112)(font "Arial" (font_size 8)))
+		(line (pt 368 112)(pt 224 112)(line_width 1))
+	)
+	(port
+		(pt 0 312)
+		(input)
+		(text "aux_enc_B[5..0]" (rect 0 0 66 12)(font "Arial" (font_size 8)))
+		(text "aux_enc_B[5..0]" (rect 4 301 94 312)(font "Arial" (font_size 8)))
+		(line (pt 0 312)(pt 128 312)(line_width 3))
+	)
+	(port
+		(pt 0 328)
+		(input)
+		(text "aux_enc_A[5..0]" (rect 0 0 68 12)(font "Arial" (font_size 8)))
+		(text "aux_enc_A[5..0]" (rect 4 317 94 328)(font "Arial" (font_size 8)))
+		(line (pt 0 328)(pt 128 328)(line_width 3))
+	)
+	(port
+		(pt 0 272)
+		(output)
+		(text "tx_out_tx_dataout_0" (rect 0 0 82 12)(font "Arial" (font_size 8)))
+		(text "tx_out_tx_dataout_0" (rect 4 261 118 272)(font "Arial" (font_size 8)))
+		(line (pt 0 272)(pt 128 272)(line_width 1))
+	)
+	(port
+		(pt 0 368)
+		(output)
+		(text "aux_pwm_export[5..0]" (rect 0 0 89 12)(font "Arial" (font_size 8)))
+		(text "aux_pwm_export[5..0]" (rect 4 357 124 368)(font "Arial" (font_size 8)))
+		(line (pt 0 368)(pt 128 368)(line_width 3))
+	)
+	(port
+		(pt 0 448)
+		(output)
+		(text "main_pwm_export[2..0]" (rect 0 0 94 12)(font "Arial" (font_size 8)))
+		(text "main_pwm_export[2..0]" (rect 4 437 130 448)(font "Arial" (font_size 8)))
+		(line (pt 0 448)(pt 128 448)(line_width 3))
+	)
+	(port
+		(pt 0 408)
+		(bidir)
+		(text "aux_enable_export[5..0]" (rect 0 0 95 12)(font "Arial" (font_size 8)))
+		(text "aux_enable_export[5..0]" (rect 4 397 142 408)(font "Arial" (font_size 8)))
+		(line (pt 0 408)(pt 128 408)(line_width 3))
+	)
+	(drawing
+		(text "cal_blk_clk" (rect 64 43 194 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 133 67 284 144)(font "Arial" (color 0 0 0)))
+		(text "test_in" (rect 89 83 220 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "test_in" (rect 133 107 308 224)(font "Arial" (color 0 0 0)))
+		(text "refclk" (rect 96 123 228 259)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 147 302 304)(font "Arial" (color 0 0 0)))
+		(text "pcie_rstn" (rect 75 163 204 339)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 187 302 384)(font "Arial" (color 0 0 0)))
+		(text "rx_in" (rect 100 203 230 419)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "rx_datain_0" (rect 133 227 332 464)(font "Arial" (color 0 0 0)))
+		(text "tx_out" (rect 93 243 222 499)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "tx_dataout_0" (rect 133 267 338 544)(font "Arial" (color 0 0 0)))
+		(text "reconfig_togxb" (rect 225 43 534 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "data" (rect 203 67 430 144)(font "Arial" (color 0 0 0)))
+		(text "reconfig_gxbclk" (rect 225 83 540 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 209 107 436 224)(font "Arial" (color 0 0 0)))
+		(text "aux_enc" (rect 81 283 204 579)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "B" (rect 133 307 272 624)(font "Arial" (color 0 0 0)))
+		(text "A" (rect 133 323 272 656)(font "Arial" (color 0 0 0)))
+		(text "aux_pwm" (rect 73 339 188 691)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 363 302 736)(font "Arial" (color 0 0 0)))
+		(text "aux_enable" (rect 63 379 186 771)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 403 302 816)(font "Arial" (color 0 0 0)))
+		(text "main_pwm" (rect 65 419 178 851)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 133 443 302 896)(font "Arial" (color 0 0 0)))
+		(text " pci_system " (rect 315 464 702 938)(font "Arial" ))
+		(line (pt 129 52)(pt 129 76)(line_width 1))
+		(line (pt 130 52)(pt 130 76)(line_width 1))
+		(line (pt 129 92)(pt 129 116)(line_width 1))
+		(line (pt 130 92)(pt 130 116)(line_width 1))
+		(line (pt 129 132)(pt 129 156)(line_width 1))
+		(line (pt 130 132)(pt 130 156)(line_width 1))
+		(line (pt 129 172)(pt 129 196)(line_width 1))
+		(line (pt 130 172)(pt 130 196)(line_width 1))
+		(line (pt 129 212)(pt 129 236)(line_width 1))
+		(line (pt 130 212)(pt 130 236)(line_width 1))
+		(line (pt 129 252)(pt 129 276)(line_width 1))
+		(line (pt 130 252)(pt 130 276)(line_width 1))
+		(line (pt 223 52)(pt 223 76)(line_width 1))
+		(line (pt 222 52)(pt 222 76)(line_width 1))
+		(line (pt 223 92)(pt 223 116)(line_width 1))
+		(line (pt 222 92)(pt 222 116)(line_width 1))
+		(line (pt 129 292)(pt 129 332)(line_width 1))
+		(line (pt 130 292)(pt 130 332)(line_width 1))
+		(line (pt 129 348)(pt 129 372)(line_width 1))
+		(line (pt 130 348)(pt 130 372)(line_width 1))
+		(line (pt 129 388)(pt 129 412)(line_width 1))
+		(line (pt 130 388)(pt 130 412)(line_width 1))
+		(line (pt 129 428)(pt 129 452)(line_width 1))
+		(line (pt 130 428)(pt 130 452)(line_width 1))
+		(line (pt 128 32)(pt 224 32)(line_width 1))
+		(line (pt 224 32)(pt 224 464)(line_width 1))
+		(line (pt 128 464)(pt 224 464)(line_width 1))
+		(line (pt 128 32)(pt 128 464)(line_width 1))
+		(line (pt 0 0)(pt 368 0)(line_width 1))
+		(line (pt 368 0)(pt 368 480)(line_width 1))
+		(line (pt 0 480)(pt 368 480)(line_width 1))
+		(line (pt 0 0)(pt 0 480)(line_width 1))
+	)
+)
