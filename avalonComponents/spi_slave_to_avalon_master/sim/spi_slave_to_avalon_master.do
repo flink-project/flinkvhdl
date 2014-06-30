@@ -7,7 +7,7 @@ vmap work rtl_work
 
 
 vcom -93 -work work {../../../../fLink/core/flink_definitions.vhd}
-vcom -93 -work work {../../../../functionalBlocks/spi_slave/trunk/src/spi_slave.m.vhd}
+vcom -93 -work work {../../../../functionalBlocks/spi_slave/src/spi_slave.m.vhd}
 vcom -93 -work work {../src/spi_slave_to_avalon_master.m.vhd}
 vcom -93 -work work {../sim/spi_slave_to_avalon_master_tb.vhd}
 

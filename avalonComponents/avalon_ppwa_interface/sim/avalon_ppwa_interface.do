@@ -7,7 +7,7 @@ vmap work rtl_work
 
 
 vcom -93 -work work {../../../../fLink/core/flink_definitions.vhd}
-vcom -93 -work work {../../../../functionalBlocks/ppwa/trunk/src/ppwa.m.vhd}
+vcom -93 -work work {../../../../functionalBlocks/ppwa/src/ppwa.m.vhd}
 vcom -93 -work work {../src/avalon_ppwa_interface.m.vhd}
 vcom -93 -work work {../sim/avalon_ppwa_interface_tb.vhd}
 
