@@ -45,7 +45,7 @@ PACKAGE adc128S102_pkg IS
 	COMPONENT adc128S102 IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; 
-			SCLK_FREQUENCY : INTEGER := 10000000  --Min 0.8 Mhz, max 16Mhz
+			SCLK_FREQUENCY : INTEGER := 8000000  --Min 0.8 Mhz, max 16Mhz
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
@@ -76,7 +76,7 @@ USE work.spi_master_pkg.ALL;
 ENTITY adc128S102 IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; 
-			SCLK_FREQUENCY : INTEGER := 10000000  --Min 0.8 Mhz, max 16Mhz
+			SCLK_FREQUENCY : INTEGER := 8000000  --Min 0.8 Mhz, max 16Mhz
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
@@ -214,6 +214,8 @@ ARCHITECTURE rtl OF adc128S102 IS
 			END IF;
 		END PROCESS reg_process;
 		
+		
+		ot_values <= ri.values;
 END ARCHITECTURE rtl;
 
 

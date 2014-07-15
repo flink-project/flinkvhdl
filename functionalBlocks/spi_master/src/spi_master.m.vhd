@@ -113,8 +113,8 @@ END ENTITY spi_master;
 -------------------------------------------------------------------------------
 ARCHITECTURE rtl OF spi_master IS
 
-	CONSTANT NR_OF_TICKS_PER_SCLK_CYCLE : INTEGER := BASE_CLK/SCLK_FREQUENCY;
-	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(NR_OF_TICKS_PER_SCLK_CYCLE))));
+	CONSTANT NR_OF_TICKS_PER_SCLK_EDGE : INTEGER := BASE_CLK/SCLK_FREQUENCY/2;
+	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(NR_OF_TICKS_PER_SCLK_EDGE))));
 	
 	TYPE t_states IS (idle,wait_ss_enable_setup,process_data,wait_ss_disable_setup);
 
@@ -207,7 +207,7 @@ ARCHITECTURE rtl OF spi_master IS
 					IF vi.clk_count = to_unsigned(0,CYCLE_COUNTHER_WIDTH) THEN
 						vi.leading_edge := NOT vi.leading_edge;
 						vi.sclk := NOT vi.sclk;
-						vi.clk_count := to_unsigned(NR_OF_TICKS_PER_SCLK_CYCLE,CYCLE_COUNTHER_WIDTH);
+						vi.clk_count := to_unsigned(NR_OF_TICKS_PER_SCLK_EDGE,CYCLE_COUNTHER_WIDTH);
 						
 						IF CPHA = '0' THEN -- clock phase 0 = Data is captured on the leading edge of SCK and changed on the trailing edge of SCK.
 							IF vi.leading_edge = '1' THEN
