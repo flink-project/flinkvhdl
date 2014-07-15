@@ -148,7 +148,7 @@ ARCHITECTURE rtl OF spi_master IS
 		PROCEDURE change_bitcount IS
 		BEGIN
 			IF MSBFIRST = '0' THEN
-				IF vi.bit_count = TRANSFER_WIDTH-1 THEN
+				IF vi.bit_count >= TRANSFER_WIDTH-1 THEN
 					vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
 					vi.state := wait_ss_disable_setup; 
 					vi.bit_count := 0;
@@ -156,7 +156,7 @@ ARCHITECTURE rtl OF spi_master IS
 					vi.bit_count := vi.bit_count + 1;
 				END IF;
 			ELSE
-				IF vi.bit_count = 0 THEN
+				IF vi.bit_count <= 0 THEN
 					vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
 					vi.state := wait_ss_disable_setup; 
 					vi.bit_count := TRANSFER_WIDTH-1;

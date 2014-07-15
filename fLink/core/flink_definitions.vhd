@@ -61,6 +61,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_memory_id 							: INTEGER := 8;
 	CONSTANT c_fLink_pwm_out_id 						: INTEGER := 12;
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
+	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 
 	-- Digital I/O interface: 
 	CONSTANT c_number_of_register_per_gpio_generic		: INTEGER := 2;
@@ -73,6 +74,15 @@ PACKAGE fLink_definitions IS
 	--Counter Interface: 
 	CONSTANT c_number_of_register_per_counter_generic	: INTEGER := 1;
 	CONSTANT c_counter_interface_address_with			: INTEGER := 5;
+	
+	--PPWE Interface
+	CONSTANT c_ppwa_interface_address_with : INTEGER := 5;
+
+	--Watchdog Interface
+	CONSTANT c_watchdog_interface_address_with : INTEGER := 5;
+	
+	--Analog Input Interface:
+	CONSTANT c_analog_input_interface_address_with			: INTEGER := 5;
 	
 END PACKAGE fLink_definitions;
 
