@@ -200,18 +200,18 @@ ARCHITECTURE rtl OF spi_master IS
 					vi.clk_count := vi.clk_count + 1;
 					IF vi.clk_count >= CS_SETUP_CYLES THEN
 						vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
+						vi.leading_edge := '1';
+						vi.rx_data_buf := (OTHERS => '0');
 						vi.state := process_data;
 					END IF;
 				WHEN process_data =>	
 					--toggle sclk
 					IF vi.clk_count = to_unsigned(0,CYCLE_COUNTHER_WIDTH) THEN
-						vi.leading_edge := NOT vi.leading_edge;
 						vi.sclk := NOT vi.sclk;
 						vi.clk_count := to_unsigned(NR_OF_TICKS_PER_SCLK_EDGE,CYCLE_COUNTHER_WIDTH);
-						
 						IF CPHA = '0' THEN -- clock phase 0 = Data is captured on the leading edge of SCK and changed on the trailing edge of SCK.
 							IF vi.leading_edge = '1' THEN
-								vi.rx_data_buf(vi.bit_count) := vi.sync_miso_2;	
+								vi.rx_data_buf(vi.bit_count) := vi.sync_miso_2;
 							ELSE --trailing edge
 								vi.mosi := islv_tx_data(vi.bit_count);
 								change_bitcount;
@@ -220,10 +220,11 @@ ARCHITECTURE rtl OF spi_master IS
 							IF vi.leading_edge = '1' THEN
 								vi.mosi := islv_tx_data(vi.bit_count);
 							ELSE --trailing edge
-								vi.mosi := islv_tx_data(vi.bit_count);
+								vi.rx_data_buf(vi.bit_count) := vi.sync_miso_2;
 								change_bitcount;
 							END IF;
 						END IF;
+						vi.leading_edge := NOT vi.leading_edge;
 					ELSE
 						vi.clk_count := vi.clk_count - 1;
 					END IF; 

@@ -47,6 +47,7 @@ PACKAGE avalon_pwm_interface_pkg IS
 					islv_avs_address		: IN  STD_LOGIC_VECTOR(c_pwm_interface_address_with-1 DOWNTO 0);
 					isl_avs_read			: IN  STD_LOGIC;
 					isl_avs_write			: IN  STD_LOGIC;
+					osl_avs_waitrequest		: OUT STD_LOGIC;
 					islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					oslv_pwm				: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
@@ -77,6 +78,7 @@ ENTITY avalon_pwm_interface IS
 			islv_avs_address		: IN  STD_LOGIC_VECTOR(c_pwm_interface_address_with-1 DOWNTO 0);
 			isl_avs_read			: IN  STD_LOGIC;
 			isl_avs_write			: IN  STD_LOGIC;
+			osl_avs_waitrequest		: OUT STD_LOGIC;
 			islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 			oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 			oslv_pwm				: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
@@ -178,4 +180,6 @@ BEGIN
 			ri <= ri_next;
 		END IF;
 	END PROCESS reg_proc;
+	
+	osl_avs_waitrequest <= '0';
 END rtl;

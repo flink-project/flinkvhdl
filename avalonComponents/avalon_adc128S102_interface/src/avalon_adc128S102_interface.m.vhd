@@ -52,7 +52,7 @@ PACKAGE avalon_adc128S102_interface_pkg IS
 					isl_avs_write			: IN STD_LOGIC;
 					islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT	STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
-					
+					osl_avs_waitrequest		: OUT    STD_LOGIC;
 					osl_sclk				: OUT STD_LOGIC;
 					oslv_Ss					: OUT STD_LOGIC;
 					osl_mosi				: OUT STD_LOGIC;
@@ -88,7 +88,7 @@ ENTITY avalon_adc128S102_interface IS
 			isl_avs_write			: IN STD_LOGIC;
 			islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 			oslv_avs_read_data		: OUT	STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
-			
+			osl_avs_waitrequest		: OUT    STD_LOGIC;
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
 			osl_mosi				: OUT STD_LOGIC;
@@ -154,8 +154,8 @@ BEGIN
 				WHEN c_usig_resolution_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(RESOLUTION,c_fLink_avs_data_width));
 				WHEN OTHERS => 
-					IF UNSIGNED(islv_avs_address)>= c_usig_resolution_address AND UNSIGNED(islv_avs_address)< c_usig_last_address THEN
-						adc128S102_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_resolution_address); 		
+					IF UNSIGNED(islv_avs_address)>= c_usig_value_0_address AND UNSIGNED(islv_avs_address)< c_usig_last_address THEN
+						adc128S102_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_value_0_address); 		
 						oslv_avs_read_data(RESOLUTION-1 DOWNTO 0) <= std_logic_vector(adc_values(adc128S102_part_nr));
 					END IF;
 			END CASE;
@@ -177,7 +177,7 @@ BEGIN
 		END IF;
 	END PROCESS reg_proc;
 
-		
+	osl_avs_waitrequest <= '0';
 
 END rtl;
 

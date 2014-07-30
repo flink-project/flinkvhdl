@@ -101,7 +101,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 	CONSTANT CHANEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANELS))));
 	
 	
-	TYPE t_states IS (idle,wait_for_data,store_data);
+	TYPE t_states IS (idle,wait_for_data,store_data,wait_for_next_transfer);
 
 
 	TYPE t_internal_register IS RECORD
@@ -110,6 +110,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 		tx_start 			: STD_LOGIC;
 		channel_count 		: UNSIGNED(CHANEL_COUNT_WIDTH-1 DOWNTO 0);
 		values				: t_value_regs;
+		cycle_count			: UNSIGNED(6 DOWNTO 0);
 	END RECORD;
 	
 	
@@ -129,7 +130,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 			TRANSFER_WIDTH 		=> 16, -- 16 bit per transfer see data sheet
 			NR_OF_SS 			=> 1, -- only one ss is needed
 			CPOL				=> '1', -- sckl inactive high see data sheet 
-			CPHA				=> '0', -- data is captured on the leading edge see data sheet
+			CPHA				=> '1', -- data is captured on the leading edge see data sheet
 			MSBFIRST			=> '1', -- MSB first
 			SSPOL				=> '0' -- zero active see data sheet 
 		)
@@ -176,13 +177,25 @@ ARCHITECTURE rtl OF adc128S102 IS
 						vi.state := store_data;
 					END IF;
 				WHEN store_data =>
-					vi.values(to_integer(vi.channel_count)) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
+					IF vi.channel_count = to_unsigned(0,CHANEL_COUNT_WIDTH) THEN 
+						vi.values(CHANEL_COUNT_WIDTH-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
+					ELSE
+						vi.values(to_integer(vi.channel_count)-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
+					END IF;
+					
 					IF vi.channel_count >= NUMBER_OF_CHANELS-1 THEN 
 						vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
 					ELSE
 						vi.channel_count := vi.channel_count + 1;
 					END IF;
-					vi.state := idle;
+					vi.state := wait_for_next_transfer;
+				WHEN wait_for_next_transfer =>
+					IF vi.cycle_count = 50 THEN
+						vi.cycle_count := to_unsigned(0,7);
+						vi.state := idle;
+					ELSE
+						vi.cycle_count := vi.cycle_count + 1;
+					END IF;
 				WHEN OTHERS =>
 					vi.state := idle; 
 			END CASE;
@@ -196,7 +209,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 				FOR i IN 0 TO NUMBER_OF_CHANELS-1 LOOP
 					vi.values(i) := (OTHERS => '0');
 				END LOOP;
-				
+				vi.cycle_count := (OTHERS => '0');
 			END IF;
 			
 			-- setting outputs
