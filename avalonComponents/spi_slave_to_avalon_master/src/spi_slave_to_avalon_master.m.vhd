@@ -232,12 +232,12 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 					vi.write := '0';
 					vi.avalon_address := vi.readaddress;
 					IF islv_waitrequest = '0' THEN
-						vi.readdata := islv_readdata;
 						vi.avalon_state := save_read_data;
 					END IF;
 				WHEN save_read_data =>
 					vi.read := '0';
 					vi.write := '0';
+					vi.readdata := islv_readdata;
 					vi.avalon_address := (OTHERS => '0');
 					vi.avalon_state := idle;
 				WHEN start_write_data => 
