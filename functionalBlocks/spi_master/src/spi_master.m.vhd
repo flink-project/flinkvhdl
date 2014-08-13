@@ -114,7 +114,7 @@ END ENTITY spi_master;
 ARCHITECTURE rtl OF spi_master IS
 
 	CONSTANT NR_OF_TICKS_PER_SCLK_EDGE : INTEGER := BASE_CLK/SCLK_FREQUENCY/2;
-	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(NR_OF_TICKS_PER_SCLK_EDGE))));
+	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(CS_SETUP_CYLES))))+1;
 	
 	TYPE t_states IS (idle,wait_ss_enable_setup,process_data,wait_ss_disable_setup);
 
