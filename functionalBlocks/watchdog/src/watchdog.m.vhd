@@ -138,6 +138,7 @@ ARCHITECTURE rtl OF watchdog IS
             IF isl_reset_n = '0' THEN
                  vi.counter := iusig_counter_set;
 				 vi.watchdog_fired := '0';
+				 vi.granted := '0';
             END IF;
 				
 			-- setting outputs
