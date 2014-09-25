@@ -178,7 +178,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 					END IF;
 				WHEN store_data =>
 					IF vi.channel_count = to_unsigned(0,CHANEL_COUNT_WIDTH) THEN 
-						vi.values(CHANEL_COUNT_WIDTH-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
+						vi.values(NUMBER_OF_CHANELS-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
 					ELSE
 						vi.values(to_integer(vi.channel_count)-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
 					END IF;
