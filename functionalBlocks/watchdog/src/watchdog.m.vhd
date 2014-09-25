@@ -43,12 +43,13 @@ PACKAGE watchdog_pkg IS
 			gi_counter_resolution : INTEGER := 32
 		);
 		PORT(
-			isl_clk					: IN STD_LOGIC;
-			isl_reset_n    			: IN STD_LOGIC;
-			isl_signal_to_check		: IN STD_LOGIC;
-			isl_clk_pol				: IN STD_LOGIC; --0 = reset counter on rising edge, 1 = reset counter on falling edge
-			iusig_counter_set		: IN UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
-			osl_granted				: OUT STD_LOGIC
+			isl_clk					: IN STD_LOGIC; 
+			isl_reset_n    			: IN STD_LOGIC; 
+			iusig_counter_set		: IN UNSIGNED(gi_counter_resolution-1 DOWNTO 0); -- value the internal counter is set after set isl_counter_change to high
+			isl_counter_change		: IN STD_LOGIC; -- every time this value is set high the internal counter is set to iusig_counter_set's value; this signal should only be assigned for one cycle.
+			isl_rearm				: IN STD_LOGIC; --if the watchdog fired this signal has to be set to high for one cycle before the watchdog starts counting again. 
+			osl_counter_val			: OUT UNSIGNED(gi_counter_resolution-1 DOWNTO 0); --the actual value of the internal counter
+			osl_granted				: OUT STD_LOGIC -- '1' if the counter is higher than zero and the rearm was set after the watchdog fired
 		);
 	END COMPONENT watchdog;
 
@@ -70,9 +71,10 @@ ENTITY watchdog IS
 		PORT(
 			isl_clk					: IN STD_LOGIC;
 			isl_reset_n    			: IN STD_LOGIC;
-			isl_signal_to_check		: IN STD_LOGIC;
-			isl_clk_pol				: IN STD_LOGIC;
 			iusig_counter_set		: IN UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
+			isl_counter_change			: IN STD_LOGIC;
+			isl_rearm				: IN STD_LOGIC;
+			osl_counter_val			: OUT UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
 			osl_granted				: OUT STD_LOGIC
 		);
 END ENTITY watchdog;
@@ -83,10 +85,6 @@ END ENTITY watchdog;
 ARCHITECTURE rtl OF watchdog IS
 
 	TYPE t_internal_register IS RECORD
-		-- synchronize signals 
-		sync_signal_to_check_1			: STD_LOGIC;
-		sync_signal_to_check_2			: STD_LOGIC;
-		sync_signal_to_check_3			: STD_LOGIC;
 		watchdog_fired					: STD_LOGIC;
 		granted							: STD_LOGIC;
 		counter							: UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
@@ -99,7 +97,7 @@ ARCHITECTURE rtl OF watchdog IS
 		--------------------------------------------
 		-- combinatorial process
 		--------------------------------------------
-		comb_process: PROCESS(ri, isl_signal_to_check, isl_reset_n,iusig_counter_set,isl_clk_pol)
+		comb_process: PROCESS(ri, isl_reset_n,iusig_counter_set,isl_counter_change,isl_rearm)
 		
 		VARIABLE vi: t_internal_register;
 		
@@ -107,37 +105,35 @@ ARCHITECTURE rtl OF watchdog IS
 			-- keep variables stable
 			vi:=ri;
 			
-			-- input buffer, to synchronize asynchronous inputs
-			vi.sync_signal_to_check_3 := vi.sync_signal_to_check_2;
-			vi.sync_signal_to_check_2 := vi.sync_signal_to_check_1;
-			vi.sync_signal_to_check_1 := isl_signal_to_check;
-			
-	
-	
-			if vi.counter > to_unsigned(0,gi_counter_resolution) THEN
-				vi.counter := vi.counter -1;
+			IF isl_rearm = '1' THEN
+				vi.watchdog_fired := '0';
 			END IF;
-			 
 			
 			
-			IF	vi.sync_signal_to_check_2 /= vi.sync_signal_to_check_3 AND --edge in signal to check
-				vi.sync_signal_to_check_3 = isl_clk_pol AND --only react if edge is the right kind 
-				vi.watchdog_fired = '0' -- only reset if watchdog has not fired till the last reset 
-			THEN
+			IF isl_counter_change = '1' THEN
 				vi.counter := iusig_counter_set;
 			END IF;
 			
-			IF vi.counter > to_unsigned(0,gi_counter_resolution) THEN
-				vi.granted := '1';
+			IF vi.watchdog_fired = '0' THEN
+				IF vi.counter > to_unsigned(0,gi_counter_resolution) THEN
+					vi.counter := vi.counter -1;
+					vi.granted := '1';
+				END IF;
 			ELSE
-				vi.watchdog_fired := '1';
 				vi.granted := '0';
 			END IF;
 			
+			
+			IF vi.counter = to_unsigned(0,gi_counter_resolution) THEN
+				vi.watchdog_fired := '1';
+			END IF;
+			
+			
+			
             -- reset
             IF isl_reset_n = '0' THEN
-                 vi.counter := iusig_counter_set;
-				 vi.watchdog_fired := '0';
+                 vi.counter := (OTHERS => '0');
+				 vi.watchdog_fired := '1';
 				 vi.granted := '0';
             END IF;
 				
@@ -158,6 +154,7 @@ ARCHITECTURE rtl OF watchdog IS
 		END PROCESS reg_process;
 		
 		osl_granted <= ri.granted;
+		osl_counter_val <= ri.counter;
 		
 END ARCHITECTURE rtl;
 

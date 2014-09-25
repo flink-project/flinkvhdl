@@ -52,7 +52,7 @@ ARCHITECTURE sim OF avalon_watchdog_interface_tb IS
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
-	SIGNAL slv_signals_to_check	: STD_LOGIC_VECTOR(number_of_watchdogs-1 DOWNTO 0) := (OTHERS =>'0');
+	SIGNAL sl_watchdog_pwm			: STD_LOGIC := '0';
 	SIGNAL sl_granted			: STD_LOGIC := '0';
 	
 	
@@ -61,7 +61,6 @@ BEGIN
 	--create component
 	my_unit_under_test : avalon_watchdog_interface 
 	GENERIC MAP(
-		number_of_watchdogs => number_of_watchdogs,
 		base_clk => 125000000
 	)
 	PORT MAP(
@@ -72,10 +71,11 @@ BEGIN
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data		=> slv_avs_write_data,	
 			oslv_avs_read_data		=> slv_avs_read_data,
-			islv_signals_to_check 	=> slv_signals_to_check,	
+			osl_watchdog_pwm 		=> sl_watchdog_pwm,	
 			osl_granted				=> sl_granted
 		
 	);
+	
 	
 	sl_clk 		<= NOT sl_clk after main_period/2;
 
@@ -124,50 +124,102 @@ BEGIN
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(number_of_watchdogs,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 		
---test register for every chanel
-		FOR i IN 0 TO number_of_watchdogs-1 LOOP
-			--test counter set register:
-			WAIT FOR 1000*main_period;
-				sl_avs_write <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_watchdog_interface_address_with));
-				slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(100+i,c_fLink_avs_data_width));	
-			WAIT FOR main_period;
-				sl_avs_write <= '0';
-				slv_avs_address <= (OTHERS =>'0');
-				slv_avs_write_data <= (OTHERS =>'0');
-			WAIT FOR main_period;
-				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_watchdog_interface_address_with));
-			WAIT FOR main_period;
-				sl_avs_read <= '0';
-				slv_avs_address <= (OTHERS =>'0');
-				ASSERT slv_avs_read_data = STD_LOGIC_VECTOR(to_unsigned(100+i,c_fLink_avs_data_width)) 
-				REPORT "Wrong counter value was given back" SEVERITY FAILURE;
-				
-			--test clock pol register:
-			WAIT FOR 1000*main_period;
-				sl_avs_write <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+number_of_watchdogs+i,c_watchdog_interface_address_with));
-				slv_avs_write_data <= (OTHERS => '0');
-				slv_avs_write_data(1) <= '1';				
-			WAIT FOR main_period;
-				sl_avs_write <= '0';
-				slv_avs_address <= (OTHERS =>'0');
-				slv_avs_write_data <= (OTHERS =>'0');
-			WAIT FOR main_period;
-				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+number_of_watchdogs+i,c_watchdog_interface_address_with));
-			WAIT FOR main_period;
-				sl_avs_read <= '0';
-				slv_avs_address <= (OTHERS =>'0');
-				ASSERT slv_avs_read_data(1) = '1'
-				REPORT "Wrong clock pol was given back" SEVERITY FAILURE;
-		END LOOP;
-		
-		WAIT FOR 1000*main_period;
-		WAIT FOR 1000*main_period;
-		WAIT FOR 1000*main_period;
-		WAIT FOR 1000*main_period;
+--test base clock register
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_base_clk_address);
+		WAIT FOR main_period;	
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(125000000,c_fLink_interface_version_length)) 
+			REPORT "Base clock Error" SEVERITY FAILURE;
+--test status register
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+		WAIT FOR main_period;	
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data(c_int_status_bit) = '0' REPORT "osl_granted should be zero at this point" SEVERITY FAILURE;
+			ASSERT slv_avs_read_data(c_int_rearm_bit) = '0' REPORT "Rearm not set to zero after reset" SEVERITY FAILURE;
+-- test set counter register 
+		WAIT FOR 10*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(100,c_fLink_avs_data_width));
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+		WAIT FOR main_period;	
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data = STD_LOGIC_VECTOR(to_unsigned(100,c_fLink_avs_data_width))
+			REPORT "counter not stayed at set value" SEVERITY FAILURE;
+--rearm 
+		WAIT FOR 10*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+			slv_avs_write_data(c_int_rearm_bit) <= '1';
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+		WAIT FOR main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+		WAIT FOR main_period;	
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data(c_int_status_bit) = '1' REPORT "osl_granted should be set at this point" SEVERITY FAILURE;
+			ASSERT slv_avs_read_data(c_int_rearm_bit) = '0' REPORT "Rearm not set because self clearing" SEVERITY FAILURE;
+-- set counter again
+		WAIT FOR 10*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(100,c_fLink_avs_data_width));
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+-- test granted again
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+		WAIT FOR main_period;	
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data(c_int_status_bit) = '1' REPORT "osl_granted should be set at this point" SEVERITY FAILURE;
+			ASSERT slv_avs_read_data(c_int_rearm_bit) = '0' REPORT "Rearm not set because self clearing" SEVERITY FAILURE;
+-- write counter again to see if pwm chages
+		WAIT FOR 10*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(100,c_fLink_avs_data_width));
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+-- read counter
+		WAIT FOR 10*main_period;	
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+
+-- wait and see if osl_granted goes low
+		WAIT FOR 91*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+		WAIT FOR main_period;	
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data(c_int_status_bit) = '0' REPORT "osl_granted should be zero at this point" SEVERITY FAILURE;
+			ASSERT slv_avs_read_data(c_int_rearm_bit) = '0' REPORT "Rearm not set because self clearing" SEVERITY FAILURE;
 		WAIT FOR 1000*main_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
