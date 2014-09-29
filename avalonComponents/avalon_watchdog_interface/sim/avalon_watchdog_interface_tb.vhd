@@ -220,6 +220,29 @@ BEGIN
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT slv_avs_read_data(c_int_status_bit) = '0' REPORT "osl_granted should be zero at this point" SEVERITY FAILURE;
 			ASSERT slv_avs_read_data(c_int_rearm_bit) = '0' REPORT "Rearm not set because self clearing" SEVERITY FAILURE;
+-- rearm and then reset and see what happends: 
+		WAIT FOR 100*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_counter_address);
+			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(100,c_fLink_avs_data_width));
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+		WAIT FOR 10*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_wd_status_conf_address);
+			slv_avs_write_data(c_int_rearm_bit) <= '1';
+		WAIT FOR main_period;	
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+		WAIT FOR 20*main_period;
+			sl_reset_n	<=	'0';
+		WAIT FOR 100*main_period;
+			sl_reset_n	<=	'1';
+
+
 		WAIT FOR 1000*main_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
