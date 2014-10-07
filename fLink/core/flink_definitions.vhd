@@ -84,6 +84,9 @@ PACKAGE fLink_definitions IS
 	--Analog Input Interface:
 	CONSTANT c_analog_input_interface_address_with			: INTEGER := 5;
 	
+	--Analog Output Interface:
+	CONSTANT c_analog_output_interface_address_with			: INTEGER := 5;
+	
 END PACKAGE fLink_definitions;
 
 
