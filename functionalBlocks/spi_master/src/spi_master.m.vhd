@@ -114,7 +114,7 @@ END ENTITY spi_master;
 ARCHITECTURE rtl OF spi_master IS
 
 	CONSTANT NR_OF_TICKS_PER_SCLK_EDGE : INTEGER := BASE_CLK/SCLK_FREQUENCY/2;
-	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(CS_SETUP_CYLES))))+1;
+	CONSTANT CYCLE_COUNTHER_WIDTH : INTEGER := integer(ceil(log2(real(SCLK_FREQUENCY))))+1;
 	
 	TYPE t_states IS (idle,wait_ss_enable_setup,process_data,wait_ss_disable_setup);
 
@@ -160,7 +160,6 @@ ARCHITECTURE rtl OF spi_master IS
 					vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
 					vi.state := wait_ss_disable_setup; 
 					vi.bit_count := TRANSFER_WIDTH-1;
-					vi.rx_done := '1';
 				ELSE
 					vi.bit_count := vi.bit_count - 1;
 				END IF;
@@ -233,8 +232,9 @@ ARCHITECTURE rtl OF spi_master IS
 						vi.ss := (OTHERS => NOT SSPOL);
 						vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
 						vi.state := idle;
+						vi.rx_done := '1';
 					ELSE
-						vi.clk_count := vi.clk_count - 1;
+						vi.clk_count := vi.clk_count + 1;
 					END IF;
 				WHEN OTHERS =>
 					vi.state := idle; 
@@ -243,6 +243,7 @@ ARCHITECTURE rtl OF spi_master IS
 			
 			--reset
 			IF isl_reset_n = '0' THEN
+				vi.state := idle;
 				vi.sclk := CPOL;
 				vi.clk_count := to_unsigned(0,CYCLE_COUNTHER_WIDTH);
 				vi.ss := (OTHERS => NOT SSPOL);

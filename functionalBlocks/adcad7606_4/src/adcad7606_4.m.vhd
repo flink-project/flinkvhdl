@@ -41,6 +41,13 @@ PACKAGE adcad7606_4_pkg IS
 	CONSTANT RESOLUTION : INTEGER := 16;
 	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
 	
+	TYPE t_config IS RECORD
+		range_select		: STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
+		oversampling		: STD_LOGIC_VECTOR(2 DOWNTO 0); --select oversampling ratio
+		standby				: STD_LOGIC; --when range='0' stby = '0' is shutdown mode, if range = '1' stby= '0' is standby mode
+	END RECORD;
+	
+	
 	
 	COMPONENT adcad7606_4 IS
 		GENERIC(
@@ -52,6 +59,7 @@ PACKAGE adcad7606_4_pkg IS
 			isl_reset_n    			: IN STD_LOGIC;
 			
 			ot_values				: OUT t_value_regs;
+			config					: IN t_config;
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
@@ -59,14 +67,12 @@ PACKAGE adcad7606_4_pkg IS
 			isl_miso				: IN STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
-			isl_range_select		: IN STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
 			osl_range				: OUT STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
-			islv_oversampling_select: IN STD_LOGIC_VECTOR(2 DOWNTO 0); --select oversampling ratio
 			oslv_os					: OUT STD_LOGIC_VECTOR(2 DOWNTO 0); --select oversampling ratio
 			isl_busy				: IN STD_LOGIC; --indicate that conversion has started, stays high till all channels has been sampled 
 			isl_first_data			: IN STD_LOGIC; --indicates when the first channel is being output
-			osl_stby_n				: OUT STD_LOGIC; --when range='0' stby = '0' is shutdown mode, if range = '1' stby= '0' is standby mode
-			osl_adc_reset			: OUT STD_LOGIC --rising edge resets the adc
+			osl_adc_reset			: OUT STD_LOGIC; --rising edge resets the adc
+			osl_stby_n				: OUT STD_LOGIC
 		);
 	END COMPONENT adcad7606_4;
 
@@ -93,6 +99,7 @@ ENTITY adcad7606_4 IS
 			isl_reset_n    			: IN STD_LOGIC;
 			
 			ot_values				: OUT t_value_regs;
+			config					: IN t_config;
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
@@ -100,14 +107,12 @@ ENTITY adcad7606_4 IS
 			isl_miso				: IN STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
-			isl_range_select		: IN STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
 			osl_range				: OUT STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
-			islv_oversampling_select: IN STD_LOGIC_VECTOR(2 DOWNTO 0); --select oversampling ratio
 			oslv_os					: OUT STD_LOGIC_VECTOR(2 DOWNTO 0); --select oversampling ratio
 			isl_busy				: IN STD_LOGIC; --indicate that conversion has started, stays high till all channels has been sampled 
 			isl_first_data			: IN STD_LOGIC; --indicates when the first channel is being output
-			osl_stby_n				: OUT STD_LOGIC; --when range='0' stby = '0' is shutdown mode, if range = '1' stby= '0' is standby mode
-			osl_adc_reset			: OUT STD_LOGIC --rising edge resets the adc
+			osl_adc_reset			: OUT STD_LOGIC; --rising edge resets the adc
+			osl_stby_n				: OUT STD_LOGIC
 		);
 END ENTITY adcad7606_4;
 
@@ -243,10 +248,11 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 		
 		oslv_conv_start <= ri.slv_conv_start;
 		ot_values <= ri.values;
-		osl_range <= isl_range_select;
-		oslv_os <= islv_oversampling_select;
+		osl_range <= config.range_select;
+		oslv_os <= config.oversampling;
 		osl_adc_reset <= ri.sl_adc_reset;
-		osl_stby_n <= '1';
+		osl_stby_n <= config.standby;
+		
 		
 		
 END ARCHITECTURE rtl;

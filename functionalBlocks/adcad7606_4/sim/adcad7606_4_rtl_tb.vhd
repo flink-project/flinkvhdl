@@ -54,15 +54,13 @@ ARCHITECTURE sim OF adcad7606_4_rtl_tb IS
 	SIGNAL sl_miso				: STD_LOGIC := '0';
 	SIGNAL sl_d_out_b			: STD_LOGIC := '0';
 	SIGNAL slv_conv_start		:  STD_LOGIC_VECTOR(1 DOWNTO 0):= (OTHERS => '0');
-	SIGNAL sl_range_select		: STD_LOGIC := '0';
 	SIGNAL sl_range				: STD_LOGIC := '0';
-	SIGNAL slv_oversampling_select: STD_LOGIC_VECTOR(2 DOWNTO 0):= (OTHERS => '0');
 	SIGNAL slv_os				: STD_LOGIC_VECTOR(2 DOWNTO 0):= (OTHERS => '0');
 	SIGNAL sl_busy				: STD_LOGIC := '0';
 	SIGNAL sl_first_data		: STD_LOGIC := '0';
 	SIGNAL sl_stby_n			: STD_LOGIC := '0';
 	SIGNAL sl_adc_reset			: STD_LOGIC := '0';
-	
+	SIGNAL config 				: t_config;
 	
 	
 BEGIN
@@ -77,16 +75,14 @@ BEGIN
 			isl_reset_n    			=> sl_reset_n,
 			
 			ot_values			=> values,
-			
+			config				=> config,
 			osl_sclk				=> sl_sclk,
 			oslv_Ss					=> slv_Ss,
 			osl_mosi				=> sl_mosi,
 			isl_miso				=> sl_miso,
 			isl_d_out_b				=> sl_d_out_b,
 			oslv_conv_start			=> slv_conv_start,
-			isl_range_select		=> sl_range_select,
 			osl_range				=> sl_range,
-			islv_oversampling_select=> slv_oversampling_select,
 			oslv_os					=> slv_os,
 			isl_busy				=> sl_busy,
 			isl_first_data			=> sl_first_data,
@@ -97,6 +93,10 @@ BEGIN
 		
 		
 	sl_clk 		<= NOT sl_clk after main_period/2;
+	
+	config.range_select <= '0';
+	config.oversampling <= (OTHERS => '0');
+	config.standby <= '1';
 	
 	tb_main_proc : PROCESS
 	BEGIN
