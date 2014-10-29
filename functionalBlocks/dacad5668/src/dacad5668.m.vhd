@@ -46,7 +46,7 @@ PACKAGE dacad5668_pkg IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; 
 			SCLK_FREQUENCY : INTEGER := 8000000;  --Max 50MHz
-			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to externel reference
+			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to external reference
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
@@ -108,15 +108,11 @@ ARCHITECTURE rtl OF dacad5668 IS
 	CONSTANT TRANSFER_WIDTH : INTEGER := 32;
 	
 	--COMMAND CODES
-	CONSTANT WRITE_INPUT_REGISTER_N : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000";
-	CONSTANT UPDATE_DAC_REGISTER_N : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0001";
 	CONSTANT WRITE_AND_UPDATE_CHANNEL_N : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0011";
-	
 	CONSTANT SETUP_INTERNAL_REF : STD_LOGIC_VECTOR(3 DOWNTO 0) 	:= "1000";
-	CONSTANT POWER_MODE : STD_LOGIC_VECTOR(3 DOWNTO 0) 	:= "0100";
 	
 	
-	TYPE t_states IS (idle,wait_for_transfer_to_finish,wait_for_next_transfer,set_internal_reference,update_channels,power_up_mode);
+	TYPE t_states IS (idle,wait_for_transfer_to_finish,wait_for_next_transfer,set_internal_reference,keep_clear_low,wait_after_reset);
 
 
 	TYPE t_internal_register IS RECORD
@@ -186,19 +182,27 @@ ARCHITECTURE rtl OF dacad5668 IS
 			
 			
 			CASE vi.state IS 
-				WHEN power_up_mode => 
+				WHEN keep_clear_low => 
+					vi.CLR_n := '0';
+					IF vi.cycle_count = 10 THEN
+						vi.state := wait_after_reset;
+						vi.cycle_count := (OTHERS => '0');
+					ELSE
+						vi.cycle_count := vi.cycle_count + 1;
+					END IF;
+				WHEN wait_after_reset => 
+					IF vi.cycle_count = 100 THEN
+						vi.state := set_internal_reference;
+						vi.cycle_count := (OTHERS => '0');
+					ELSE
+						vi.cycle_count := vi.cycle_count + 1;
+					END IF;
+				WHEN set_internal_reference =>
 					vi.tx_data := (OTHERS => '0');
-					vi.tx_data(TRANSFER_WIDTH -5 DOWNTO TRANSFER_WIDTH-8) := POWER_MODE;
-					vi.tx_data(NUMBER_OF_CHANELS -1 DOWNTO 0) := (OTHERS => '1'); -- power up all chanels
+					vi.tx_data(TRANSFER_WIDTH -5 DOWNTO TRANSFER_WIDTH-8) := SETUP_INTERNAL_REF;
+					vi.tx_data(0) := INTERNAL_REFERENCE; 
 					vi.tx_start := '1';
 					vi.state := wait_for_transfer_to_finish; 
-					vi.channel_count := to_unsigned(NUMBER_OF_CHANELS-1,CHANEL_COUNT_WIDTH);
-				--WHEN set_internal_reference =>
-					--vi.tx_data := (OTHERS => '0');
-					--vi.tx_data(TRANSFER_WIDTH -5 DOWNTO TRANSFER_WIDTH-8) := SETUP_INTERNAL_REF;
-					--vi.tx_data(0) := INTERNAL_REFERENCE; 
-					--vi.tx_start := '1';
-					--vi.state := wait_for_transfer_to_finish; 
 				WHEN idle => 
 					vi.tx_data := (OTHERS => '0');
 					vi.tx_data(TRANSFER_WIDTH -5 DOWNTO TRANSFER_WIDTH-8) := WRITE_AND_UPDATE_CHANNEL_N;
@@ -208,17 +212,9 @@ ARCHITECTURE rtl OF dacad5668 IS
 					vi.state := wait_for_transfer_to_finish; 
 				WHEN wait_for_transfer_to_finish =>
 					IF sl_rx_done = '1' THEN
-						vi.state := update_channels;
+						vi.state := wait_for_next_transfer;
 						vi.cycle_count := (OTHERS => '0');
 					END IF;
-				WHEN update_channels => 
-						vi.LDAC_n := '0';
-						IF vi.cycle_count = 20 THEN
-							vi.state := wait_for_next_transfer;
-							vi.cycle_count := (OTHERS => '0');
-						ELSE
-							vi.cycle_count := vi.cycle_count + 1;
-						END IF;
 				WHEN wait_for_next_transfer =>
 					IF vi.cycle_count = 100 THEN
 						vi.cycle_count := to_unsigned(0,7);
@@ -238,7 +234,7 @@ ARCHITECTURE rtl OF dacad5668 IS
 			
 			--reset
 			IF isl_reset_n = '0' THEN
-				vi.state := power_up_mode; 
+				vi.state := keep_clear_low; 
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
 				vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
