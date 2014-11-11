@@ -6,8 +6,8 @@ vlib rtl_work
 vmap work rtl_work
 
 
-vcom -93 -work work {../../../fLink/core/flink_definitions.vhd}
-vcom -93 -work work {../../../functionalBlocks/adjustable_pwm/trunk/src/adjustable_pwm.m.vhd}
+vcom -93 -work work {../../../../fLink/core/flink_definitions.vhd}
+vcom -93 -work work {../../../../functionalBlocks/adjustable_pwm/src/adjustable_pwm.m.vhd}
 vcom -93 -work work {../src/avalon_pwm_interface.m.vhd}
 vcom -93 -work work {../sim/avalon_pwm_interface_tb.vhd}
 

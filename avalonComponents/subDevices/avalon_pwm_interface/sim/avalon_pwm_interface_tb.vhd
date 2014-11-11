@@ -41,7 +41,8 @@ ARCHITECTURE sim OF avalon_pwm_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT number_of_pwms : INTEGER := 3;
-
+	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"0070776d"; --fqd
+	
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
 	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_pwm_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
@@ -55,7 +56,8 @@ BEGIN
 	--create component
 	my_unit_under_test : avalon_pwm_interface 
 	GENERIC MAP(
-		number_of_pwms =>number_of_pwms
+		number_of_pwms =>number_of_pwms,
+		unice_id => unice_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -115,6 +117,16 @@ BEGIN
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(number_of_pwms,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 
+--test unic id register:
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_pwm_interface_address_with));
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data = unice_id
+			REPORT "Unic Id Error" SEVERITY FAILURE;
+			
 	FOR i IN 0 TO number_of_pwms-1 LOOP
 	--test frequency register:
 		WAIT FOR 1000*main_period;
