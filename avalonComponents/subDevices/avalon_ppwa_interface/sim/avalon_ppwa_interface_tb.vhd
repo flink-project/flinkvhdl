@@ -45,7 +45,8 @@ ARCHITECTURE sim OF avalon_ppwa_interface_tb IS
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT signal_to_measure_0_period : TIME := 800 ns; -- 12.5MHz
 	CONSTANT number_of_ppwas : INTEGER := 5;
-
+	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"70707761"; --ppwa
+	
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
 	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_ppwa_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
@@ -62,7 +63,8 @@ BEGIN
 	my_unit_under_test : avalon_ppwa_interface 
 	GENERIC MAP(
 		number_of_ppwas => number_of_ppwas,
-		base_clk => 125000000
+		base_clk => 125000000,
+		unice_id => unice_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -113,6 +115,16 @@ BEGIN
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_ppwa_interface_address_with)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**number_of_ppwas))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
+--test unic id register:
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_ppwa_interface_address_with));
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data = unice_id
+			REPORT "Unic Id Error" SEVERITY FAILURE;
+			
 --test number of chanels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';

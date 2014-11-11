@@ -42,7 +42,8 @@ PACKAGE avalon_ppwa_interface_pkg IS
 	COMPONENT avalon_ppwa_interface IS
 			GENERIC (
 				number_of_ppwas: INTEGER RANGE 1 TO c_max_number_of_ppwas:= 1;
-				base_clk: INTEGER := 125000000
+				base_clk: INTEGER := 125000000;
+				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
@@ -74,7 +75,8 @@ USE work.ppwa_pkg.ALL;
 ENTITY avalon_ppwa_interface IS
 	GENERIC (
 			number_of_ppwas: INTEGER RANGE 1 TO c_max_number_of_ppwas:= 1;
-			base_clk: INTEGER := 125000000
+			base_clk: INTEGER := 125000000;
+			unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 		);
 		PORT (
 				isl_clk					: IN STD_LOGIC;
@@ -150,6 +152,8 @@ BEGIN
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(number_of_ppwas,c_fLink_avs_data_width));
 				WHEN c_usig_base_clk_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(base_clk,c_fLink_avs_data_width));
+				WHEN to_unsigned(c_fLink_unice_id_address,c_ppwa_interface_address_with) => 
+					oslv_avs_read_data <= unice_id;
 				WHEN OTHERS => 
 					IF UNSIGNED(islv_avs_address)>= c_usig_period_time_address AND UNSIGNED(islv_avs_address)< c_usig_high_time_address THEN
 						ppwa_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_period_time_address); 		

@@ -1,20 +1,20 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/number_of_ppwes
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/base_clk
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/isl_clk
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/isl_reset_n
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/islv_avs_address
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/isl_avs_read
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/isl_avs_write
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/islv_avs_write_data
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/oslv_avs_read_data
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/islv_signals_to_measure
-add wave -noupdate /avalon_ppwe_interface_tb/my_unit_under_test/ri
-add wave -noupdate -radix unsigned /avalon_ppwe_interface_tb/my_unit_under_test/usig_period_count_regs
-add wave -noupdate -radix unsigned /avalon_ppwe_interface_tb/my_unit_under_test/usig_hightime_count_regs
+add wave -noupdate /avalon_ppwa_interface_tb/sl_clk
+add wave -noupdate /avalon_ppwa_interface_tb/sl_reset_n
+add wave -noupdate /avalon_ppwa_interface_tb/slv_avs_address
+add wave -noupdate /avalon_ppwa_interface_tb/sl_avs_read
+add wave -noupdate /avalon_ppwa_interface_tb/sl_avs_write
+add wave -noupdate /avalon_ppwa_interface_tb/slv_avs_write_data
+add wave -noupdate /avalon_ppwa_interface_tb/slv_avs_read_data
+add wave -noupdate /avalon_ppwa_interface_tb/slv_signals_to_measure
+add wave -noupdate /avalon_ppwa_interface_tb/main_period
+add wave -noupdate /avalon_ppwa_interface_tb/signal_to_measure_0_period
+add wave -noupdate /avalon_ppwa_interface_tb/number_of_ppwas
+add wave -noupdate /avalon_ppwa_interface_tb/unice_id
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {44654498 ps} 0}
+WaveRestoreCursors {{Cursor 1} {85770911 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -29,4 +29,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {102795 ns}
+WaveRestoreZoom {0 ps} {170137800 ps}
