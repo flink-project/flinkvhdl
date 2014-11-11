@@ -1,4 +1,14 @@
-flinkvhdl
+flinkvhdl: vhdl part of the flink project
 =========
 
-fLink VHDL Components
+
+Development Tools
+-----------------
+
+At the current state FLink is only available for Altera FPGAs.
+
+For simulation of the blocks Modelsim Altera 10.1d is used.
+
+For compiling and downloading Quartus Version 13.0.1 Service Pack 1 and Qsys 13.0sp1 is used.
+
+The TCL scripts added in the repository are only working with Qsys 13.0sp1!
