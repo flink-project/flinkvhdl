@@ -42,7 +42,8 @@ PACKAGE avalon_dacad5668_interface_pkg IS
 			GENERIC (
 				BASE_CLK: INTEGER := 33000000; 
 				SCLK_FREQUENCY : INTEGER := 10000000;
-				INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to external reference
+				INTERNAL_REFERENCE : STD_LOGIC := '0';  -- '0' = set to internal reference, '1' set to external reference
+				UNICE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
@@ -81,7 +82,8 @@ ENTITY avalon_dacad5668_interface IS
 	GENERIC (
 				BASE_CLK: INTEGER := 33000000; 
 				SCLK_FREQUENCY : INTEGER := 10000000;
-				INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to external reference
+				INTERNAL_REFERENCE : STD_LOGIC := '0';  -- '0' = set to internal reference, '1' set to external reference
+				UNICE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
@@ -160,6 +162,8 @@ BEGIN
 					oslv_avs_read_data(c_analog_output_interface_address_with+2) <= '1';
 				WHEN to_unsigned(c_fLink_number_of_chanels_address,c_analog_output_interface_address_with) => 
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(NUMBER_OF_CHANELS,c_fLink_avs_data_width));
+				WHEN to_unsigned(c_fLink_unice_id_address,c_analog_output_interface_address_with) => 
+					oslv_avs_read_data <= UNICE_ID;
 				WHEN c_usig_resolution_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(RESOLUTION,c_fLink_avs_data_width));
 				WHEN OTHERS => 
