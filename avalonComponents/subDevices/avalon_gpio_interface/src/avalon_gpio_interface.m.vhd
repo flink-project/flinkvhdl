@@ -38,7 +38,8 @@ PACKAGE avalon_gpio_interface_pkg IS
 
 	COMPONENT avalon_gpio_interface IS
 			GENERIC (
-				number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1
+				number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN    STD_LOGIC;
@@ -46,7 +47,7 @@ PACKAGE avalon_gpio_interface_pkg IS
 					islv_avs_address		: IN    STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 DOWNTO 0);
 					isl_avs_read			: IN    STD_LOGIC;
 					isl_avs_write			: IN    STD_LOGIC;
-					osl_avs_waitrequest		: OUT    STD_LOGIC;
+					osl_avs_waitrequest		: OUT   STD_LOGIC;
 					islv_avs_write_data		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT   STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
@@ -69,7 +70,8 @@ USE work.fLink_definitions.ALL;
 
 ENTITY avalon_gpio_interface IS
 	GENERIC (
-		number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1
+		number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+		unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 	);
 	PORT (
 			isl_clk					: IN    STD_LOGIC;
@@ -175,6 +177,10 @@ BEGIN
 				-- Read config register
 				WHEN to_unsigned(c_fLink_configuration_address, c_gpio_interface_address_with) =>
 					oslv_avs_read_data <= vi.conf_reg;
+				
+				-- Read unice id register
+				WHEN to_unsigned(c_fLink_unice_id_address,info_device_address_with) => 
+					oslv_avs_read_data <= unice_id;
 				
 				-- Read direction or value register
 				WHEN OTHERS => 

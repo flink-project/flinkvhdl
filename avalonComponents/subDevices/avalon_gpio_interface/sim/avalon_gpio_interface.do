@@ -6,7 +6,7 @@ vlib rtl_work
 vmap work rtl_work
 
 
-vcom -93 -work work {../../../fLink/core/flink_definitions.vhd}
+vcom -93 -work work {../../../../fLink/core/flink_definitions.vhd}
 vcom -93 -work work {../src/avalon_gpio_interface.m.vhd}
 vcom -93 -work work {../sim/avalon_gpio_interface_tb.vhd}
 
