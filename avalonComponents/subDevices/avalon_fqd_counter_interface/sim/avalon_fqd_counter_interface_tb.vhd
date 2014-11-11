@@ -45,7 +45,7 @@ ARCHITECTURE sim OF avalon_fqd_counter_interface_tb IS
 	CONSTANT direction : INTEGER := 1; -- forwards:1 backwards: -1
 	CONSTANT enc_tick_per_turn : REAL := 512.0;
 	CONSTANT wait_time : TIME := (1.0 / velocity / enc_tick_per_turn / 4.0) * 1 sec;
-
+	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00667164"; --fqd
 
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
@@ -62,7 +62,8 @@ BEGIN
 	--create component
 	my_unit_under_test : avalon_fqd_counter_interface 
 	GENERIC MAP(
-		number_of_fqds =>number_of_fqds
+		number_of_fqds =>number_of_fqds,
+		unice_id => unice_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -121,6 +122,15 @@ BEGIN
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(number_of_fqds,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 
+--test unic id register:
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_counter_interface_address_with));
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data = unice_id
+			REPORT "Unic Id Error" SEVERITY FAILURE;
 --test number of chanels register:
 
 

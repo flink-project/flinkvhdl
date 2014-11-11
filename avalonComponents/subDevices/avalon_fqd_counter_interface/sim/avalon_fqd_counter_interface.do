@@ -6,8 +6,8 @@ vlib rtl_work
 vmap work rtl_work
 
 
-vcom -93 -work work {../../../fLink/core/flink_definitions.vhd}
-vcom -93 -work work {../../../functionalBlocks/fqd/trunk/src/fqd.m.vhd}
+vcom -93 -work work {../../../../fLink/core/flink_definitions.vhd}
+vcom -93 -work work {../../../../functionalBlocks/fqd/src/fqd.m.vhd}
 vcom -93 -work work {../src/avalon_fqd_counter_interface.m.vhd}
 vcom -93 -work work {../sim/avalon_fqd_counter_interface_tb.vhd}
 

@@ -38,7 +38,8 @@ PACKAGE avalon_fqd_counter_interface_pkg IS
 	
 	COMPONENT avalon_fqd_counter_interface IS
 			GENERIC (
-				number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1
+				number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1;
+				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN  STD_LOGIC;
@@ -70,7 +71,8 @@ USE work.fLink_definitions.ALL;
 
 ENTITY avalon_fqd_counter_interface IS
 	GENERIC (
-		number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1
+		number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1;
+		unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 	);
 	PORT (
 			isl_clk					: IN  STD_LOGIC;
@@ -140,6 +142,8 @@ BEGIN
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(number_of_fqds,c_fLink_avs_data_width));
 				WHEN to_unsigned(c_fLink_configuration_address,c_counter_interface_address_with) =>
 					oslv_avs_read_data <= vi.conf_reg;
+				WHEN to_unsigned(c_fLink_unice_id_address,c_counter_interface_address_with) => 
+					oslv_avs_read_data <= unice_id;
 				WHEN OTHERS => 
 					IF UNSIGNED(islv_avs_address)>= to_unsigned(c_fLink_number_of_std_registers,c_counter_interface_address_with) AND 
 						UNSIGNED(islv_avs_address)< to_unsigned(c_fLink_number_of_std_registers + number_of_fqds,c_counter_interface_address_with)
