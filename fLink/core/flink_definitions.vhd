@@ -42,6 +42,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_typdef_address						: INTEGER := 0;
 	CONSTANT c_fLink_mem_size_address					: INTEGER := 1;
 	CONSTANT c_fLink_number_of_chanels_address			: INTEGER := 2;
+	CONSTANT c_fLink_unice_id_address					: INTEGER := 3;
 	CONSTANT c_fLink_status_address						: INTEGER := 4;
 	CONSTANT c_fLink_configuration_address				: INTEGER := 5;
 	
@@ -52,7 +53,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_reset_bit_num						: INTEGER := 0;
 	
 	-- Interface IDs:
-	CONSTANT c_fLink_unused_id							: INTEGER := 0;
+	CONSTANT c_fLink_info_id							: INTEGER := 0;
 	CONSTANT c_fLink_analog_input_id 					: INTEGER := 1;
 	CONSTANT c_fLink_analog_output_id			 		: INTEGER := 2;
 	CONSTANT c_fLink_digital_io_id 						: INTEGER := 5;
@@ -63,6 +64,9 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 
+	-- Info Device: 
+	CONSTANT info_device_address_with					: INTEGER := 4;
+	
 	-- Digital I/O interface: 
 	CONSTANT c_number_of_register_per_gpio_generic		: INTEGER := 2;
 	CONSTANT c_gpio_interface_address_with				: INTEGER := 4;

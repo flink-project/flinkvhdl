@@ -1,0 +1,148 @@
+-------------------------------------------------------------------------------
+--  _________     _____      _____    ____  _____    ___  ____               --
+-- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
+--   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
+--   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
+--  _| |_        _| |__/ |   _| |_    _| |_\   |_    _| |  \ \_              --
+-- |_____|      |________|  |_____|  |_____|\____|  |____||____|             --
+--                                                                           --
+-------------------------------------------------------------------------------
+--                                                                           --
+-- Avalon MM interface for PWM                                               --
+--                                                                           --
+-------------------------------------------------------------------------------
+-- Copyright 2014 NTB University of Applied Sciences in Technology           --
+--                                                                           --
+-- Licensed under the Apache License, Version 2.0 (the "License");           --
+-- you may not use this file except in compliance with the License.          --
+-- You may obtain a copy of the License at                                   --
+--                                                                           --
+-- http://www.apache.org/licenses/LICENSE-2.0                                --
+--                                                                           --
+-- Unless required by applicable law or agreed to in writing, software       --
+-- distributed under the License is distributed on an "AS IS" BASIS,         --
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  --
+-- See the License for the specific language governing permissions and       --
+-- limitations under the License.                                            --
+-------------------------------------------------------------------------------
+
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;
+USE IEEE.math_real.ALL;
+
+USE work.fLink_definitions.ALL;
+
+PACKAGE info_device_pkg IS
+	CONSTANT c_int_number_of_descr_register: INTEGER := 7;
+	
+	
+	COMPONENT info_device IS
+			GENERIC (
+				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+				description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+				dev_size: INTEGER := 0
+			);
+			PORT (
+					isl_clk					: IN  STD_LOGIC;
+					isl_reset_n				: IN  STD_LOGIC;
+					islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_with-1 DOWNTO 0);
+					isl_avs_read			: IN  STD_LOGIC;
+					isl_avs_write			: IN  STD_LOGIC;
+					osl_avs_waitrequest		: OUT STD_LOGIC;
+					islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0)
+			);
+	END COMPONENT;
+	
+	CONSTANT info_device_subtype_id : INTEGER := 0;
+	CONSTANT info_device_interface_version : INTEGER := 0;
+	
+	
+	CONSTANT c_usig_dev_size_address	: UNSIGNED(info_device_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers, info_device_address_with);
+	CONSTANT c_usig_description_address	: UNSIGNED(info_device_address_with-1 DOWNTO 0) := c_usig_dev_size_address + 1;
+	
+END PACKAGE info_device_pkg;
+
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;
+USE IEEE.math_real.ALL;
+USE work.info_device_pkg.ALL;
+USE work.fLink_definitions.ALL;
+
+ENTITY info_device IS
+	GENERIC (
+		unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+		description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+		dev_size: INTEGER := 0
+	);
+	PORT (
+			isl_clk					: IN  STD_LOGIC;
+			isl_reset_n				: IN  STD_LOGIC;
+			islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_with-1 DOWNTO 0);
+			isl_avs_read			: IN  STD_LOGIC;
+			isl_avs_write			: IN  STD_LOGIC;
+			osl_avs_waitrequest		: OUT STD_LOGIC;
+			islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+			oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0)
+	);
+
+END ENTITY info_device;
+
+ARCHITECTURE rtl OF info_device IS
+	TYPE t_internal_register IS RECORD
+		  	read_data : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+	END RECORD;
+
+	SIGNAL ri,ri_next : t_internal_register;
+	
+BEGIN
+
+	-- combinatoric process
+	comb_proc : PROCESS (isl_reset_n,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data)
+		VARIABLE description_part: INTEGER := 0;
+		VARIABLE vi :	t_internal_register;
+	BEGIN
+		-- keep variables stable
+		vi := ri;	
+	
+		--standard values
+		vi.read_data := (OTHERS => '0');
+
+		--avalon slave interface read part
+		IF isl_avs_read = '1' THEN
+			CASE UNSIGNED(islv_avs_address) IS
+				WHEN to_unsigned(c_fLink_typdef_address,info_device_address_with) =>
+					vi.read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
+												(c_fLink_interface_version_length + c_fLink_subtype_length)) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_info_id,c_fLink_id_length));
+					vi.read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) := STD_LOGIC_VECTOR(to_unsigned(info_device_subtype_id,c_fLink_subtype_length));
+					vi.read_data(c_fLink_interface_version_length-1 DOWNTO 0) :=  STD_LOGIC_VECTOR(to_unsigned(info_device_interface_version,c_fLink_interface_version_length));
+				WHEN to_unsigned(c_fLink_mem_size_address,info_device_address_with) => 
+					vi.read_data(info_device_address_with+2) := '1';
+				WHEN to_unsigned(c_fLink_unice_id_address,info_device_address_with) => 
+					vi.read_data := unice_id;
+				WHEN c_usig_dev_size_address =>
+					vi.read_data := std_logic_vector(to_unsigned(dev_size,c_fLink_avs_data_width));
+				WHEN OTHERS => 
+					IF UNSIGNED(islv_avs_address)>= c_usig_description_address THEN
+						description_part := to_integer(UNSIGNED(islv_avs_address) - c_usig_description_address); 
+						vi.read_data := description((description_part+1)*32-1 DOWNTO description_part*32);
+					END IF;
+			END CASE;
+		END IF;
+
+		ri_next <= vi;
+		
+	END PROCESS comb_proc;
+	
+	reg_proc : PROCESS (isl_clk)
+	BEGIN
+		IF rising_edge(isl_clk) THEN
+			ri <= ri_next;
+		END IF;
+	END PROCESS reg_proc;
+	
+	oslv_avs_read_data <= ri.read_data;
+	osl_avs_waitrequest <= '0';
+END rtl;
