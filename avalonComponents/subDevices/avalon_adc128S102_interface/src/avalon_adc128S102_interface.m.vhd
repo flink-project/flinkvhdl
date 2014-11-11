@@ -41,7 +41,8 @@ PACKAGE avalon_adc128S102_interface_pkg IS
 	COMPONENT avalon_adc128S102_interface IS
 			GENERIC (
 				BASE_CLK: INTEGER := 33000000; 
-				SCLK_FREQUENCY : INTEGER := 10000000 --Min 0.8 Mhz, max 16Mhz
+				SCLK_FREQUENCY : INTEGER := 10000000; --Min 0.8 Mhz, max 16Mhz
+				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
@@ -77,7 +78,8 @@ USE work.adc128S102_pkg.ALL;
 ENTITY avalon_adc128S102_interface IS
 	GENERIC (
 		BASE_CLK: INTEGER := 33000000; 
-		SCLK_FREQUENCY : INTEGER := 10000000 --Min 0.8 Mhz, max 16Mhz
+		SCLK_FREQUENCY : INTEGER := 10000000; --Min 0.8 Mhz, max 16Mhz
+		unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 	);
 	PORT (
 			isl_clk					: IN STD_LOGIC;
@@ -151,6 +153,8 @@ BEGIN
 					oslv_avs_read_data(c_analog_input_interface_address_with+2) <= '1';
 				WHEN to_unsigned(c_fLink_number_of_chanels_address,c_analog_input_interface_address_with) => 
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(NUMBER_OF_CHANELS,c_fLink_avs_data_width));
+				WHEN to_unsigned(c_fLink_unice_id_address,c_analog_input_interface_address_with) => 
+					oslv_avs_read_data <= unice_id;
 				WHEN c_usig_resolution_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(RESOLUTION,c_fLink_avs_data_width));
 				WHEN OTHERS => 
