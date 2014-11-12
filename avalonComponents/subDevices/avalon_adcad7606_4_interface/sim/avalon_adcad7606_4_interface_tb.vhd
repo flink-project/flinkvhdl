@@ -44,7 +44,7 @@ END ENTITY avalon_adcad7606_4_interface_tb;
 ARCHITECTURE sim OF avalon_adcad7606_4_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
-	
+	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00616463"; --adc
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
@@ -75,7 +75,8 @@ BEGIN
 	my_unit_under_test : avalon_adcad7606_4_interface 
 	GENERIC MAP(
 		BASE_CLK => 33000000,
-		SCLK_FREQUENCY => 1000000
+		SCLK_FREQUENCY => 1000000,
+		unice_id => unice_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -136,7 +137,16 @@ BEGIN
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_analog_input_interface_address_with)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**NUMBER_OF_CHANELS))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
-
+--test unic id register:
+		WAIT FOR 10*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_analog_input_interface_address_with));
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			ASSERT slv_avs_read_data = unice_id
+			REPORT "Unic Id Error" SEVERITY FAILURE;
+			
 --test number of chanels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
