@@ -105,7 +105,6 @@ BEGIN
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-		WAIT FOR main_period/2;
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**info_device_address_with)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**info_device_address_with))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 --test unice id register:
@@ -115,7 +114,6 @@ BEGIN
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-		WAIT FOR main_period/2;
 			ASSERT slv_avs_read_data = unic_id
 			REPORT "Unice ID Error" SEVERITY FAILURE;
 --test number of chanels register:
@@ -125,7 +123,6 @@ BEGIN
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-		WAIT FOR main_period/2;
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 --test dev_size
@@ -135,7 +132,6 @@ BEGIN
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-		WAIT FOR main_period/2;
 			ASSERT slv_avs_read_data = STD_LOGIC_VECTOR(to_unsigned(dev_size,c_fLink_avs_data_width)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 --test description
@@ -146,7 +142,6 @@ BEGIN
 			WAIT FOR main_period;
 				sl_avs_read <= '0';
 				slv_avs_address <= (OTHERS =>'0');
-			WAIT FOR main_period/2;
 				ASSERT slv_avs_read_data = description((i+1)*32-1 DOWNTO i*32) 
 				REPORT "Test Description Error: "&INTEGER'IMAGE(i) SEVERITY FAILURE;
 		END LOOP;
