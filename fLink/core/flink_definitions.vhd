@@ -65,7 +65,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 
 	-- Info Device: 
-	CONSTANT info_device_address_with					: INTEGER := 4;
+	CONSTANT info_device_address_with					: INTEGER := 5;
 	
 	-- Digital I/O interface: 
 	CONSTANT c_number_of_register_per_gpio_generic		: INTEGER := 2;
@@ -92,7 +92,5 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_analog_output_interface_address_with			: INTEGER := 5;
 	
 END PACKAGE fLink_definitions;
-
-
 
 

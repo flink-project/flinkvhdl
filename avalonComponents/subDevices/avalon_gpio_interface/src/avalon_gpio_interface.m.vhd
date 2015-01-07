@@ -179,7 +179,7 @@ BEGIN
 					oslv_avs_read_data <= vi.conf_reg;
 				
 				-- Read unice id register
-				WHEN to_unsigned(c_fLink_unice_id_address,info_device_address_with) => 
+				WHEN to_unsigned(c_fLink_unice_id_address,c_gpio_interface_address_with) => 
 					oslv_avs_read_data <= unice_id;
 				
 				-- Read direction or value register

@@ -45,7 +45,7 @@ ARCHITECTURE sim OF info_device_tb IS
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT dev_size: INTEGER := 128;
 	CONSTANT unic_id: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0) := x"00001337";
-	CONSTANT description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := x"664c696e6b2050726f6a656374000000000000000000000000000000"; --fLink Project
+	CONSTANT description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := x"000000000000000000000000000000664c696e6b2050726f6a656374"; --fLink Project
 	
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
