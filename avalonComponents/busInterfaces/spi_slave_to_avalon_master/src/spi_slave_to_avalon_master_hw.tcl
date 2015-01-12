@@ -40,8 +40,8 @@ add_fileset QUARTUS_SYNTH QUARTUS_SYNTH "" ""
 set_fileset_property QUARTUS_SYNTH TOP_LEVEL spi_slave_to_avalon_master
 set_fileset_property QUARTUS_SYNTH ENABLE_RELATIVE_INCLUDE_PATHS false
 add_fileset_file spi_slave_to_avalon_master.m.vhd VHDL PATH spi_slave_to_avalon_master.m.vhd TOP_LEVEL_FILE
-add_fileset_file flink_definitions.vhd VHDL PATH ../../../fLink/core/flink_definitions.vhd
-add_fileset_file spi_slave.m.vhd VHDL PATH ../../../functionalBlocks/spi_slave/src/spi_slave.m.vhd
+add_fileset_file flink_definitions.vhd VHDL PATH ../../../../fLink/core/flink_definitions.vhd
+add_fileset_file spi_slave.m.vhd VHDL PATH ../../../../functionalBlocks/spi_slave/src/spi_slave.m.vhd
 
 
 # 
