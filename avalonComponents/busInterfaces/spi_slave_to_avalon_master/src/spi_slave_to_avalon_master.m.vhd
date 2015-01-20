@@ -107,9 +107,9 @@ END ENTITY spi_slave_to_avalon_master;
 ARCHITECTURE rtl OF spi_slave_to_avalon_master IS 
 
 	TYPE t_states IS (	idle,
-						read_address_byte_0,read_address_byte_1,read_address_byte_2,
-						write_address_byte_0, write_address_byte_1,write_address_byte_2,write_address_byte_3,
-						write_data_byte_0, write_data_byte_1,write_data_byte_2,write_data_byte_3
+						address_part_0,address_part_1,address_part_2,
+						wait_for_readdata,
+						data_part_0, data_part_1,data_part_2,data_part_3
 					  );
 	TYPE t_avalon_states IS (idle,start_read_data,save_read_data,start_write_data,end_write_data);
 
@@ -125,6 +125,7 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 		write				: STD_LOGIC;
 		writeaddress		: STD_LOGIC_VECTOR (address_with-1 DOWNTO 0);
 		writedata			: STD_LOGIC_VECTOR (address_with-1 DOWNTO 0);
+		write_n_read		: STD_LOGIC;
 		
 	END RECORD;
 	
@@ -148,78 +149,162 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 			-- keep variables stable 
 			vi:=ri;
 
-			CASE vi.state IS
-				WHEN idle =>
-					vi.spi_tx_data := (OTHERS => '0');
-					IF spi_rx_trig = '1' THEN
-						vi.readaddress(31 DOWNTO 24) := spi_rx_data;
-						vi.state := read_address_byte_2;
-					END IF;
-				WHEN read_address_byte_2 => 
-					IF spi_rx_trig = '1' THEN
-						vi.readaddress(23 DOWNTO 16) := spi_rx_data;
-						vi.state := read_address_byte_1;
-					END IF;
-				WHEN read_address_byte_1 => 
-					IF spi_rx_trig = '1' THEN
-						vi.readaddress(15 DOWNTO 8) := spi_rx_data;
-						vi.state := read_address_byte_0;
-					END IF;
-				WHEN read_address_byte_0 => 
-					IF spi_rx_trig = '1' THEN
-						vi.readaddress(7 DOWNTO 0) := spi_rx_data;
-						vi.state := write_address_byte_3;
-						vi.avalon_state := start_read_data;
-					END IF;
-				WHEN write_address_byte_3 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writeaddress(31 DOWNTO 24) := spi_rx_data;
-						vi.state := write_address_byte_2;
-					END IF;
-				WHEN write_address_byte_2 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writeaddress(23 DOWNTO 16) := spi_rx_data;
-						vi.state := write_address_byte_1;
-					END IF;
-				WHEN write_address_byte_1 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writeaddress(15 DOWNTO 8) := spi_rx_data;
-						vi.state := write_address_byte_0;
-					END IF;
-				WHEN write_address_byte_0 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writeaddress(7 DOWNTO 0) := spi_rx_data;
-						vi.spi_tx_data := vi.readdata(31 DOWNTO 24);
-						vi.state := write_data_byte_3;
-					END IF;
-				WHEN write_data_byte_3 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writedata(31 DOWNTO 24) := spi_rx_data;
-						vi.spi_tx_data := vi.readdata(23 DOWNTO 16);
-						vi.state := write_data_byte_2;
-					END IF;
-				WHEN write_data_byte_2 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writedata(23 DOWNTO 16) := spi_rx_data;
-						vi.spi_tx_data := vi.readdata(15 DOWNTO 8);
-						vi.state := write_data_byte_1;
-					END IF;
-				WHEN write_data_byte_1 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writedata(15 DOWNTO 8) := spi_rx_data;
-						vi.spi_tx_data := vi.readdata(7 DOWNTO 0);
-						vi.state := write_data_byte_0;
-					END IF;
-				WHEN write_data_byte_0 => 
-					IF spi_rx_trig = '1' THEN
-						vi.writedata(7 DOWNTO 0) := spi_rx_data;
+			CASE TRANSFER_WIDTH IS
+				WHEN 8 =>
+					CASE vi.state IS
+						WHEN idle =>
+							vi.spi_tx_data := (OTHERS => '0');
+							IF spi_rx_trig = '1' THEN
+								vi.write_n_read := spi_rx_data(7);
+								vi.readaddress(31 DOWNTO 24) := '0' & spi_rx_data(6 DOWNTO 0);
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(31 DOWNTO 24) := '0' & spi_rx_data(6 DOWNTO 0);
+								else
+									vi.writeaddress:= (OTHERS => '0');
+								END IF;
+								vi.state := address_part_2;
+							END IF;
+						WHEN address_part_2 => 
+							IF spi_rx_trig = '1' THEN
+								vi.readaddress(23 DOWNTO 16) := spi_rx_data;
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(23 DOWNTO 16) := spi_rx_data;
+								END IF;
+								vi.state := address_part_1;
+							END IF;
+						WHEN address_part_1 => 
+							IF spi_rx_trig = '1' THEN
+								vi.readaddress(15 DOWNTO 8) := spi_rx_data;
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(15 DOWNTO 8) := spi_rx_data;
+								END IF;
+								vi.state := address_part_0;
+							END IF;
+						WHEN address_part_0 => 
+							IF spi_rx_trig = '1' THEN
+								vi.readaddress(7 DOWNTO 0) := spi_rx_data;
+								
+								vi.avalon_state := start_read_data;
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(7 DOWNTO 0) := spi_rx_data;
+								END IF;
+								vi.state := wait_for_readdata;
+							END IF;
+						WHEN wait_for_readdata =>
+							IF(vi.avalon_state = idle) THEN
+								vi.spi_tx_data := vi.readdata(31 DOWNTO 24);
+								vi.state := data_part_3;
+							END IF;
+						WHEN data_part_3 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(31 DOWNTO 24) := spi_rx_data;
+								vi.spi_tx_data := vi.readdata(23 DOWNTO 16);
+								vi.state := data_part_2;
+							END IF;
+						WHEN data_part_2 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(23 DOWNTO 16) := spi_rx_data;
+								vi.spi_tx_data := vi.readdata(15 DOWNTO 8);
+								vi.state := data_part_1;
+							END IF;
+						WHEN data_part_1 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(15 DOWNTO 8) := spi_rx_data;
+								vi.spi_tx_data := vi.readdata(7 DOWNTO 0);
+								vi.state := data_part_0;
+							END IF;
+						WHEN data_part_0 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(7 DOWNTO 0) := spi_rx_data;
+								vi.state := idle;
+								IF(vi.write_n_read = '1') THEN
+									vi.avalon_state := start_write_data;
+								END IF;
+							END IF;
+						WHEN OTHERS =>
+							vi.state := idle;
+					END CASE;
+				WHEN 16 =>
+					CASE vi.state IS
+						WHEN idle =>
+							vi.spi_tx_data := (OTHERS => '0');
+							IF spi_rx_trig = '1' THEN
+								vi.write_n_read := spi_rx_data(15);
+								vi.readaddress(31 DOWNTO 16) := '0' & spi_rx_data(14 DOWNTO 0);
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(31 DOWNTO 16) := '0' & spi_rx_data(14 DOWNTO 0);
+								else
+									vi.writeaddress:= (OTHERS => '0');
+								END IF;
+								vi.state := address_part_0;
+							END IF;
+						WHEN address_part_0 => 
+							IF spi_rx_trig = '1' THEN
+								vi.readaddress(15 DOWNTO 0) := spi_rx_data;
+								vi.avalon_state := start_read_data;
+								IF(vi.write_n_read = '1') THEN
+									vi.writeaddress(15 DOWNTO 0) := spi_rx_data;
+								END IF;
+								vi.state := wait_for_readdata;
+							END IF;
+						WHEN wait_for_readdata =>
+							IF(vi.avalon_state = idle) THEN
+								vi.spi_tx_data := vi.readdata(31 DOWNTO 16);
+								vi.state := data_part_1;
+							END IF;
+						WHEN data_part_1 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(31 DOWNTO 16) := spi_rx_data;
+								vi.spi_tx_data := vi.readdata(15 DOWNTO 0);
+								vi.state := data_part_0;
+							END IF;
+						WHEN data_part_0 => 
+							IF spi_rx_trig = '1' THEN
+								vi.writedata(15 DOWNTO 0) := spi_rx_data;
+								vi.state := idle;
+								IF(vi.write_n_read = '1') THEN
+									vi.avalon_state := start_write_data;
+								END IF;
+							END IF;
+						WHEN OTHERS =>
+							vi.state := idle;
+					END CASE;
+				WHEN 32 =>
+					CASE vi.state IS
+					WHEN idle =>
+						vi.spi_tx_data := (OTHERS => '0');
+						IF spi_rx_trig = '1' THEN
+							vi.write_n_read := spi_rx_data(31);
+							vi.readaddress := '0' & spi_rx_data(30 DOWNTO 0);
+							IF(vi.write_n_read = '1') THEN
+								vi.writeaddress := '0' & spi_rx_data(30 DOWNTO 0);
+							else
+								vi.writeaddress:= (OTHERS => '0');
+							END IF;
+							vi.state := wait_for_readdata;
+							vi.avalon_state := start_read_data;
+						END IF;
+					WHEN wait_for_readdata =>
+						IF(vi.avalon_state = idle) THEN
+							vi.spi_tx_data := vi.readdata;
+							vi.state := data_part_0;
+						END IF;
+					WHEN data_part_0 => 
+						IF spi_rx_trig = '1' THEN
+							vi.writedata := spi_rx_data;
+							vi.spi_tx_data := vi.readdata;
+							vi.state := idle;
+							IF(vi.write_n_read = '1') THEN
+								vi.avalon_state := start_write_data;
+							END IF;
+						END IF;
+					WHEN OTHERS =>
 						vi.state := idle;
-						vi.avalon_state := start_write_data;
-					END IF;
-				WHEN OTHERS =>
-					vi.state := idle;
+					END CASE;
+			WHEN OTHERS =>
+				ASSERT FALSE REPORT "TRANSFER_WIDTH can only have the values: 8,16 or 32" SEVERITY FAILURE;
 			END CASE;
-			
+
 			CASE vi.avalon_state IS
 				WHEN idle =>
 					vi.read := '0';
@@ -236,7 +321,6 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 					vi.read := '0';
 					vi.write := '0';
 					vi.readdata := islv_readdata;
-					vi.avalon_address := (OTHERS => '0');
 					vi.avalon_state := idle;
 				WHEN start_write_data => 
 					vi.read := '0';
@@ -269,6 +353,7 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 				vi.write:= '0';
 				vi.writeaddress := (OTHERS => '0');
 				vi.writedata := (OTHERS => '0');
+				vi.write_n_read := '0';
 			END IF; 
 			
 			-- setting outputs

@@ -52,7 +52,7 @@ set_parameter_property TRANSFER_WIDTH DEFAULT_VALUE 8
 set_parameter_property TRANSFER_WIDTH DISPLAY_NAME TRANSFER_WIDTH
 set_parameter_property TRANSFER_WIDTH TYPE INTEGER
 set_parameter_property TRANSFER_WIDTH UNITS None
-set_parameter_property TRANSFER_WIDTH ALLOWED_RANGES -2147483648:2147483647
+set_parameter_property TRANSFER_WIDTH ALLOWED_RANGES 0:32
 set_parameter_property TRANSFER_WIDTH HDL_PARAMETER true
 add_parameter CPOL STD_LOGIC 0
 set_parameter_property CPOL DEFAULT_VALUE 0

@@ -66,7 +66,7 @@ BEGIN
 	--create component
 	my_unit_under_test : spi_slave_to_avalon_master 
 	GENERIC MAP(
-		TRANSFER_WIDTH => 8,
+		TRANSFER_WIDTH => 32,
 		CPOL => '0',
 		CPHA => '0',
 		SSPOL => '0'
@@ -104,10 +104,10 @@ BEGIN
 		
 		--write transfer whit only 1's
 		sl_mosi <='1';
-		FOR u IN 0 TO 7 LOOP
+		FOR u IN 0 TO 1 LOOP
 				sl_ss <= '0';
 				WAIT FOR spi_period;
-				FOR i IN 0 TO 15 LOOP
+				FOR i IN 0 TO 63 LOOP
 					sl_sclk <= NOT sl_sclk;
 					WAIT FOR spi_period;
 				END LOOP;
@@ -121,13 +121,13 @@ BEGIN
 		
 		--read transfer on address 0x0FFFFFF
 		sl_mosi <='0';
-		FOR u IN 0 TO 7 LOOP
+		FOR u IN 0 TO 1 LOOP
 				sl_ss <= '0';
 				IF(u /= 0) THEN
 						sl_mosi <='1';
 				END IF;
 				WAIT FOR spi_period;
-				FOR i IN 0 TO 15 LOOP
+				FOR i IN 0 TO 63 LOOP
 					sl_sclk <= NOT sl_sclk;
 					WAIT FOR spi_period;
 				END LOOP;
