@@ -145,7 +145,7 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 		VARIABLE vi: t_internal_register;
 
 		BEGIN
-			-- keep variables stable
+			-- keep variables stable 
 			vi:=ri;
 
 			CASE vi.state IS
@@ -219,8 +219,6 @@ ARCHITECTURE rtl OF spi_slave_to_avalon_master IS
 				WHEN OTHERS =>
 					vi.state := idle;
 			END CASE;
-			
-			
 			
 			CASE vi.avalon_state IS
 				WHEN idle =>
