@@ -101,10 +101,10 @@ BEGIN
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(c_dacad5668_interface_version,c_fLink_interface_version_length)) 
+			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = c_dacad5668_interface_version 
 			REPORT "Interface Version Missmatch" SEVERITY FAILURE;
 			
-			ASSERT slv_avs_read_data(c_fLink_interface_version_length+c_fLink_subtype_length-1 DOWNTO c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_dacad5668_subtype_id,c_fLink_subtype_length)) 
+			ASSERT slv_avs_read_data(c_fLink_interface_version_length+c_fLink_subtype_length-1 DOWNTO c_fLink_interface_version_length) = c_dacad5668_subtype_id
 			REPORT "Subtype ID Missmatch" SEVERITY FAILURE;
 
 			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_output_id,c_fLink_id_length)) 

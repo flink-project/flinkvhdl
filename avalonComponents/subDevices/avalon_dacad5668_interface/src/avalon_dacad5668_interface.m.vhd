@@ -48,7 +48,6 @@ PACKAGE avalon_dacad5668_interface_pkg IS
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
-					
 					islv_avs_address		: IN STD_LOGIC_VECTOR(c_analog_output_interface_address_with-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
@@ -64,8 +63,8 @@ PACKAGE avalon_dacad5668_interface_pkg IS
 			);
 	END COMPONENT;
 
-	CONSTANT c_dacad5668_subtype_id : INTEGER := 1;
-	CONSTANT c_dacad5668_interface_version : INTEGER := 0;
+	CONSTANT c_dacad5668_subtype_id : STD_LOGIC_VECTOR(c_fLink_subtype_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1,c_fLink_subtype_length));
+	CONSTANT c_dacad5668_interface_version : STD_LOGIC_VECTOR(c_fLink_interface_version_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_interface_version_length));
 
 
 END PACKAGE avalon_dacad5668_interface_pkg;
@@ -88,7 +87,6 @@ ENTITY avalon_dacad5668_interface IS
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
-					
 					islv_avs_address		: IN STD_LOGIC_VECTOR(c_analog_output_interface_address_with-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
@@ -101,15 +99,17 @@ ENTITY avalon_dacad5668_interface IS
 					isl_miso				: IN STD_LOGIC;
 					osl_LDAC_n				: OUT STD_LOGIC;
 					osl_CLR_n				: OUT STD_LOGIC
-					
-					
 			);
 
-	CONSTANT c_usig_resolution_address: UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_analog_output_interface_address_with);
-	CONSTANT c_usig_value_0_address: UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := c_usig_resolution_address + 1;
-	CONSTANT c_usig_last_address: UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := c_usig_value_0_address + NUMBER_OF_CHANELS;
-	
-	
+	CONSTANT c_dacad5668_configuration_address:			UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address,c_analog_output_interface_address_with);
+	CONSTANT c_dacad5668_typdef_address :				UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_typdef_address,c_analog_output_interface_address_with);
+	CONSTANT c_dacad5668_mem_size_address:				UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_mem_size_address,c_analog_output_interface_address_with);
+	CONSTANT c_dacad5668_number_of_chanels_address: 	UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_chanels_address,c_analog_output_interface_address_with);
+	CONSTANT c_dacad5668_unice_id_address: 				UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_unice_id_address,c_analog_output_interface_address_with);
+	CONSTANT c_usig_resolution_address:					UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_analog_output_interface_address_with);
+	CONSTANT c_usig_value_0_address:					UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := c_usig_resolution_address + 1;
+	CONSTANT c_usig_last_address:						UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := c_usig_value_0_address + NUMBER_OF_CHANELS;
+
 END ENTITY avalon_dacad5668_interface;
 
 ARCHITECTURE rtl OF avalon_dacad5668_interface IS
@@ -131,6 +131,7 @@ BEGIN
 	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data)
 		VARIABLE vi :	t_internal_register;
 		VARIABLE dacad5668_part_nr: INTEGER := 0;
+		VARIABLE address: UNSIGNED(c_analog_output_interface_address_with-1 DOWNTO 0) := to_unsigned(0,c_analog_output_interface_address_with);
 	BEGIN
 		-- keep variables stable
 		vi := ri;	
@@ -139,36 +140,38 @@ BEGIN
 		oslv_avs_read_data <= (OTHERS => '0');
 		vi.global_reset_n := '1';
 		vi.adc_reset_n := '1';
+		address := UNSIGNED(islv_avs_address);
+		
 
 		--avalon slave interface write part
 		IF isl_avs_write = '1' THEN
-			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_analog_output_interface_address_with) THEN
-				vi.global_reset_n := NOT islv_avs_write_data(c_fLink_reset_bit_num);		
-			ELSIF UNSIGNED(islv_avs_address)>= c_usig_value_0_address AND UNSIGNED(islv_avs_address)< c_usig_last_address THEN
-				dacad5668_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_value_0_address); 	
+			IF address = c_dacad5668_configuration_address THEN
+				vi.global_reset_n := NOT islv_avs_write_data(c_fLink_reset_bit_num);
+			ELSIF address>= c_usig_value_0_address AND address< c_usig_last_address THEN
+				dacad5668_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_value_0_address);
 				vi.set_values(dacad5668_part_nr) := islv_avs_write_data;
 			END IF;
 		END IF;
 
 		--avalon slave interface read part
 		IF isl_avs_read = '1' THEN
-			CASE UNSIGNED(islv_avs_address) IS
-				WHEN to_unsigned(c_fLink_typdef_address,c_analog_output_interface_address_with) =>
+			CASE address IS
+				WHEN c_dacad5668_typdef_address =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
 												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_output_id,c_fLink_id_length));
-					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= STD_LOGIC_VECTOR(to_unsigned(c_dacad5668_subtype_id,c_fLink_subtype_length));
-					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  STD_LOGIC_VECTOR(to_unsigned(c_dacad5668_interface_version,c_fLink_interface_version_length));
-				WHEN to_unsigned(c_fLink_mem_size_address,c_analog_output_interface_address_with) => 
+					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= c_dacad5668_subtype_id;
+					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  c_dacad5668_interface_version;
+				WHEN c_dacad5668_mem_size_address => 
 					oslv_avs_read_data(c_analog_output_interface_address_with+2) <= '1';
-				WHEN to_unsigned(c_fLink_number_of_chanels_address,c_analog_output_interface_address_with) => 
+				WHEN c_dacad5668_number_of_chanels_address => 
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(NUMBER_OF_CHANELS,c_fLink_avs_data_width));
-				WHEN to_unsigned(c_fLink_unice_id_address,c_analog_output_interface_address_with) => 
+				WHEN c_dacad5668_unice_id_address => 
 					oslv_avs_read_data <= UNICE_ID;
 				WHEN c_usig_resolution_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(RESOLUTION,c_fLink_avs_data_width));
 				WHEN OTHERS => 
-					IF UNSIGNED(islv_avs_address)>= c_usig_value_0_address AND UNSIGNED(islv_avs_address)< c_usig_last_address THEN
-						dacad5668_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_value_0_address); 		
+					IF address >= c_usig_value_0_address AND address < c_usig_last_address THEN
+						dacad5668_part_nr := to_integer(address - c_usig_value_0_address);
 						oslv_avs_read_data(RESOLUTION-1 DOWNTO 0) <= std_logic_vector(vi.set_values(dacad5668_part_nr));
 					END IF;
 			END CASE;
