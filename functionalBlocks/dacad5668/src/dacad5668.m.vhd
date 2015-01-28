@@ -59,8 +59,7 @@ PACKAGE dacad5668_pkg IS
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
-			osl_mosi				: OUT STD_LOGIC;
-			isl_miso				: IN STD_LOGIC
+			osl_mosi				: OUT STD_LOGIC
 		);
 	END COMPONENT dacad5668;
 
@@ -94,8 +93,7 @@ ENTITY dacad5668 IS
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
-			osl_mosi				: OUT STD_LOGIC;
-			isl_miso				: IN STD_LOGIC
+			osl_mosi				: OUT STD_LOGIC
 		);
 END ENTITY dacad5668;
 
@@ -159,7 +157,7 @@ ARCHITECTURE rtl OF dacad5668 IS
 			osl_sclk				=> osl_sclk,
 			oslv_Ss(0)				=> oslv_Ss,
 			osl_mosi				=> osl_mosi,
-			isl_miso				=> isl_miso
+			isl_miso				=> '0'
 		);
 	
 	
