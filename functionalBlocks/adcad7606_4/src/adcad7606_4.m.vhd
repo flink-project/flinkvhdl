@@ -63,7 +63,6 @@ PACKAGE adcad7606_4_pkg IS
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
-			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
@@ -103,7 +102,6 @@ ENTITY adcad7606_4 IS
 			
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
-			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
@@ -125,7 +123,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 	CONSTANT CHANEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANELS))));
 	
 	
-	TYPE t_states IS (idle,wait_for_data,store_data,wait_for_next_transfer);
+	TYPE t_states IS (idle,wait_for_sampling_done,wait_for_data,store_data,wait_for_next_transfer);
 
 
 	TYPE t_internal_register IS RECORD
@@ -144,6 +142,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 	SIGNAL sl_rx_done : STD_LOGIC;
 	
 	SIGNAL ri, ri_next : t_internal_register;
+	SIGNAL sl_mosi : STD_LOGIC;
 	
 	BEGIN
 	
@@ -171,7 +170,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 			
 			osl_sclk				=> osl_sclk,
 			oslv_Ss(0)				=> oslv_Ss,
-			osl_mosi				=> osl_mosi,
+			osl_mosi				=> sl_mosi,
 			isl_miso				=> isl_miso
 		);
 	
@@ -179,7 +178,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 		--------------------------------------------
 		-- combinatorial process
 		--------------------------------------------
-		comb_process: PROCESS(ri, isl_reset_n,sl_rx_done,slv_rx_data)
+		comb_process: PROCESS(ri, isl_reset_n,sl_rx_done,slv_rx_data,isl_busy)
 		
 		VARIABLE vi: t_internal_register;
 		
@@ -196,16 +195,20 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 			CASE vi.state IS 
 				WHEN idle => 
 					vi.slv_conv_start := (OTHERS => '1');
-					vi.tx_data := (OTHERS => '0');
-					vi.tx_start := '1';
-					vi.state := wait_for_data; 
+					 vi.state := wait_for_sampling_done;
+				WHEN wait_for_sampling_done =>
+					IF isl_busy = '0' THEN
+						vi.tx_start := '1';
+						vi.tx_data := (OTHERS => '0');
+						vi.state := wait_for_data;
+					END IF;
 				WHEN wait_for_data =>
 					IF sl_rx_done = '1' THEN
 						vi.state := store_data;
 					END IF;
 				WHEN store_data =>
 					FOR i IN NUMBER_OF_CHANELS DOWNTO 1 LOOP
-						vi.values(NUMBER_OF_CHANELS-i) := vi.tx_data(i*RESOLUTION-1 DOWNTO RESOLUTION*(i-1));
+						vi.values(NUMBER_OF_CHANELS-i) := slv_rx_data(i*RESOLUTION-1 DOWNTO RESOLUTION*(i-1));
 					END LOOP;
 					vi.state := wait_for_next_transfer;
 				WHEN wait_for_next_transfer =>
