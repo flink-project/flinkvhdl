@@ -120,7 +120,7 @@ BEGIN
 				WHEN OTHERS => 
 					IF UNSIGNED(islv_avs_address)>= c_usig_description_address AND UNSIGNED(islv_avs_address) <= c_usig_max_address THEN
 						description_part := to_integer(UNSIGNED(islv_avs_address) - c_usig_description_address); 
-						oslv_avs_read_data <= description((description_part+1)*32-1 DOWNTO description_part*32);
+						oslv_avs_read_data <= description(((c_int_number_of_descr_register-description_part))*32-1 DOWNTO (c_int_number_of_descr_register-description_part-1)*32);
 					END IF;
 			END CASE;
 		END IF;

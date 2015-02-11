@@ -135,10 +135,10 @@ BEGIN
 			ASSERT slv_avs_read_data = STD_LOGIC_VECTOR(to_unsigned(dev_size,c_fLink_avs_data_width)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 --test description
-		FOR i in 0 TO c_int_number_of_descr_register-1 LOOP
+		FOR i in c_int_number_of_descr_register-1 DOWNTO 0 LOOP
 			WAIT FOR 10*main_period;
 				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(c_usig_description_address + to_unsigned(i,info_device_address_with));				
+				slv_avs_address <= STD_LOGIC_VECTOR(c_usig_description_address + to_unsigned(c_int_number_of_descr_register-i-1,info_device_address_with));
 			WAIT FOR main_period;
 				sl_avs_read <= '0';
 				slv_avs_address <= (OTHERS =>'0');
