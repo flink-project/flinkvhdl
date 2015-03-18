@@ -62,7 +62,7 @@ PACKAGE avalon_adcad7606_4_interface_pkg IS
 					osl_sclk				: OUT STD_LOGIC;
 					oslv_Ss					: OUT STD_LOGIC;
 					isl_miso				: IN STD_LOGIC;
-					
+					osl_mosi				: OUT STD_LOGIC;
 					isl_d_out_b				: IN STD_LOGIC;
 					oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
 					osl_range				: OUT STD_LOGIC;
@@ -106,7 +106,7 @@ ENTITY avalon_adcad7606_4_interface IS
 					osl_sclk				: OUT STD_LOGIC;
 					oslv_Ss					: OUT STD_LOGIC;
 					isl_miso				: IN STD_LOGIC;
-					
+					osl_mosi				: OUT STD_LOGIC;
 					isl_d_out_b				: IN STD_LOGIC;
 					oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
 					osl_range				: OUT STD_LOGIC;
@@ -140,7 +140,7 @@ ARCHITECTURE rtl OF avalon_adcad7606_4_interface IS
 BEGIN
 	my_adcad7606_4 : adcad7606_4 
 		GENERIC MAP (BASE_CLK,SCLK_FREQUENCY)
-		PORT MAP (isl_clk,ri.adc_reset_n,adc_values,ri.config,osl_sclk,oslv_Ss,isl_miso,isl_d_out_b,oslv_conv_start,osl_range,oslv_os,isl_busy,isl_first_data,osl_adc_reset,osl_stby_n);
+		PORT MAP (isl_clk,ri.adc_reset_n,adc_values,ri.config,osl_sclk,oslv_Ss,isl_miso,osl_mosi,isl_d_out_b,oslv_conv_start,osl_range,oslv_os,isl_busy,isl_first_data,osl_adc_reset,osl_stby_n);
 
 		
 	-- cobinatoric process
