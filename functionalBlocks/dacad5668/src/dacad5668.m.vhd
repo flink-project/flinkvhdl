@@ -46,7 +46,7 @@ PACKAGE dacad5668_pkg IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; 
 			SCLK_FREQUENCY : INTEGER := 8000000;  --Max 50MHz
-			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to external reference
+			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = external reference, '1' internal reference
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
@@ -80,7 +80,7 @@ ENTITY dacad5668 IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; 
 			SCLK_FREQUENCY : INTEGER := 10000000;  --Max 50MHz
-			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = set to internal reference, '1' set to externel reference
+			INTERNAL_REFERENCE : STD_LOGIC := '0'  -- '0' = external reference, '1' internal reference
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
