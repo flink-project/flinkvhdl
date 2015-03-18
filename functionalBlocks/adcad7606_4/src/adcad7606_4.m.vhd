@@ -64,6 +64,7 @@ PACKAGE adcad7606_4_pkg IS
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC;
+			osl_mosi				: OUT STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
 			osl_range				: OUT STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
@@ -103,6 +104,7 @@ ENTITY adcad7606_4 IS
 			osl_sclk				: OUT STD_LOGIC;
 			oslv_Ss					: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC;
+			osl_mosi				: OUT STD_LOGIC;
 			isl_d_out_b				: IN STD_LOGIC;
 			oslv_conv_start			: OUT STD_LOGIC_VECTOR(1 DOWNTO 0); --initiates conversion
 			osl_range				: OUT STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
@@ -142,7 +144,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 	SIGNAL sl_rx_done : STD_LOGIC;
 	
 	SIGNAL ri, ri_next : t_internal_register;
-	SIGNAL sl_mosi : STD_LOGIC;
+
 	
 	BEGIN
 	
@@ -170,7 +172,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 			
 			osl_sclk				=> osl_sclk,
 			oslv_Ss(0)				=> oslv_Ss,
-			osl_mosi				=> sl_mosi,
+			osl_mosi				=> osl_mosi,
 			isl_miso				=> isl_miso
 		);
 	
@@ -197,10 +199,13 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 					vi.slv_conv_start := (OTHERS => '1');
 					 vi.state := wait_for_sampling_done;
 				WHEN wait_for_sampling_done =>
-					IF isl_busy = '0' THEN
+					IF vi.cycle_count > 2 AND isl_busy = '0' THEN
+						vi.cycle_count := to_unsigned(0,7);
 						vi.tx_start := '1';
 						vi.tx_data := (OTHERS => '0');
 						vi.state := wait_for_data;
+					ELSE
+						vi.cycle_count := vi.cycle_count + 1;
 					END IF;
 				WHEN wait_for_data =>
 					IF sl_rx_done = '1' THEN
