@@ -63,10 +63,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_pwm_out_id 						: INTEGER := 12;
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
-
 	
-	--PPWE Interface
-	CONSTANT c_ppwa_interface_address_with : INTEGER := 5;
 
 	--Watchdog Interface
 	CONSTANT c_watchdog_interface_address_with : INTEGER := 5;
