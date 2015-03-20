@@ -17,14 +17,14 @@
 -- Copyright 2013 NTB University of Applied Sciences in Technology
 -------------------------------------------------------------------------------
 -- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
+-- you may not use this file except in compliance witdh the License.
 -- You may obtain a copy of the License at
 -- 
 -- http://www.apache.org/licenses/LICENSE-2.0
 --   
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- witdhOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 -------------------------------------------------------------------------------
@@ -44,22 +44,23 @@ ARCHITECTURE sim OF info_device_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT dev_size: INTEGER := 128;
-	CONSTANT unic_id: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0) := x"00001337";
+	CONSTANT unique_id: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0) := x"00001337";
 	CONSTANT description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := x"000000000000000000000000000000664c696e6b2050726f6a656374"; --fLink Project
 	
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
-	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (info_device_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (info_device_address_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_byteenable	: STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0):= (OTHERS =>'1');
 	
 BEGIN
 	--create component
 	my_unit_under_test : info_device 
 	GENERIC MAP(
-		unice_id => unic_id,
+		unique_id => unique_id,
 		description => description,
 		dev_size => dev_size
 	)
@@ -70,7 +71,8 @@ BEGIN
 			isl_avs_read 			=> sl_avs_read,
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data		=> slv_avs_write_data,	
-			oslv_avs_read_data		=> slv_avs_read_data
+			oslv_avs_read_data		=> slv_avs_read_data,
+			islv_avs_byteenable		=> slv_avs_byteenable	
 	);
 	
 	sl_clk 		<= NOT sl_clk after main_period/2;
@@ -85,7 +87,7 @@ BEGIN
 --test id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,info_device_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,info_device_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -101,25 +103,25 @@ BEGIN
 --test mem size register register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,info_device_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,info_device_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**info_device_address_with)
-			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**info_device_address_with))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
---test unice id register:
+			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**info_device_address_width)
+			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**info_device_address_width))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
+--test unique id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,info_device_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,info_device_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data = unic_id
-			REPORT "Unice ID Error" SEVERITY FAILURE;
---test number of chanels register:
+			ASSERT slv_avs_read_data = unique_id
+			REPORT "unique ID Error" SEVERITY FAILURE;
+--test number of channels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_chanels_address,info_device_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,info_device_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -138,7 +140,7 @@ BEGIN
 		FOR i in c_int_number_of_descr_register-1 DOWNTO 0 LOOP
 			WAIT FOR 10*main_period;
 				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(c_usig_description_address + to_unsigned(c_int_number_of_descr_register-i-1,info_device_address_with));
+				slv_avs_address <= STD_LOGIC_VECTOR(c_usig_description_address + to_unsigned(c_int_number_of_descr_register-i-1,info_device_address_width));
 			WAIT FOR main_period;
 				sl_avs_read <= '0';
 				slv_avs_address <= (OTHERS =>'0');

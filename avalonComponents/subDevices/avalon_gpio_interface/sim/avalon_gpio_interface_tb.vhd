@@ -39,13 +39,14 @@ END ENTITY avalon_gpio_interface_tb;
 
 ARCHITECTURE sim OF avalon_gpio_interface_tb IS
 	
-	CONSTANT main_period : TIME := 8 ns; -- 125MHz
+	CONSTANT main_period : TIME := 8 ns; -- 50Mhz
 	CONSTANT number_of_gpios : INTEGER := 33;
 	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"6770696f";
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '0';
 	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_gpio_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_byteenable		: STD_LOGIC_VECTOR(3 DOWNTO 0):= (OTHERS =>'1');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
@@ -66,6 +67,7 @@ BEGIN
 			isl_clk					=> sl_clk,
 			isl_reset_n				=> sl_reset_n,
 			islv_avs_address 		=> slv_avs_address,
+			islv_avs_byteenable		=> slv_avs_byteenable,
 			isl_avs_read 			=> sl_avs_read,
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data	=> slv_avs_write_data,	
@@ -155,7 +157,7 @@ BEGIN
 				END LOOP;
 			END IF;
 			
-	--test ratio register:
+	--test value register:
 		WAIT FOR 1000*main_period;
 			sl_avs_write <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+(number_of_gpios-1)/c_fLink_avs_data_width+i+1,c_gpio_interface_address_with));

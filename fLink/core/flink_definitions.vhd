@@ -34,15 +34,15 @@ PACKAGE fLink_definitions IS
 
 	-- Global
 	CONSTANT c_fLink_avs_data_width						: INTEGER := 32;
---	CONSTANT c_fLink_disable_bit_num					: INTEGER := 0;
-	
+	CONSTANT c_fLink_avs_data_width_in_byte 			: INTEGER := c_fLink_avs_data_width/8;
+
 	-- Header registers
 	CONSTANT c_fLink_number_of_std_registers			: INTEGER := 8;
 	
 	CONSTANT c_fLink_typdef_address						: INTEGER := 0;
 	CONSTANT c_fLink_mem_size_address					: INTEGER := 1;
-	CONSTANT c_fLink_number_of_chanels_address			: INTEGER := 2;
-	CONSTANT c_fLink_unice_id_address					: INTEGER := 3;
+	CONSTANT c_fLink_number_of_channels_address 		: INTEGER := 2;
+	CONSTANT c_fLink_unique_id_address					: INTEGER := 3;
 	CONSTANT c_fLink_status_address						: INTEGER := 4;
 	CONSTANT c_fLink_configuration_address				: INTEGER := 5;
 	
@@ -64,15 +64,8 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 
-	-- Info Device: 
-	CONSTANT info_device_address_with					: INTEGER := 5;
-	
-	-- Digital I/O interface: 
-	CONSTANT c_number_of_register_per_gpio_generic		: INTEGER := 2;
-	CONSTANT c_gpio_interface_address_with				: INTEGER := 4;
 
 	--PWM interface:
-	CONSTANT c_number_of_register_per_pwm_generic		: INTEGER := 1;
 	CONSTANT c_pwm_interface_address_with				: INTEGER := 6;
 
 	--Counter Interface: 

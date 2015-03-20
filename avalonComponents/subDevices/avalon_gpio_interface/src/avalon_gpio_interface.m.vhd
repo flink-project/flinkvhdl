@@ -31,11 +31,11 @@ USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE IEEE.math_real.ALL;
 
-USE work.fLink_definitions.ALL;
-
 PACKAGE avalon_gpio_interface_pkg IS
 	CONSTANT c_max_number_of_GPIOs : INTEGER := 128;
-
+	CONSTANT c_gpio_interface_address_with : INTEGER := 4;
+	
+	
 	COMPONENT avalon_gpio_interface IS
 			GENERIC (
 				number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
@@ -45,6 +45,7 @@ PACKAGE avalon_gpio_interface_pkg IS
 					isl_clk					: IN    STD_LOGIC;
 					isl_reset_n				: IN    STD_LOGIC;
 					islv_avs_address		: IN    STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 					isl_avs_read			: IN    STD_LOGIC;
 					isl_avs_write			: IN    STD_LOGIC;
 					osl_avs_waitrequest		: OUT   STD_LOGIC;
@@ -77,6 +78,7 @@ ENTITY avalon_gpio_interface IS
 			isl_clk					: IN    STD_LOGIC;
 			isl_reset_n				: IN    STD_LOGIC;
 			islv_avs_address		: IN    STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 DOWNTO 0);
+			islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 			isl_avs_read			: IN    STD_LOGIC;
 			isl_avs_write			: IN    STD_LOGIC;
 			osl_avs_waitrequest		: OUT    STD_LOGIC;
@@ -85,10 +87,13 @@ ENTITY avalon_gpio_interface IS
 			oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
 	);
 	
+	CONSTANT c_configuration_reg_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address, c_gpio_interface_address_with);
 	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_gpio_interface_address_with);
 	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
 	CONSTANT c_usig_value_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_dir_regs_address + c_usig_number_of_regs; 
 	CONSTANT c_usig_value_regs_max_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_value_regs_address + c_usig_number_of_regs;
+	
+	CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/c_fLink_avs_data_width;
 	
 END ENTITY avalon_gpio_interface;
 
@@ -106,12 +111,16 @@ ARCHITECTURE rtl OF avalon_gpio_interface IS
 BEGIN
 	
 	-- combinatoric process
-	comb_proc : PROCESS (isl_reset_n, ri, isl_avs_write, islv_avs_address, isl_avs_read, islv_avs_write_data, oslv_gpios)
+	comb_proc : PROCESS (isl_reset_n, ri, isl_avs_write, islv_avs_address, isl_avs_read, islv_avs_write_data, oslv_gpios,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
 		VARIABLE gpio_part_nr: INTEGER := 0;
+		VARIABLE avs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(0,c_gpio_interface_address_with);
+		
 	BEGIN
 		-- Keep variables stable
 		vi := ri;	
+		
+		avs_address := UNSIGNED(islv_avs_address);
 		
 		-- Set read data to default value
 		oslv_avs_read_data <= (OTHERS => '0');
@@ -120,30 +129,30 @@ BEGIN
 		IF isl_avs_write = '1' THEN
 			
 			-- Write to config register
-			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address, c_gpio_interface_address_with) THEN
-				vi.conf_reg := islv_avs_write_data;
-			
+			IF avs_address = c_configuration_reg_address THEN
+				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+					IF islv_avs_byteenable(i) = '1' THEN
+						vi.conf_reg((i + 1) * 8 - 1 DOWNTO i * 8) := islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+					END IF;
+				END LOOP;
 			-- Write to direction registers
-			ELSIF UNSIGNED(islv_avs_address) >= c_usig_dir_regs_address AND UNSIGNED(islv_avs_address)< c_usig_value_regs_address THEN
-				gpio_part_nr := to_integer(UNSIGNED(islv_avs_address)-c_usig_dir_regs_address);
-				IF gpio_part_nr < number_of_gpios/c_fLink_avs_data_width  THEN
-					vi.dir_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width) := islv_avs_write_data;
-				ELSE
-					FOR i IN 0 TO (number_of_gpios mod c_fLink_avs_data_width)-1 LOOP
-						vi.dir_reg(i+gpio_part_nr*c_fLink_avs_data_width) := islv_avs_write_data(i);
-					END LOOP;
-				END IF;
-			-- Write to value registers
-			ELSIF UNSIGNED(islv_avs_address)>= c_usig_value_regs_address AND UNSIGNED(islv_avs_address)< c_usig_value_regs_max_address THEN
-				gpio_part_nr := to_integer(UNSIGNED(islv_avs_address)-c_usig_value_regs_address);
+			ELSIF avs_address >= c_usig_dir_regs_address AND avs_address < c_usig_value_regs_address THEN
+				gpio_part_nr := to_integer(avs_address-c_usig_dir_regs_address);
 				
-				IF gpio_part_nr < number_of_gpios/c_fLink_avs_data_width  THEN
-					vi.value_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width) := islv_avs_write_data;
-				ELSE
-					FOR i IN 0 TO (number_of_gpios mod c_fLink_avs_data_width)-1 LOOP
-						vi.value_reg(i+gpio_part_nr*c_fLink_avs_data_width) := islv_avs_write_data(i);
-					END LOOP;
-				END IF;
+				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+					IF islv_avs_byteenable(i) = '1' THEN
+						vi.dir_reg(gpio_part_nr * c_fLink_avs_data_width + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * c_fLink_avs_data_width + i * 8) 	:=	islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+					END IF;
+				END LOOP;
+			
+			-- Write to value registers
+			ELSIF avs_address>= c_usig_value_regs_address AND avs_address< c_usig_value_regs_max_address THEN
+				gpio_part_nr := to_integer(avs_address-c_usig_value_regs_address);
+				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+					IF islv_avs_byteenable(i) = '1' THEN
+						vi.value_reg(gpio_part_nr * c_fLink_avs_data_width + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * c_fLink_avs_data_width + i * 8) 	:=	islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+					END IF;
+				END LOOP;
 			END IF;
 		END IF;
 		
@@ -158,7 +167,7 @@ BEGIN
 		
 		--avalon slave interface read part
 		IF isl_avs_read = '1' THEN
-			CASE UNSIGNED(islv_avs_address) IS
+			CASE avs_address IS
 				-- Read type register
 				WHEN to_unsigned(c_fLink_typdef_address, c_gpio_interface_address_with) =>
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length-1) DOWNTO 
@@ -184,19 +193,19 @@ BEGIN
 				
 				-- Read direction or value register
 				WHEN OTHERS => 
-					IF UNSIGNED(islv_avs_address) >= c_usig_dir_regs_address AND UNSIGNED(islv_avs_address)< c_usig_value_regs_address THEN
-						gpio_part_nr := to_integer(UNSIGNED(islv_avs_address))-c_fLink_number_of_std_registers;
+					IF avs_address >= c_usig_dir_regs_address AND avs_address< c_usig_value_regs_address THEN
+						gpio_part_nr := to_integer(avs_address)-c_fLink_number_of_std_registers;
 						
-						IF gpio_part_nr <number_of_gpios/c_fLink_avs_data_width  THEN
+						IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
 							oslv_avs_read_data <= vi.dir_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width);
 						ELSE
 							FOR i IN 0 TO (number_of_gpios mod c_fLink_avs_data_width)-1 LOOP
 								oslv_avs_read_data(i) <= vi.dir_reg(i+gpio_part_nr*c_fLink_avs_data_width);
 							END LOOP;
 						END IF;
-					ELSIF UNSIGNED(islv_avs_address)>= c_usig_value_regs_address AND UNSIGNED(islv_avs_address)< c_usig_value_regs_max_address THEN
-						gpio_part_nr := to_integer(UNSIGNED(islv_avs_address)-c_usig_value_regs_address);
-						IF gpio_part_nr <number_of_gpios/c_fLink_avs_data_width  THEN
+					ELSIF avs_address>= c_usig_value_regs_address AND avs_address< c_usig_value_regs_max_address THEN
+						gpio_part_nr := to_integer(avs_address-c_usig_value_regs_address);
+						IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
 							oslv_avs_read_data <= vi.value_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width);
 						ELSE
 							FOR i IN 0 TO (number_of_gpios mod c_fLink_avs_data_width)-1 LOOP

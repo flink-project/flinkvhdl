@@ -35,23 +35,24 @@ USE work.fLink_definitions.ALL;
 
 PACKAGE info_device_pkg IS
 	CONSTANT c_int_number_of_descr_register: INTEGER := 7;
-	
+	CONSTANT info_device_address_width	: INTEGER := 5;
 	
 	COMPONENT info_device IS
 			GENERIC (
-				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
 				description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
 				dev_size: INTEGER := 0
 			);
 			PORT (
 					isl_clk					: IN  STD_LOGIC;
 					isl_reset_n				: IN  STD_LOGIC;
-					islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_with-1 DOWNTO 0);
+					islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_width-1 DOWNTO 0);
 					isl_avs_read			: IN  STD_LOGIC;
 					isl_avs_write			: IN  STD_LOGIC;
 					osl_avs_waitrequest		: OUT STD_LOGIC;
 					islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
-					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0)
+					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0)
 			);
 	END COMPONENT;
 	
@@ -59,9 +60,13 @@ PACKAGE info_device_pkg IS
 	CONSTANT info_device_interface_version : INTEGER := 0;
 	
 	
-	CONSTANT c_usig_dev_size_address	: UNSIGNED(info_device_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers, info_device_address_with);
-	CONSTANT c_usig_description_address	: UNSIGNED(info_device_address_with-1 DOWNTO 0) := c_usig_dev_size_address + 1;
-	CONSTANT c_usig_max_address			: UNSIGNED(info_device_address_with-1 DOWNTO 0) := c_usig_dev_size_address + c_int_number_of_descr_register;
+	CONSTANT c_usig_typdef_address		: UNSIGNED(info_device_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_typdef_address,info_device_address_width);
+	CONSTANT c_usig_mem_size_address 	: UNSIGNED(info_device_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_mem_size_address,info_device_address_width);
+	CONSTANT c_usig_unique_id_address 	: UNSIGNED(info_device_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_unique_id_address,info_device_address_width);
+	CONSTANT c_usig_dev_size_address	: UNSIGNED(info_device_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers, info_device_address_width);
+	CONSTANT c_usig_description_address	: UNSIGNED(info_device_address_width-1 DOWNTO 0) := c_usig_dev_size_address + 1;
+	CONSTANT c_usig_max_address			: UNSIGNED(info_device_address_width-1 DOWNTO 0) := c_usig_dev_size_address + c_int_number_of_descr_register;
+	
 	
 END PACKAGE info_device_pkg;
 
@@ -74,19 +79,20 @@ USE work.fLink_definitions.ALL;
 
 ENTITY info_device IS
 	GENERIC (
-		unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
+		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
 		description: STD_LOGIC_VECTOR (c_int_number_of_descr_register*c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0');
 		dev_size: INTEGER := 0
 	);
 	PORT (
 			isl_clk					: IN  STD_LOGIC;
 			isl_reset_n				: IN  STD_LOGIC;
-			islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_with-1 DOWNTO 0);
+			islv_avs_address		: IN  STD_LOGIC_VECTOR(info_device_address_width-1 DOWNTO 0);
 			isl_avs_read			: IN  STD_LOGIC;
 			isl_avs_write			: IN  STD_LOGIC;
 			osl_avs_waitrequest		: OUT STD_LOGIC;
 			islv_avs_write_data		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
-			oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0)
+			oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+			islv_avs_byteenable		: IN  STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0)
 	);
 
 END ENTITY info_device;
@@ -98,28 +104,32 @@ BEGIN
 	-- combinatoric process
 	comb_proc : PROCESS (isl_reset_n,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,isl_clk)
 		VARIABLE description_part: INTEGER := 0;
+		VARIABLE address: UNSIGNED(info_device_address_width-1 DOWNTO 0) := to_unsigned(0,info_device_address_width);
 	BEGIN
-
+		
+		--type conversion
+		address := UNSIGNED(islv_avs_address);
+		
 		--standard values
 		oslv_avs_read_data <= (OTHERS => '0');
 
 		--avalon slave interface read part
 		IF isl_avs_read = '1' THEN
-			CASE UNSIGNED(islv_avs_address) IS
-				WHEN to_unsigned(c_fLink_typdef_address,info_device_address_with) =>
+			CASE address IS
+				WHEN c_usig_typdef_address =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
-												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_info_id,c_fLink_id_length));
+(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_info_id,c_fLink_id_length));
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= STD_LOGIC_VECTOR(to_unsigned(info_device_subtype_id,c_fLink_subtype_length));
 					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  STD_LOGIC_VECTOR(to_unsigned(info_device_interface_version,c_fLink_interface_version_length));
-				WHEN to_unsigned(c_fLink_mem_size_address,info_device_address_with) => 
-					oslv_avs_read_data(info_device_address_with+2) <= '1';
-				WHEN to_unsigned(c_fLink_unice_id_address,info_device_address_with) => 
-					oslv_avs_read_data <= unice_id;
+				WHEN c_usig_mem_size_address => 
+					oslv_avs_read_data(info_device_address_width+2) <= '1';
+				WHEN c_usig_unique_id_address => 
+					oslv_avs_read_data <= unique_id;
 				WHEN c_usig_dev_size_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(dev_size,c_fLink_avs_data_width));
 				WHEN OTHERS => 
-					IF UNSIGNED(islv_avs_address)>= c_usig_description_address AND UNSIGNED(islv_avs_address) <= c_usig_max_address THEN
-						description_part := to_integer(UNSIGNED(islv_avs_address) - c_usig_description_address); 
+					IF address >= c_usig_description_address AND address <= c_usig_max_address THEN
+						description_part := to_integer(address - c_usig_description_address); 
 						oslv_avs_read_data <= description(((c_int_number_of_descr_register-description_part))*32-1 DOWNTO (c_int_number_of_descr_register-description_part-1)*32);
 					END IF;
 			END CASE;
