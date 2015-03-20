@@ -64,13 +64,6 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 	
-	
-	--Analog Input Interface:
-	CONSTANT c_analog_input_interface_address_with			: INTEGER := 5;
-	
-	--Analog Output Interface:
-	CONSTANT c_analog_output_interface_address_with			: INTEGER := 5;
-	
 END PACKAGE fLink_definitions;
 
 

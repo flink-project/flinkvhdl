@@ -37,9 +37,9 @@ USE IEEE.numeric_std.ALL;
 -- PACKAGE DEFINITION
 -------------------------------------------------------------------------------
 PACKAGE dacad5668_pkg IS
-	CONSTANT NUMBER_OF_CHANELS : INTEGER := 8;
+	CONSTANT NUMBER_OF_CHANNELS : INTEGER := 8;
 	CONSTANT RESOLUTION : INTEGER := 16;
-	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
+	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANNELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
 	
 	
 	COMPONENT dacad5668 IS
@@ -102,7 +102,7 @@ END ENTITY dacad5668;
 -------------------------------------------------------------------------------
 ARCHITECTURE rtl OF dacad5668 IS
 	CONSTANT SS_HOLD_CYCLES : INTEGER := 40; -- minimum 15ns see datasheet 
-	CONSTANT CHANEL_COUNT_WIDTH : INTEGER := 4;
+	CONSTANT CHANNEL_COUNT_WIDTH : INTEGER := 4;
 	CONSTANT TRANSFER_WIDTH : INTEGER := 32;
 	
 	--COMMAND CODES
@@ -117,7 +117,7 @@ ARCHITECTURE rtl OF dacad5668 IS
 		state				:t_states;
 		tx_data 			: STD_LOGIC_VECTOR(TRANSFER_WIDTH -1 DOWNTO 0);
 		tx_start 			: STD_LOGIC;
-		channel_count 		: UNSIGNED(CHANEL_COUNT_WIDTH-1 DOWNTO 0);
+		channel_count 		: UNSIGNED(CHANNEL_COUNT_WIDTH-1 DOWNTO 0);
 		cycle_count 		: UNSIGNED(6 DOWNTO 0);
 		LDAC_n				: STD_LOGIC;
 		CLR_n 				: STD_LOGIC;
@@ -216,8 +216,8 @@ ARCHITECTURE rtl OF dacad5668 IS
 				WHEN wait_for_next_transfer =>
 					IF vi.cycle_count = 100 THEN
 						vi.cycle_count := to_unsigned(0,7);
-						IF vi.channel_count = NUMBER_OF_CHANELS -1 THEN
-							vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
+						IF vi.channel_count = NUMBER_OF_CHANNELS -1 THEN
+							vi.channel_count := to_unsigned(0,CHANNEL_COUNT_WIDTH);
 						ELSE
 							vi.channel_count := vi.channel_count + 1;
 						END IF;
@@ -235,7 +235,7 @@ ARCHITECTURE rtl OF dacad5668 IS
 				vi.state := keep_clear_low; 
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
-				vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
+				vi.channel_count := to_unsigned(0,CHANNEL_COUNT_WIDTH);
 				vi.cycle_count := (OTHERS => '0');
 				vi.CLR_n := '0';
 			END IF;

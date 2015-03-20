@@ -44,20 +44,20 @@ END ENTITY avalon_dacad5668_interface_tb;
 ARCHITECTURE sim OF avalon_dacad5668_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
-	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00646163"; --dac
+	CONSTANT unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00646163"; --dac
 
-	SIGNAL sl_clk					: STD_LOGIC := '0';
-	SIGNAL sl_reset_n				: STD_LOGIC := '1';
-	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_analog_input_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL sl_clk				: STD_LOGIC := '0';
+	SIGNAL sl_reset_n			: STD_LOGIC := '1';
+	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_analog_output_interface_address_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_byteenable	: STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0):= (OTHERS =>'1');
 	
 	SIGNAL sl_sclk			: STD_LOGIC:= '0';
 	SIGNAL slv_Ss			: STD_LOGIC:= '0';
 	SIGNAL sl_mosi			: STD_LOGIC:= '0';
-	SIGNAL sl_miso			: STD_LOGIC:= '0';
 	SIGNAL sl_LDAC_n		: STD_LOGIC:= '0';
 	SIGNAL sl_CLR_n			: STD_LOGIC:= '0';
 BEGIN
@@ -67,7 +67,7 @@ BEGIN
 		BASE_CLK => 33000000,
 		SCLK_FREQUENCY => 1000000,
 		INTERNAL_REFERENCE => '1',
-		UNICE_ID => unice_id
+		UNIQUE_ID => unique_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -76,11 +76,11 @@ BEGIN
 			isl_avs_read 			=> sl_avs_read,
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data		=> slv_avs_write_data,	
+			islv_avs_byteenable		=> slv_avs_byteenable,
 			oslv_avs_read_data		=> slv_avs_read_data,
 			osl_sclk				=> sl_sclk,
 			oslv_Ss					=> slv_Ss,
 			osl_mosi				=> sl_mosi,
-			isl_miso				=> sl_miso,
 			osl_LDAC_n				=> sl_LDAC_n,
 			osl_CLR_n				=> sl_CLR_n
 	);
@@ -97,7 +97,7 @@ BEGIN
 --test id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_analog_output_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_analog_output_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -113,31 +113,31 @@ BEGIN
 --test mem size register register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_analog_input_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_analog_output_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_analog_input_interface_address_with)
-			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**NUMBER_OF_CHANELS))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
+			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_analog_output_interface_address_width)
+			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**NUMBER_OF_CHANNELS))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
 --test unic id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_analog_input_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_analog_output_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data = unice_id
+			ASSERT slv_avs_read_data = unique_id
 			REPORT "Unic Id Error" SEVERITY FAILURE;
 
---test number of chanels register:
+--test number of channels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_chanels_address,c_analog_input_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_analog_output_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(NUMBER_OF_CHANELS,c_fLink_interface_version_length)) 
+			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(NUMBER_OF_CHANNELS,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
 
 		WAIT FOR 10000*main_period;
