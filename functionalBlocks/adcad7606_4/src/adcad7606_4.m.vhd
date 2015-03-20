@@ -37,9 +37,9 @@ USE IEEE.numeric_std.ALL;
 -- PACKAGE DEFINITION
 -------------------------------------------------------------------------------
 PACKAGE adcad7606_4_pkg IS
-	CONSTANT NUMBER_OF_CHANELS : INTEGER := 8;
+	CONSTANT NUMBER_OF_CHANNELS : INTEGER := 8;
 	CONSTANT RESOLUTION : INTEGER := 16;
-	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
+	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANNELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
 	
 	TYPE t_config IS RECORD
 		range_select		: STD_LOGIC; -- '0' range is +-5V, '1' range is +-10V
@@ -122,7 +122,7 @@ END ENTITY adcad7606_4;
 ARCHITECTURE rtl OF adcad7606_4 IS
 	CONSTANT SS_HOLD_CYCLES : INTEGER := 2; -- add 2 to be sure and have a minimum number of cycles
 	CONSTANT TRANSFER_WIDTH : INTEGER := 128;
-	CONSTANT CHANEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANELS))));
+	CONSTANT CHANNEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANNELS))));
 	
 	
 	TYPE t_states IS (idle,wait_for_sampling_done,wait_for_data,store_data,wait_for_next_transfer);
@@ -212,8 +212,8 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 						vi.state := store_data;
 					END IF;
 				WHEN store_data =>
-					FOR i IN NUMBER_OF_CHANELS DOWNTO 1 LOOP
-						vi.values(NUMBER_OF_CHANELS-i) := slv_rx_data(i*RESOLUTION-1 DOWNTO RESOLUTION*(i-1));
+					FOR i IN NUMBER_OF_CHANNELS DOWNTO 1 LOOP
+						vi.values(NUMBER_OF_CHANNELS-i) := slv_rx_data(i*RESOLUTION-1 DOWNTO RESOLUTION*(i-1));
 					END LOOP;
 					vi.state := wait_for_next_transfer;
 				WHEN wait_for_next_transfer =>
@@ -232,7 +232,7 @@ ARCHITECTURE rtl OF adcad7606_4 IS
 				vi.state := idle; 
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
-				FOR i IN 0 TO NUMBER_OF_CHANELS-1 LOOP
+				FOR i IN 0 TO NUMBER_OF_CHANNELS-1 LOOP
 					vi.values(i) := (OTHERS => '0');
 				END LOOP;
 				vi.cycle_count := (OTHERS => '0');

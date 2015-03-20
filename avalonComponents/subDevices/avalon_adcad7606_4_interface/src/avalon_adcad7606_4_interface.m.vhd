@@ -38,7 +38,7 @@ USE work.fLink_definitions.ALL;
 
 PACKAGE avalon_adcad7606_4_interface_pkg IS
 
-	CONSTANT c_adcad7606_4_address_with : INTEGER := 5;
+	CONSTANT c_adcad7606_4_address_width : INTEGER := 5;
 	CONSTANT c_adcad7606_4_subtype_id : INTEGER := 2;
 	CONSTANT c_adcad7606_4_interface_version : INTEGER := 0;
 
@@ -46,16 +46,17 @@ PACKAGE avalon_adcad7606_4_interface_pkg IS
 			GENERIC (
 				BASE_CLK: INTEGER := 33000000; 
 				SCLK_FREQUENCY : INTEGER := 10000000;--Min 0.8 Mhz, max 16Mhz
-				UNICE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				UNIQUE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
 					
-					islv_avs_address		: IN STD_LOGIC_VECTOR(c_adcad7606_4_address_with-1 DOWNTO 0);
+					islv_avs_address		: IN STD_LOGIC_VECTOR(c_adcad7606_4_address_width-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
 					islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					osl_avs_waitrequest		: OUT STD_LOGIC;
 					
@@ -90,16 +91,17 @@ ENTITY avalon_adcad7606_4_interface IS
 			GENERIC (
 				BASE_CLK: INTEGER := 33000000; 
 				SCLK_FREQUENCY : INTEGER := 10000000;--Min 0.8 Mhz, max 16Mhz
-				UNICE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				UNIQUE_ID: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
 					
-					islv_avs_address		: IN STD_LOGIC_VECTOR(c_adcad7606_4_address_with-1 DOWNTO 0);
+					islv_avs_address		: IN STD_LOGIC_VECTOR(c_adcad7606_4_address_width-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
 					islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					osl_avs_waitrequest		: OUT STD_LOGIC;
 					
@@ -119,9 +121,9 @@ ENTITY avalon_adcad7606_4_interface IS
 					
 			);
 
-	CONSTANT c_usig_resolution_address: UNSIGNED(c_adcad7606_4_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_adcad7606_4_address_with);
-	CONSTANT c_usig_value_0_address: UNSIGNED(c_adcad7606_4_address_with-1 DOWNTO 0) := c_usig_resolution_address + 1;
-	CONSTANT c_usig_last_address: UNSIGNED(c_adcad7606_4_address_with-1 DOWNTO 0) := c_usig_value_0_address + NUMBER_OF_CHANELS;
+	CONSTANT c_usig_resolution_address: UNSIGNED(c_adcad7606_4_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_adcad7606_4_address_width);
+	CONSTANT c_usig_value_0_address: UNSIGNED(c_adcad7606_4_address_width-1 DOWNTO 0) := c_usig_resolution_address + 1;
+	CONSTANT c_usig_last_address: UNSIGNED(c_adcad7606_4_address_width-1 DOWNTO 0) := c_usig_value_0_address + NUMBER_OF_CHANNELS;
 	
 	
 END ENTITY avalon_adcad7606_4_interface;
@@ -163,25 +165,27 @@ BEGIN
 		
 		--avalon slave interface write part
 		IF isl_avs_write = '1' THEN
-			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_adcad7606_4_address_with) THEN
-				vi.global_reset_n := NOT islv_avs_write_data(0);		
+			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_adcad7606_4_address_width) THEN
+				IF islv_avs_byteenable(0) = '1' THEN
+					vi.global_reset_n := NOT islv_avs_write_data(0);		
+				END IF;
 			END IF;
 		END IF;
 
 		--avalon slave interface read part
 		IF isl_avs_read = '1' THEN
 			CASE UNSIGNED(islv_avs_address) IS
-				WHEN to_unsigned(c_fLink_typdef_address,c_adcad7606_4_address_with) =>
+				WHEN to_unsigned(c_fLink_typdef_address,c_adcad7606_4_address_width) =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
 												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_input_id,c_fLink_id_length));
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= STD_LOGIC_VECTOR(to_unsigned(c_adcad7606_4_subtype_id,c_fLink_subtype_length));
 					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  STD_LOGIC_VECTOR(to_unsigned(c_adcad7606_4_interface_version,c_fLink_interface_version_length));
-				WHEN to_unsigned(c_fLink_mem_size_address,c_adcad7606_4_address_with) => 
-					oslv_avs_read_data(c_adcad7606_4_address_with+2) <= '1';
-				WHEN to_unsigned(c_fLink_number_of_chanels_address,c_adcad7606_4_address_with) => 
-					oslv_avs_read_data <= std_logic_vector(to_unsigned(NUMBER_OF_CHANELS,c_fLink_avs_data_width));
-				WHEN to_unsigned(c_fLink_unice_id_address,c_adcad7606_4_address_with) => 
-					oslv_avs_read_data <= UNICE_ID;
+				WHEN to_unsigned(c_fLink_mem_size_address,c_adcad7606_4_address_width) => 
+					oslv_avs_read_data(c_adcad7606_4_address_width+2) <= '1';
+				WHEN to_unsigned(c_fLink_number_of_channels_address,c_adcad7606_4_address_width) => 
+					oslv_avs_read_data <= std_logic_vector(to_unsigned(NUMBER_OF_CHANNELS,c_fLink_avs_data_width));
+				WHEN to_unsigned(c_fLink_unique_id_address,c_adcad7606_4_address_width) => 
+					oslv_avs_read_data <= UNIQUE_ID;
 				WHEN c_usig_resolution_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(RESOLUTION,c_fLink_avs_data_width));
 				WHEN OTHERS => 
