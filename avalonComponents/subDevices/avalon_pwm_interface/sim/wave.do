@@ -10,7 +10,7 @@ add wave -noupdate /avalon_pwm_interface_tb/sl_avs_write
 add wave -noupdate /avalon_pwm_interface_tb/slv_avs_write_data
 add wave -noupdate -radix unsigned /avalon_pwm_interface_tb/slv_avs_read_data
 add wave -noupdate -divider {output signals}
-add wave -noupdate -radix symbolic -childformat {{/avalon_pwm_interface_tb/slv_pwm(0) -radix symbolic}} -expand -subitemconfig {/avalon_pwm_interface_tb/slv_pwm(0) {-radix symbolic}} /avalon_pwm_interface_tb/slv_pwm
+add wave -noupdate -radix symbolic -childformat {{/avalon_pwm_interface_tb/slv_pwm(2) -radix symbolic} {/avalon_pwm_interface_tb/slv_pwm(1) -radix symbolic} {/avalon_pwm_interface_tb/slv_pwm(0) -radix symbolic}} -expand -subitemconfig {/avalon_pwm_interface_tb/slv_pwm(2) {-radix symbolic} /avalon_pwm_interface_tb/slv_pwm(1) {-radix symbolic} /avalon_pwm_interface_tb/slv_pwm(0) {-height 15 -radix symbolic}} /avalon_pwm_interface_tb/slv_pwm
 add wave -noupdate -divider {simulation parameter}
 add wave -noupdate /avalon_pwm_interface_tb/main_period
 add wave -noupdate /avalon_pwm_interface_tb/number_of_pwms

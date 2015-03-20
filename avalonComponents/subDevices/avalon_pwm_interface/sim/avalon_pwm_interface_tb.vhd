@@ -41,23 +41,24 @@ ARCHITECTURE sim OF avalon_pwm_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT number_of_pwms : INTEGER := 3;
-	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"0070776d"; --fqd
+	CONSTANT unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"0070776d"; --fqd
 	
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
-	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_pwm_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_pwm_interface_address_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_pwm					: STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_byteenable	: STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0) := (OTHERS =>'1');
 	
 BEGIN
 	--create component
 	my_unit_under_test : avalon_pwm_interface 
 	GENERIC MAP(
 		number_of_pwms =>number_of_pwms,
-		unice_id => unice_id
+		unique_id => unique_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -67,7 +68,8 @@ BEGIN
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data	=> slv_avs_write_data,	
 			oslv_avs_read_data	=> slv_avs_read_data,
-			oslv_pwm					=> slv_pwm
+			oslv_pwm					=> slv_pwm,
+			islv_avs_byteenable 	=> slv_avs_byteenable
 	);
 
 	sl_clk 		<= NOT sl_clk after main_period/2;
@@ -84,7 +86,7 @@ BEGIN
 --test id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_pwm_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_pwm_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -100,17 +102,17 @@ BEGIN
 --test mem size register register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_pwm_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_pwm_interface_address_with)
+			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_pwm_interface_address_width)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**number_of_pwms))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
 --test number of chanels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_chanels_address,c_pwm_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_pwm_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -120,18 +122,18 @@ BEGIN
 --test unic id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_pwm_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data = unice_id
+			ASSERT slv_avs_read_data = unique_id
 			REPORT "Unic Id Error" SEVERITY FAILURE;
 			
 	FOR i IN 0 TO number_of_pwms-1 LOOP
 	--test frequency register:
 		WAIT FOR 1000*main_period;
 			sl_avs_write <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_pwm_interface_address_width));
 			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(1250+i,c_fLink_avs_data_width));	
 		WAIT FOR main_period;
 			sl_avs_write <= '0';
@@ -139,7 +141,7 @@ BEGIN
 			slv_avs_write_data <= (OTHERS =>'0');
 		WAIT FOR main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_pwm_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -148,7 +150,7 @@ BEGIN
 	--test ratio register:
 		WAIT FOR 1000*main_period;
 			sl_avs_write <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+number_of_pwms+i+1,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+number_of_pwms+i+1,c_pwm_interface_address_width));
 			slv_avs_write_data <= STD_LOGIC_VECTOR(to_unsigned(125+i,c_fLink_avs_data_width));	
 		WAIT FOR main_period;
 			sl_avs_write <= '0';
@@ -156,7 +158,7 @@ BEGIN
 			slv_avs_write_data <= (OTHERS =>'0');
 		WAIT FOR main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+number_of_pwms+i+1,c_pwm_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+number_of_pwms+i+1,c_pwm_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
