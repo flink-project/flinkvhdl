@@ -98,6 +98,34 @@ BEGIN
 			sl_reset_n	<=	'0';
 		WAIT FOR 100*main_period;
 			sl_reset_n	<=	'1';
+		WAIT FOR 200*main_period;	
+			--read transfer
+			sl_cs_n <= '0';
+			sl_we_n <= '1';
+		WAIT FOR 1 ns;
+			sl_oe_n <= '0';
+		WAIT FOR 2*main_period;
+		WHILE sl_data_ack = '1' LOOP
+			WAIT FOR  1 ns;
+		END LOOP;
+		WAIT FOR 2 ns;	
+			sl_oe_n <= '1';
+		WAIT FOR 1 ns;	
+			sl_cs_n <= '1';
+		WAIT FOR 1000*main_period;
+		--write transfer 
+			slv_data <= x"AFFE";
+			sl_cs_n <= '0';
+			sl_oe_n <= '1';
+		WAIT FOR 3 ns;
+			sl_we_n <= '0';
+		WAIT FOR 44 ns;	
+			sl_we_n <= '1';
+		WAIT FOR 3 ns;	
+			slv_data <= (OTHERS => 'Z');
+			sl_cs_n <= '1';
+		WAIT FOR 100*main_period;
+			
 		WAIT FOR 1000*main_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;

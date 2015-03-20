@@ -12,7 +12,7 @@ add wave -noupdate /eim_slave_to_avalon_master_tb/slv_avalon_address
 add wave -noupdate /eim_slave_to_avalon_master_tb/slv_read
 add wave -noupdate /eim_slave_to_avalon_master_tb/slv_write
 add wave -noupdate /eim_slave_to_avalon_master_tb/slv_readdata
-add wave -noupdate /eim_slave_to_avalon_master_tb/slv_writedata
+add wave -noupdate -radix hexadecimal /eim_slave_to_avalon_master_tb/slv_writedata
 add wave -noupdate /eim_slave_to_avalon_master_tb/slv_waitrequest
 add wave -noupdate /eim_slave_to_avalon_master_tb/main_period
 add wave -noupdate /eim_slave_to_avalon_master_tb/BUS_WIDTH
@@ -39,8 +39,8 @@ add wave -noupdate /eim_slave_to_avalon_master_tb/my_unit_under_test/sl_got_addr
 add wave -noupdate /eim_slave_to_avalon_master_tb/my_unit_under_test/slv_write_data
 add wave -noupdate /eim_slave_to_avalon_master_tb/my_unit_under_test/sl_got_write_data
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {0 ps} 0}
-quietly wave cursor active 0
+WaveRestoreCursors {{Cursor 1} {10995011 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -55,4 +55,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {9599050 ps} {9600050 ps}
+WaveRestoreZoom {0 ps} {21094500 ps}
