@@ -37,9 +37,9 @@ USE IEEE.numeric_std.ALL;
 -- PACKAGE DEFINITION
 -------------------------------------------------------------------------------
 PACKAGE adc128S102_pkg IS
-	CONSTANT NUMBER_OF_CHANELS : INTEGER := 8;
+	CONSTANT NUMBER_OF_CHANNELS : INTEGER := 8;
 	CONSTANT RESOLUTION : INTEGER := 12;
-	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
+	TYPE t_value_regs IS ARRAY(NUMBER_OF_CHANNELS -1 DOWNTO 0) OF STD_LOGIC_VECTOR(RESOLUTION-1 DOWNTO 0);
 	
 	
 	COMPONENT adc128S102 IS
@@ -98,7 +98,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 	CONSTANT SS_HOLD_FREQUENCY : INTEGER := 100000000; -- (10ns)^-1 see data sheet for this value
 	CONSTANT SS_HOLD_CYCLES : INTEGER := BASE_CLK/SS_HOLD_FREQUENCY + 2; -- add 2 to be sure and have a minimum number of cycles
 	CONSTANT TRANSFER_WIDTH : INTEGER := 16;
-	CONSTANT CHANEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANELS))));
+	CONSTANT CHANNEL_COUNT_WIDTH : INTEGER := integer(ceil(log2(real(NUMBER_OF_CHANNELS))));
 	
 	
 	TYPE t_states IS (idle,wait_for_data,store_data,wait_for_next_transfer);
@@ -108,7 +108,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 		state				:t_states;
 		tx_data 			: STD_LOGIC_VECTOR(TRANSFER_WIDTH -1 DOWNTO 0);
 		tx_start 			: STD_LOGIC;
-		channel_count 		: UNSIGNED(CHANEL_COUNT_WIDTH-1 DOWNTO 0);
+		channel_count 		: UNSIGNED(CHANNEL_COUNT_WIDTH-1 DOWNTO 0);
 		values				: t_value_regs;
 		cycle_count			: UNSIGNED(6 DOWNTO 0);
 	END RECORD;
@@ -177,14 +177,14 @@ ARCHITECTURE rtl OF adc128S102 IS
 						vi.state := store_data;
 					END IF;
 				WHEN store_data =>
-					IF vi.channel_count = to_unsigned(0,CHANEL_COUNT_WIDTH) THEN 
-						vi.values(NUMBER_OF_CHANELS-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
+					IF vi.channel_count = to_unsigned(0,CHANNEL_COUNT_WIDTH) THEN 
+						vi.values(NUMBER_OF_CHANNELS-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
 					ELSE
 						vi.values(to_integer(vi.channel_count)-1) := slv_rx_data(RESOLUTION-1 DOWNTO 0);
 					END IF;
 					
-					IF vi.channel_count >= NUMBER_OF_CHANELS-1 THEN 
-						vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
+					IF vi.channel_count >= NUMBER_OF_CHANNELS-1 THEN 
+						vi.channel_count := to_unsigned(0,CHANNEL_COUNT_WIDTH);
 					ELSE
 						vi.channel_count := vi.channel_count + 1;
 					END IF;
@@ -205,8 +205,8 @@ ARCHITECTURE rtl OF adc128S102 IS
 				vi.state := idle; 
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
-				vi.channel_count := to_unsigned(0,CHANEL_COUNT_WIDTH);
-				FOR i IN 0 TO NUMBER_OF_CHANELS-1 LOOP
+				vi.channel_count := to_unsigned(0,CHANNEL_COUNT_WIDTH);
+				FOR i IN 0 TO NUMBER_OF_CHANNELS-1 LOOP
 					vi.values(i) := (OTHERS => '0');
 				END LOOP;
 				vi.cycle_count := (OTHERS => '0');
