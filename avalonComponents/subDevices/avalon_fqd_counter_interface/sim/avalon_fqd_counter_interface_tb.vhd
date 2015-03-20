@@ -45,25 +45,25 @@ ARCHITECTURE sim OF avalon_fqd_counter_interface_tb IS
 	CONSTANT direction : INTEGER := 1; -- forwards:1 backwards: -1
 	CONSTANT enc_tick_per_turn : REAL := 512.0;
 	CONSTANT wait_time : TIME := (1.0 / velocity / enc_tick_per_turn / 4.0) * 1 sec;
-	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00667164"; --fqd
+	CONSTANT unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00667164"; --fqd
 
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '0';
-	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_counter_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_counter_interface_address_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_enc_A				: STD_LOGIC_VECTOR(number_of_fqds-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_enc_B				: STD_LOGIC_VECTOR(number_of_fqds-1 DOWNTO 0):= (OTHERS =>'0');
-	
+	SIGNAL slv_avs_byteenable		:     STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0) := (OTHERS =>'1');
 BEGIN
 	--create component
 	my_unit_under_test : avalon_fqd_counter_interface 
 	GENERIC MAP(
 		number_of_fqds =>number_of_fqds,
-		unice_id => unice_id
+		unique_id => unique_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -72,6 +72,7 @@ BEGIN
 			isl_avs_read 			=> sl_avs_read,
 			isl_avs_write			=> sl_avs_write,
 			islv_avs_write_data	=> slv_avs_write_data,	
+			islv_avs_byteenable		=> slv_avs_byteenable,
 			oslv_avs_read_data	=> slv_avs_read_data,
 			islv_enc_A				=> slv_enc_A,
 			islv_enc_B				=> slv_enc_B
@@ -89,7 +90,7 @@ BEGIN
 --test id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_counter_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_counter_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -105,17 +106,17 @@ BEGIN
 --test mem size register register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_counter_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_counter_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_counter_interface_address_with)
-			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**ceil(log2(REAL(number_of_fqds*c_number_of_register_per_counter_generic+c_fLink_number_of_std_registers)))))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
+			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_counter_interface_address_width)
+			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**ceil(log2(REAL(number_of_fqds+c_fLink_number_of_std_registers)))))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
---test number of chanels register:
+--test number of channels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_chanels_address,c_counter_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_counter_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -125,11 +126,11 @@ BEGIN
 --test unic id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_counter_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_counter_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data = unice_id
+			ASSERT slv_avs_read_data = unique_id
 			REPORT "Unic Id Error" SEVERITY FAILURE;
 --test number of chanels register:
 
@@ -137,7 +138,7 @@ BEGIN
 
 		WAIT FOR 1000*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers,c_counter_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers,c_counter_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');

@@ -64,9 +64,6 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
 	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
 
-	--Counter Interface: 
-	CONSTANT c_number_of_register_per_counter_generic	: INTEGER := 1;
-	CONSTANT c_counter_interface_address_with			: INTEGER := 5;
 	
 	--PPWE Interface
 	CONSTANT c_ppwa_interface_address_with : INTEGER := 5;
