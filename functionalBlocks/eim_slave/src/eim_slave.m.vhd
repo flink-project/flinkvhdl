@@ -182,6 +182,7 @@ ARCHITECTURE rtl OF eim_slave IS
 				
 				IF vi.sync_we(1) = '0' AND vi.sync_we(2) = '1' THEN --rising edge we_n
 					vi.sl_got_write_data := '1';
+					vi.slv_write_data := ioslv_data;
 				END IF;
 			ELSE
 				IF vi.sl_data_ack = '1' THEN
@@ -193,7 +194,6 @@ ARCHITECTURE rtl OF eim_slave IS
 				ioslv_data <= vi.slv_read_data;
 			ELSE
 				ioslv_data <= (OTHERS => 'Z');
-				vi.slv_write_data := ioslv_data;
 			END IF;
 			
 			IF isl_reset_n = '0' THEN
