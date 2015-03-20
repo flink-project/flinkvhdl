@@ -44,17 +44,18 @@ ARCHITECTURE sim OF avalon_watchdog_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT number_of_watchdogs : INTEGER := 1;
-	CONSTANT unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00007764"; --wd
+	CONSTANT unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00007764"; --wd
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
-	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_watchdog_interface_address_with-1 DOWNTO 0):= (OTHERS =>'0');
+	SIGNAL slv_avs_address		: STD_LOGIC_VECTOR (c_watchdog_interface_address_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_avs_read			: STD_LOGIC:= '0';
 	SIGNAL sl_avs_write			: STD_LOGIC:= '0';
 	SIGNAL slv_avs_write_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL slv_avs_read_data	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0):= (OTHERS =>'0');
 	SIGNAL sl_watchdog_pwm			: STD_LOGIC := '0';
 	SIGNAL sl_granted			: STD_LOGIC := '0';
+	SIGNAL slv_avs_byteenable	: STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0) := (OTHERS =>'1');
 	
 	
 	
@@ -63,7 +64,7 @@ BEGIN
 	my_unit_under_test : avalon_watchdog_interface 
 	GENERIC MAP(
 		base_clk => 125000000,
-		unice_id => unice_id
+		unique_id => unique_id
 	)
 	PORT MAP(
 			isl_clk					=> sl_clk,
@@ -71,7 +72,8 @@ BEGIN
 			islv_avs_address 		=> slv_avs_address,
 			isl_avs_read 			=> sl_avs_read,
 			isl_avs_write			=> sl_avs_write,
-			islv_avs_write_data		=> slv_avs_write_data,	
+			islv_avs_write_data		=> slv_avs_write_data,
+			islv_avs_byteenable		=> slv_avs_byteenable,
 			oslv_avs_read_data		=> slv_avs_read_data,
 			osl_watchdog_pwm 		=> sl_watchdog_pwm,	
 			osl_granted				=> sl_granted
@@ -93,7 +95,7 @@ BEGIN
 --test id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_watchdog_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_watchdog_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -109,17 +111,17 @@ BEGIN
 --test mem size register register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_watchdog_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_watchdog_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_watchdog_interface_address_with)
+			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_watchdog_interface_address_width)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**number_of_watchdogs))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
 --test number of chanels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_chanels_address,c_watchdog_interface_address_with));				
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_watchdog_interface_address_width));				
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
@@ -129,11 +131,11 @@ BEGIN
 --test unic id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
-			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unice_id_address,c_watchdog_interface_address_with));
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_watchdog_interface_address_width));
 		WAIT FOR main_period;
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
-			ASSERT slv_avs_read_data = unice_id
+			ASSERT slv_avs_read_data = unique_id
 			REPORT "Unic Id Error" SEVERITY FAILURE;
 			
 --test base clock register

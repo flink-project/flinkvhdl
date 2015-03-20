@@ -37,20 +37,23 @@ USE IEEE.math_real.ALL;
 USE work.fLink_definitions.ALL;
 
 PACKAGE avalon_watchdog_interface_pkg IS
+	CONSTANT c_watchdog_interface_address_width : INTEGER := 5;
+
 
 	COMPONENT avalon_watchdog_interface IS
 			GENERIC (
 				base_clk: INTEGER := 125000000;
-				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
-					islv_avs_address		: IN STD_LOGIC_VECTOR(c_watchdog_interface_address_with-1 DOWNTO 0);
+					islv_avs_address		: IN STD_LOGIC_VECTOR(c_watchdog_interface_address_width-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
 					osl_avs_waitrequest		: OUT STD_LOGIC;
 					islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					osl_watchdog_pwm		: OUT STD_LOGIC;
 					osl_granted				: OUT STD_LOGIC
@@ -61,9 +64,9 @@ PACKAGE avalon_watchdog_interface_pkg IS
 	CONSTANT c_watchdog_interface_version : INTEGER := 0;
 
 	--addresses
-	CONSTANT c_usig_base_clk_address: UNSIGNED(c_watchdog_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_watchdog_interface_address_with);
-	CONSTANT c_usig_wd_status_conf_address: UNSIGNED(c_watchdog_interface_address_with-1 DOWNTO 0) := c_usig_base_clk_address + 1;
-	CONSTANT c_usig_counter_address: UNSIGNED(c_watchdog_interface_address_with-1 DOWNTO 0) := c_usig_wd_status_conf_address + 1;
+	CONSTANT c_usig_base_clk_address: UNSIGNED(c_watchdog_interface_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_watchdog_interface_address_width);
+	CONSTANT c_usig_wd_status_conf_address: UNSIGNED(c_watchdog_interface_address_width-1 DOWNTO 0) := c_usig_base_clk_address + 1;
+	CONSTANT c_usig_counter_address: UNSIGNED(c_watchdog_interface_address_width-1 DOWNTO 0) := c_usig_wd_status_conf_address + 1;
 	--status reg bits 
 	CONSTANT c_int_status_bit: INTEGER := 0;
 	CONSTANT c_int_rearm_bit: INTEGER := 1;
@@ -81,16 +84,17 @@ USE work.watchdog_pkg.ALL;
 ENTITY avalon_watchdog_interface IS
 	GENERIC (
 				base_clk: INTEGER := 125000000;
-				unice_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 					isl_clk					: IN STD_LOGIC;
 					isl_reset_n				: IN STD_LOGIC;
-					islv_avs_address		: IN STD_LOGIC_VECTOR(c_watchdog_interface_address_with-1 DOWNTO 0);
+					islv_avs_address		: IN STD_LOGIC_VECTOR(c_watchdog_interface_address_width-1 DOWNTO 0);
 					isl_avs_read			: IN STD_LOGIC;
 					isl_avs_write			: IN STD_LOGIC;
 					osl_avs_waitrequest		: OUT STD_LOGIC;
 					islv_avs_write_data		: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+					islv_avs_byteenable		: IN    STD_LOGIC_VECTOR(c_fLink_avs_data_width_in_byte-1 DOWNTO 0);
 					oslv_avs_read_data		: OUT	STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 					osl_watchdog_pwm		: OUT STD_LOGIC;
 					osl_granted				: OUT STD_LOGIC
@@ -138,12 +142,20 @@ BEGIN
 		vi.wd_counter_changed := '0';
 		--avalon slave interface write part
 		IF isl_avs_write = '1' THEN
-			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_watchdog_interface_address_with) THEN
-				vi.global_reset_n := NOT islv_avs_write_data(0);		
+			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_watchdog_interface_address_width) THEN
+				IF islv_avs_byteenable(0) = '1' THEN
+					vi.global_reset_n := NOT islv_avs_write_data(0);		
+				END IF;
 			ELSIF UNSIGNED(islv_avs_address) = c_usig_wd_status_conf_address THEN
-				vi.wd_rearm := islv_avs_write_data(c_int_rearm_bit);
+				IF islv_avs_byteenable(0) = '1' THEN
+					vi.wd_rearm := islv_avs_write_data(c_int_rearm_bit);
+				END IF;
 			ELSIF UNSIGNED(islv_avs_address) = c_usig_counter_address THEN
-				vi.counter_set_reg := unsigned(islv_avs_write_data);
+				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+					IF islv_avs_byteenable(i) = '1' THEN
+							vi.counter_set_reg((i + 1) * 8 - 1 DOWNTO i * 8) := UNSIGNED(islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8));
+					END IF;
+				END LOOP;
 				vi.wd_counter_changed := '1';
 				IF granted = '1' THEN
 					vi.pwm_state := NOT vi.pwm_state;
@@ -154,17 +166,17 @@ BEGIN
 		--avalon slave interface read part
 		IF isl_avs_read = '1' THEN
 			CASE UNSIGNED(islv_avs_address) IS
-				WHEN to_unsigned(c_fLink_typdef_address,c_watchdog_interface_address_with) =>
+				WHEN to_unsigned(c_fLink_typdef_address,c_watchdog_interface_address_width) =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
 												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_watchdog_id,c_fLink_id_length));
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= STD_LOGIC_VECTOR(to_unsigned(c_watchdog_subtype_id,c_fLink_subtype_length));
 					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  STD_LOGIC_VECTOR(to_unsigned(c_watchdog_interface_version,c_fLink_interface_version_length));
-				WHEN to_unsigned(c_fLink_mem_size_address,c_watchdog_interface_address_with) => 
-					oslv_avs_read_data(c_watchdog_interface_address_with+2) <= '1';
-				WHEN to_unsigned(c_fLink_number_of_chanels_address,c_watchdog_interface_address_with) => 
+				WHEN to_unsigned(c_fLink_mem_size_address,c_watchdog_interface_address_width) => 
+					oslv_avs_read_data(c_watchdog_interface_address_width+2) <= '1';
+				WHEN to_unsigned(c_fLink_number_of_channels_address,c_watchdog_interface_address_width) => 
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(1,c_fLink_avs_data_width));
-				WHEN to_unsigned(c_fLink_unice_id_address,c_watchdog_interface_address_with) => 
-					oslv_avs_read_data <= unice_id;
+				WHEN to_unsigned(c_fLink_unique_id_address,c_watchdog_interface_address_width) => 
+					oslv_avs_read_data <= unique_id;
 				WHEN c_usig_base_clk_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(base_clk,c_fLink_avs_data_width));
 				WHEN c_usig_wd_status_conf_address =>
