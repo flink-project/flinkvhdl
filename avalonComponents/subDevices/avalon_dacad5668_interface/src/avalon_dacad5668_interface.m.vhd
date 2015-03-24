@@ -153,11 +153,13 @@ BEGIN
 				END IF;
 			ELSIF address>= c_usig_value_0_address AND address< c_usig_last_address THEN
 				dacad5668_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_value_0_address);
-				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
-					IF islv_avs_byteenable(i) = '1' THEN
-							vi.set_values(dacad5668_part_nr)((i + 1) * 8 - 1 DOWNTO i * 8) := islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
-					END IF;
-				END LOOP;
+				--only 16 bit are needed cause adc resolution is 16
+				IF islv_avs_byteenable(0) = '1' THEN
+							vi.set_values(dacad5668_part_nr)(7 DOWNTO 0) := islv_avs_write_data(7 DOWNTO 0);
+				END IF;
+				IF islv_avs_byteenable(1) = '1' THEN
+							vi.set_values(dacad5668_part_nr)(15 DOWNTO 8) := islv_avs_write_data(15 DOWNTO 8);
+				END IF;
 			END IF;
 		END IF;
 
