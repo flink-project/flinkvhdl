@@ -6,6 +6,7 @@ vlib rtl_work
 vmap work rtl_work
 
 vcom -93 -work work {../../spi_master/src/spi_master.m.vhd}
+vcom -93 -work work {../../adjustable_pwm/src/adjustable_pwm.m.vhd}
 vcom -93 -work work {../src/ldc1000.m.vhd}
 vcom -93 -work work {../sim/ldc1000_rtl_tb.vhd}
 
