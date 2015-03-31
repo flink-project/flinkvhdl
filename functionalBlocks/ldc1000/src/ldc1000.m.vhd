@@ -131,7 +131,7 @@ END ENTITY ldc1000;
 ARCHITECTURE rtl OF ldc1000 IS
 	CONSTANT WRITE_TRANSFER : STD_LOGIC := '0';
 	CONSTANT READ_TRANSFER : STD_LOGIC := '1';
-	CONSTANT SS_HOLD_CYCLES : INTEGER := 2; -- add 2 to be sure and have a minimum number of cycles
+	CONSTANT SS_HOLD_CYCLES : INTEGER := 40; -- add 2 to be sure and have a minimum number of cycles
 	CONSTANT TRANSFER_WIDTH : INTEGER := 56;
 	CONSTANT DEVICE_ID_ADDRESS : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000000";
 	CONSTANT RESERVED_ADDRESS : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
@@ -144,7 +144,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 						read_config_2_start,read_config_2_end,
 						write_config_1_start,write_config_1_end,
 						write_config_2_start,write_config_2_end,
-						update_data_regs_start,update_data_regs_end
+						update_data_regs_start,update_data_regs_end,
+						wait_for_next_transfer
 					);
 
 	TYPE t_internal_register IS RECORD
@@ -155,6 +156,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 		data				: t_data_regs;
 		update_config		: STD_LOGIC;
 		ratio				: UNSIGNED(PWM_FREQUENCY_RESOLUTION-1 DOWNTO 0);
+		counter				: UNSIGNED(7 DOWNTO 0);
 	END RECORD;
 	
 	
@@ -174,7 +176,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 			CS_SETUP_CYLES		=> SS_HOLD_CYCLES,
 			TRANSFER_WIDTH 		=> TRANSFER_WIDTH,
 			NR_OF_SS 			=> 1, -- only one ss is needed
-			CPOL				=> '1', -- sckl inactive high -> leading edge = falling edge, trailing edge = rising edge
+			CPOL				=> '1', 
 			CPHA				=> '1', -- data is captured on the trialling edge see data sheet page 15
 			MSBFIRST			=> '1', -- MSB first
 			SSPOL				=> '0' -- zero active see data sheet page 14
@@ -320,9 +322,16 @@ ARCHITECTURE rtl OF ldc1000 IS
 						vi.data.comperator:= slv_rx_data(44);
 						vi.data.proximity := slv_rx_data(39 DOWNTO 24);
 						vi.data.frequency_counter := slv_rx_data(23 DOWNTO 0);
-						vi.state := idle;
+						vi.state := wait_for_next_transfer;
 					END IF;
-	
+				WHEN wait_for_next_transfer =>
+					vi.counter := vi.counter + 1;
+					if vi.counter >= 100 THEN
+						vi.counter := (OTHERS => '0');
+						vi.state := idle; 
+					END IF;
+				
+				
 				WHEN OTHERS =>
 					vi.state := idle; 
 			END CASE;
@@ -351,6 +360,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 				vi.out_config.pwr_mode := '0';
 				vi.update_config := '1';
 				vi.ratio := (OTHERS => '0');
+				vi.counter := (OTHERS => '0');
 			END IF;
 			-- setting outputs
 			ri_next <= vi;

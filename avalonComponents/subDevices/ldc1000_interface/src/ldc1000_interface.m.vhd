@@ -145,7 +145,7 @@ BEGIN
 
 				
 	-- cobinatoric process
-	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,configuring,out_config,ldc1000_data)
+	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,configuring,out_config,ldc1000_data,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
 		VARIABLE address: UNSIGNED(c_ldc1000_interface_address_width-1 DOWNTO 0) := to_unsigned(0,c_ldc1000_interface_address_width);
 	BEGIN
@@ -157,7 +157,7 @@ BEGIN
 		vi.global_reset_n := '1';
 		vi.ldc_reset_n := '1';
 		address := UNSIGNED(islv_avs_address);
-		
+		vi.update_config := '0';
 		
 		IF vi.wait_for_update = '1' THEN
 			IF configuring = '0' THEN
@@ -176,8 +176,8 @@ BEGIN
 					IF islv_avs_byteenable(0) = '1' THEN
 								vi.global_reset_n := NOT islv_avs_write_data(c_fLink_reset_bit_num);
 								vi.update_config := islv_avs_write_data(1);
-								vi.config_reg.response_time := islv_avs_write_data( 3 DOWNTO 2);
-								vi.config_reg.amplitude := islv_avs_write_data( 5 DOWNTO 4);
+								vi.config_reg.response_time := islv_avs_write_data( 4 DOWNTO 2);
+								vi.config_reg.amplitude := islv_avs_write_data( 6 DOWNTO 5);
 								
 					END IF;
 					IF islv_avs_byteenable(1) = '1' THEN
@@ -233,10 +233,10 @@ BEGIN
 				WHEN c_usig_base_clk_address =>
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(BASE_CLK,c_fLink_avs_data_width));
 				WHEN c_configuration_address =>
-					oslv_avs_read_data(0) <= vi.global_reset_n;
+					oslv_avs_read_data(0) <=  NOT vi.global_reset_n;
 					oslv_avs_read_data(1) <= vi.update_config;
-					oslv_avs_read_data(3 DOWNTO 2) <= out_config.response_time;
-					oslv_avs_read_data(5 DOWNTO 4) <= out_config.amplitude;
+					oslv_avs_read_data(4 DOWNTO 2) <= out_config.response_time;
+					oslv_avs_read_data(6 DOWNTO 5) <= out_config.amplitude;
 					oslv_avs_read_data(10 DOWNTO 8) <= out_config.intb_mode;
 					oslv_avs_read_data(11) <= out_config.pwr_mode;
 				WHEN c_status_address =>	
