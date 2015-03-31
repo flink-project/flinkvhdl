@@ -52,7 +52,12 @@ ARCHITECTURE sim OF mpu9250_rtl_tb IS
 	SIGNAL sl_sdi				: STD_LOGIC := '0';
 	
 	
-	SIGNAL data						: t_data_regs;
+	SIGNAL data					: t_data_regs;
+	SIGNAL out_conf				: t_config;
+	SIGNAL in_conf				: t_config;
+	SIGNAL sl_configuring		: STD_LOGIC := '0';
+	SIGNAL sl_update_config		: STD_LOGIC := '0';
+	
 BEGIN
 	--create component
 	my_unit_under_test : mpu9250 
@@ -69,14 +74,42 @@ BEGIN
 			isl_sdo				=> sl_sdo,
 			osl_sdi				=> sl_sdi,
 			
-			ot_data				=> data
+			ot_data				=> data,
+			it_conf				=> in_conf,
+			ot_conf				=> out_conf,
+			osl_configuring		=> sl_configuring,
+			isl_update_config	=> sl_update_config
 		);
-		
 		
 	sl_clk 		<= NOT sl_clk after main_period/2;
 	
 	tb_main_proc : PROCESS
 	BEGIN
+	
+			in_conf.acceleration_offset_x <= (OTHERS => '0');
+			in_conf.acceleration_offset_y <= (OTHERS => '0');
+			in_conf.acceleration_offset_z <= (OTHERS => '0');
+			in_conf.gyro_offset_x <= (OTHERS => '0');
+			in_conf.gyro_offset_y <= (OTHERS => '0');
+			in_conf.gyro_offset_z <= (OTHERS => '0');
+			in_conf.samplerate_divider <= (OTHERS => '0');
+			in_conf.DLPF_CFG <= (OTHERS => '0');
+			in_conf.EXT_SYNC_SET  <= (OTHERS => '0');
+			in_conf.FIFO_MODE <= '0';
+			in_conf.FCHOICE_B <= (OTHERS => '0');
+			in_conf.GYRO_FS_SEL <= (OTHERS => '0');
+			in_conf.ZGYRO_Cten <= '0';
+			in_conf.YGYRO_Cten <= '0';
+			in_conf.XGYRO_Cten <= '0';
+			in_conf.ACCEL_FS_SEL <= (OTHERS => '0');
+			in_conf.az_st_en <= '0';
+			in_conf.ay_st_en <= '0';
+			in_conf.ax_st_en <= '0';
+			in_conf.A_DLPF_CFG <= '0';
+			in_conf.ACCEL_FCHOICE_B <= '0';
+			in_conf.Lposc_clksel <= (OTHERS => '0');
+	
+	
 			sl_reset_n	<=	'0';
 		WAIT FOR 2*main_period;
 			sl_reset_n	<=	'1';
