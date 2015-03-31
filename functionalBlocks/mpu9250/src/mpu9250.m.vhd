@@ -94,7 +94,7 @@ PACKAGE mpu9250_pkg IS
 			--internal signals
 			ot_data						: OUT t_data_regs;
 			it_conf						: IN t_config;
-			ot_conf						: IN t_config;
+			ot_conf						: OUT t_config;
 			osl_configuring				: OUT STD_LOGIC;
 			isl_update_config			: IN STD_LOGIC
 		);
@@ -129,7 +129,7 @@ ENTITY mpu9250 IS
 			--internal signals
 			ot_data						: OUT t_data_regs;
 			it_conf						: IN t_config;
-			ot_conf						: IN t_config;
+			ot_conf						: OUT t_config;
 			osl_configuring				: OUT STD_LOGIC;
 			isl_update_config			: IN STD_LOGIC
 		);
@@ -296,7 +296,7 @@ ARCHITECTURE rtl OF mpu9250 IS
 					vi.tx_start := '1';
 					vi.state := read_conf_wait; 
 				WHEN read_conf_wait =>
-					IF sl_rx_done = '1' THEN.
+					IF sl_rx_done = '1' THEN
 						vi.conf.samplerate_divider := slv_rx_data(47 DOWNTO 40);
 						
 						vi.conf.DLPF_CFG := slv_rx_data(34 DOWNTO 32);
@@ -357,21 +357,21 @@ ARCHITECTURE rtl OF mpu9250 IS
 					vi.tx_data(37 DOWNTO 35) := it_conf.EXT_SYNC_SET;
 					vi.tx_data(38) := it_conf.FIFO_MODE;
 		
-					vi.tx_data(25 DOWNTO 24) := it_conf.FCHOICE_B
-					vi.tx_data(28 DOWNTO 27) := it_conf.GYRO_FS_SEL
-					vi.tx_data(29) := it_conf.ZGYRO_Cten
-					vi.tx_data(30) := it_conf.YGYRO_Cten
-					vi.tx_data(31) := it_conf.XGYRO_Cten
+					vi.tx_data(25 DOWNTO 24) := it_conf.FCHOICE_B;
+					vi.tx_data(28 DOWNTO 27) := it_conf.GYRO_FS_SEL;
+					vi.tx_data(29) := it_conf.ZGYRO_Cten;
+					vi.tx_data(30) := it_conf.YGYRO_Cten;
+					vi.tx_data(31) := it_conf.XGYRO_Cten;
 					
-					vi.tx_data(20 DOWNTO 19) := it_conf.ACCEL_FS_SEL
-					vi.tx_data(21) := it_conf.az_st_en
-					vi.tx_data(22) := it_conf.ay_st_en
-					vi.tx_data(23) := it_conf.ax_st_en
+					vi.tx_data(20 DOWNTO 19) := it_conf.ACCEL_FS_SEL;
+					vi.tx_data(21) := it_conf.az_st_en;
+					vi.tx_data(22) := it_conf.ay_st_en;
+					vi.tx_data(23) := it_conf.ax_st_en;
 					
-					vi.tx_data(8) := it_conf.A_DLPF_CFG
-					vi.tx_data(9) := it_conf.ACCEL_FCHOICE_B
+					vi.tx_data(8) := it_conf.A_DLPF_CFG;
+					vi.tx_data(9) := it_conf.ACCEL_FCHOICE_B;
 					
-					vi.tx_data(3 DOWNTO 0) := it_conf.conf.Lposc_clksel;
+					vi.tx_data(3 DOWNTO 0) := it_conf.Lposc_clksel;
 
 					vi.tx_start := '1';
 					vi.state := write_conf_wait; 
