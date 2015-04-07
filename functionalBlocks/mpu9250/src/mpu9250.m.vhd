@@ -96,7 +96,8 @@ PACKAGE mpu9250_pkg IS
 			it_conf						: IN t_config;
 			ot_conf						: OUT t_config;
 			osl_configuring				: OUT STD_LOGIC;
-			isl_update_config			: IN STD_LOGIC
+			isl_update_config			: IN STD_LOGIC;
+			osl_update_done				: OUT STD_LOGIC
 		);
 	END COMPONENT mpu9250;
 
@@ -131,7 +132,8 @@ ENTITY mpu9250 IS
 			it_conf						: IN t_config;
 			ot_conf						: OUT t_config;
 			osl_configuring				: OUT STD_LOGIC;
-			isl_update_config			: IN STD_LOGIC
+			isl_update_config			: IN STD_LOGIC;
+			osl_update_done				: OUT STD_LOGIC
 		);
 END ENTITY mpu9250;
 
@@ -145,20 +147,36 @@ ARCHITECTURE rtl OF mpu9250 IS
 	CONSTANT TRANSFER_WIDTH : INTEGER := 56;
 	CONSTANT ACCEL_XOUT_L_ADDRESS : STD_LOGIC_VECTOR := "0111011";
 	CONSTANT GYRO_XOUT_L_ADDRESS : STD_LOGIC_VECTOR := "1000011";
-	CONSTANT MAG_XOUT_L_ADDRESS : STD_LOGIC_VECTOR := "0000011";
 	CONSTANT XG_OFFSET_H_ADDRESS : STD_LOGIC_VECTOR := "0010011";
 	CONSTANT SMPLRT_DIV_ADDRESS : STD_LOGIC_VECTOR := "0011001";
 	CONSTANT XA_OFFSET_H_ADDRESS : STD_LOGIC_VECTOR := "1110111";
-	CONSTANT HOLD_TIME : UNSIGNED(11 DOWNTO 0) := to_unsigned(1000,12);
+	CONSTANT I2C_SLV0_ADDR_ADDRESS : STD_LOGIC_VECTOR := "0100101";
+	CONSTANT EXT_SENS_DATA_00_ADDRESS : STD_LOGIC_VECTOR := "1001001";
+	CONSTANT USER_CTRL_ADDRESS : STD_LOGIC_VECTOR := "1101010";
+	CONSTANT I2C_MST_CTRL : STD_LOGIC_VECTOR := "0100100";
 	
+	CONSTANT I2C_READ : STD_LOGIC := '1';
+	CONSTANT MAG_I2C_ADDRESS : STD_LOGIC_VECTOR := "0001100";
+	CONSTANT MAG_DATA_ADDRESS : STD_LOGIC_VECTOR := x"03";
+	
+	CONSTANT COUNTER_WIDTH : INTEGER := 16;
+	
+	CONSTANT HOLD_TIME : UNSIGNED(COUNTER_WIDTH-1 DOWNTO 0) := to_unsigned(1000,COUNTER_WIDTH);
+	CONSTANT I2C_WAIT_TIME : UNSIGNED(COUNTER_WIDTH-1 DOWNTO 0) := to_unsigned(60000,COUNTER_WIDTH);
 		
 	TYPE t_states IS (	idle,
-						write_gyro_offset_start, write_gyro_offset_wait, read_gyro_offset_start,read_gyro_offset_wait,
-						write_conf_start, write_conf_wait, read_conf_start, read_conf_wait,
-						write_accel_offset_start, write_accel_offset_wait, read_accel_offset_start,read_accel_offset_wait,
+						enable_i2c_master,enable_i2c_master_wait,
+						write_gyro_offset_start, write_gyro_offset_wait, 
+						read_gyro_offset_start,read_gyro_offset_wait,
+						write_conf_start, write_conf_wait, 
+						read_conf_start, read_conf_wait,
+						write_accel_offset_start, write_accel_offset_wait, 
+						read_accel_offset_start,read_accel_offset_wait,
 						read_acc_data_start,read_acc_data_wait,
 						read_gyro_data_start,read_gyro_data_wait,
-						read_mag_data_start,read_mag_data_wait
+						read_mag_data_start,read_mag_data_wait_1,read_mag_data_wait_i2c_end,read_mag_data_i2c_receive_data,read_mag_data_i2c_receive_wait,
+						wait_for_next_transfer
+						
 					);
 
 	TYPE t_internal_register IS RECORD
@@ -168,6 +186,9 @@ ARCHITECTURE rtl OF mpu9250 IS
 		data				: t_data_regs;
 		conf				: t_config;
 		configuring			: STD_LOGIC;
+		counter				: UNSIGNED(COUNTER_WIDTH-1 DOWNTO 0);
+		state_after_wait	: t_states;
+		update_done			: STD_LOGIC;
 	END RECORD;
 	
 	
@@ -223,6 +244,7 @@ ARCHITECTURE rtl OF mpu9250 IS
 			
 			--standard values
 			vi.tx_start := '0';
+			vi.update_done := '0';
 			
 			IF isl_update_config = '1' THEN
 				vi.configuring := '1'; 
@@ -236,6 +258,14 @@ ARCHITECTURE rtl OF mpu9250 IS
 						ELSE
 							vi.state := read_acc_data_start;
 						END IF;
+				when wait_for_next_transfer => 
+					vi.counter := vi.counter + 1;
+					IF vi.counter >= HOLD_TIME THEN
+						vi.state := vi.state_after_wait;
+						vi.counter := (OTHERS => '0');
+					END IF;
+				
+				
 				--######### read configuration #########  	
 				WHEN read_acc_data_start => 
 					vi.tx_data := (OTHERS => '0');
@@ -248,7 +278,8 @@ ARCHITECTURE rtl OF mpu9250 IS
 						vi.data.acceleration_x := slv_rx_data(47 DOWNTO 32);
 						vi.data.acceleration_y := slv_rx_data(31 DOWNTO 16);
 						vi.data.acceleration_z := slv_rx_data(15 DOWNTO 0);
-						vi.state := read_gyro_data_start; 
+						vi.state_after_wait := read_gyro_data_start; 
+						vi.state := wait_for_next_transfer; 
 					END IF;
 				WHEN read_gyro_data_start => 
 					vi.tx_data := (OTHERS => '0');
@@ -261,33 +292,59 @@ ARCHITECTURE rtl OF mpu9250 IS
 						vi.data.gyro_data_x := slv_rx_data(47 DOWNTO 32);
 						vi.data.gyro_data_y := slv_rx_data(31 DOWNTO 16);
 						vi.data.gyro_data_z := slv_rx_data(15 DOWNTO 0);
-						vi.state := read_mag_data_start; 
+						vi.state_after_wait := read_mag_data_start; 
+						vi.state := wait_for_next_transfer; 
 					END IF;
 				WHEN read_mag_data_start => 
 					vi.tx_data := (OTHERS => '0');
-					vi.tx_data(TRANSFER_WIDTH-1) := READ_TRANSFER;
-					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := MAG_XOUT_L_ADDRESS;
+					vi.tx_data(TRANSFER_WIDTH-1) := WRITE_TRANSFER;
+					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := I2C_MST_CTRL;
+					vi.tx_data(47 DOWNTO 40) := x"0D";
+					vi.tx_data(39) := I2C_READ;
+					vi.tx_data(38 DOWNTO 32) := MAG_I2C_ADDRESS;
+					vi.tx_data(31 DOWNTO 24) := MAG_DATA_ADDRESS;
+					vi.tx_data(23 DOWNTO 16) := x"86";
 					vi.tx_start := '1';
-					vi.state := read_mag_data_wait;
-				WHEN read_mag_data_wait => 
+					vi.state := read_mag_data_wait_1;
+				WHEN read_mag_data_wait_1 => 
+					IF sl_rx_done = '1' THEN
+						vi.state_after_wait := read_mag_data_wait_i2c_end; 
+						vi.state := wait_for_next_transfer;
+					END IF;
+				WHEN read_mag_data_wait_i2c_end => 
+					vi.counter := vi.counter + 1;
+					IF vi.counter >= I2C_WAIT_TIME THEN
+						vi.state := read_mag_data_i2c_receive_data;
+						vi.counter := (OTHERS => '0');
+					END IF;
+				WHEN read_mag_data_i2c_receive_data =>
+					vi.tx_data := (OTHERS => '0');
+					vi.tx_data(TRANSFER_WIDTH-1) := READ_TRANSFER;
+					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := EXT_SENS_DATA_00_ADDRESS;
+					vi.tx_start := '1';
+					vi.state := read_mag_data_i2c_receive_wait;
+				
+				WHEN read_mag_data_i2c_receive_wait =>
 					IF sl_rx_done = '1' THEN
 						vi.data.mag_data_x := slv_rx_data(47 DOWNTO 32);
 						vi.data.mag_data_y := slv_rx_data(31 DOWNTO 16);
 						vi.data.mag_data_z := slv_rx_data(15 DOWNTO 0);
-						vi.state := idle; 
+						vi.state_after_wait := idle; 
+						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN read_gyro_offset_start =>
 					vi.tx_data := (OTHERS => '0');
 					vi.tx_data(TRANSFER_WIDTH-1) := READ_TRANSFER;
 					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := XG_OFFSET_H_ADDRESS;
 					vi.tx_start := '1';
-					vi.state := write_gyro_offset_wait; 
+					vi.state := read_gyro_offset_wait; 
 				WHEN read_gyro_offset_wait =>
 					IF sl_rx_done = '1' THEN
 						vi.conf.gyro_offset_x := slv_rx_data(47 DOWNTO 32);
 						vi.conf.gyro_offset_y := slv_rx_data(31 DOWNTO 16);
 						vi.conf.gyro_offset_z := slv_rx_data(15 DOWNTO 0);
-						vi.state := read_conf_start; 
+						vi.state_after_wait := read_conf_start; 
+						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN read_conf_start => 
 					vi.tx_data := (OTHERS => '0');
@@ -318,22 +375,24 @@ ARCHITECTURE rtl OF mpu9250 IS
 						vi.conf.ACCEL_FCHOICE_B := slv_rx_data(9);
 						
 						vi.conf.Lposc_clksel := slv_rx_data(3 DOWNTO 0);
-						
-						vi.state := read_accel_offset_start; 
+						vi.state_after_wait := read_accel_offset_start; 
+						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN read_accel_offset_start =>
 					vi.tx_data := (OTHERS => '0');
 					vi.tx_data(TRANSFER_WIDTH-1) := READ_TRANSFER;
 					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := XA_OFFSET_H_ADDRESS;
 					vi.tx_start := '1';
-					vi.state := write_gyro_offset_wait; 
+					vi.state := read_accel_offset_wait; 
 				WHEN read_accel_offset_wait	=>
 					IF sl_rx_done = '1' THEN
 						vi.conf.acceleration_offset_x := slv_rx_data(47 DOWNTO 32);
 						vi.conf.acceleration_offset_y := slv_rx_data(31 DOWNTO 16);
 						vi.conf.acceleration_offset_z := slv_rx_data(15 DOWNTO 0);
-						vi.state := idle; 
 						vi.configuring := '0';
+						vi.state_after_wait := idle; 
+						vi.state := wait_for_next_transfer;
+						vi.update_done := '1';
 					END IF;
 				WHEN write_gyro_offset_start =>
 					vi.tx_data := (OTHERS => '0');
@@ -346,7 +405,8 @@ ARCHITECTURE rtl OF mpu9250 IS
 					vi.state := write_gyro_offset_wait; 
 				WHEN write_gyro_offset_wait =>
 					IF sl_rx_done = '1' THEN
-						vi.state := write_conf_start; 
+						vi.state_after_wait := write_conf_start; 
+						vi.state := wait_for_next_transfer; 
 					END IF;
 				WHEN write_conf_start =>
 					vi.tx_data := (OTHERS => '0');
@@ -377,7 +437,8 @@ ARCHITECTURE rtl OF mpu9250 IS
 					vi.state := write_conf_wait; 
 				WHEN write_conf_wait =>
 					IF sl_rx_done = '1' THEN
-						vi.state := write_accel_offset_start; 
+						vi.state_after_wait := write_accel_offset_start; 
+						vi.state := wait_for_next_transfer; 
 					END IF;
 				WHEN write_accel_offset_start =>
 					vi.tx_data := (OTHERS => '0');
@@ -390,15 +451,31 @@ ARCHITECTURE rtl OF mpu9250 IS
 					vi.state := write_accel_offset_wait; 
 				WHEN write_accel_offset_wait =>
 					IF sl_rx_done = '1' THEN
-						vi.state := read_gyro_offset_start; 
+						vi.state_after_wait := read_gyro_offset_start; 
+						vi.state := wait_for_next_transfer; 
 					END IF;
+				WHEN enable_i2c_master => 
+					vi.tx_data := (OTHERS => '0');
+					vi.tx_data(TRANSFER_WIDTH-1) := WRITE_TRANSFER;
+					vi.tx_data(TRANSFER_WIDTH-2 DOWNTO TRANSFER_WIDTH-8) := USER_CTRL_ADDRESS;
+					vi.tx_data(47 DOWNTO 40) := x"20";
+					vi.tx_data(39 DOWNTO 32) := x"01";
+					vi.tx_start := '1';
+					vi.state := enable_i2c_master_wait; 
+				WHEN enable_i2c_master_wait => 
+					IF sl_rx_done = '1' THEN
+						vi.state_after_wait := read_gyro_offset_start; 
+						vi.state := wait_for_next_transfer; 
+					END IF;
+				
+				
 				WHEN OTHERS =>
 					vi.state := idle;
 			END CASE;
 			
 			--reset
 			IF isl_reset_n = '0' THEN
-				vi.state := read_gyro_offset_start; 
+				vi.state := enable_i2c_master; 
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
 				vi.data.acceleration_x := (OTHERS => '0');
@@ -433,6 +510,8 @@ ARCHITECTURE rtl OF mpu9250 IS
 				vi.conf.ACCEL_FCHOICE_B := '0';
 				vi.conf.Lposc_clksel := (OTHERS => '0');
 				vi.configuring := '1';
+				vi.state_after_wait := idle;
+				vi.counter := (OTHERS => '0');
 			END IF;
 			-- setting outputs
 			ri_next <= vi;
@@ -453,6 +532,8 @@ ARCHITECTURE rtl OF mpu9250 IS
 		ot_data	<= ri.data;
 		osl_configuring <= ri.configuring;
 		ot_conf <= ri.conf;
+		osl_update_done <= ri.update_done;
+		
 		
 END ARCHITECTURE rtl;
 

@@ -58,6 +58,7 @@ ARCHITECTURE sim OF ldc1000_rtl_tb IS
 	SIGNAL configuring				: STD_LOGIC := '0';
 	SIGNAL data						: t_data_regs;
 	SIGNAL sl_update_config			: STD_LOGIC := '0';
+	SIGNAL sl_confi_done			: STD_LOGIC := '0';
 BEGIN
 	--create component
 	my_unit_under_test : ldc1000 
@@ -79,7 +80,8 @@ BEGIN
 			ot_config			=> out_config,
 			osl_configuring		=> configuring,
 			ot_data				=> data,
-			isl_update_config	=> sl_update_config
+			isl_update_config	=> sl_update_config,
+			osl_confi_done		=>sl_confi_done
 		);
 		
 		

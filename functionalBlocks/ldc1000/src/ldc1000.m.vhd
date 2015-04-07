@@ -84,7 +84,8 @@ PACKAGE ldc1000_pkg IS
 			ot_config					: OUT t_conf_regs;
 			ot_data						: OUT t_data_regs;
 			osl_configuring				: OUT STD_LOGIC;
-			isl_update_config			: IN STD_LOGIC
+			isl_update_config			: IN STD_LOGIC;
+			osl_confi_done				: OUT STD_LOGIC
 		);
 	END COMPONENT ldc1000;
 
@@ -121,7 +122,8 @@ ENTITY ldc1000 IS
 			ot_config					: OUT t_conf_regs;
 			ot_data						: OUT t_data_regs;
 			osl_configuring				: OUT STD_LOGIC;
-			isl_update_config			: IN STD_LOGIC
+			isl_update_config			: IN STD_LOGIC;
+			osl_confi_done				: OUT STD_LOGIC
 		);
 END ENTITY ldc1000;
 
@@ -136,7 +138,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 	CONSTANT DEVICE_ID_ADDRESS : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000000";
 	CONSTANT RESERVED_ADDRESS : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
 	CONSTANT STATUS_ADDRESS : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0100000";
-
+	CONSTANT COUNTER_WIDTH : INTEGER := 12;
+	CONSTANT HOLD_TIME : UNSIGNED(COUNTER_WIDTH-1 DOWNTO 0) := to_unsigned(400,COUNTER_WIDTH);
 		
 		
 	TYPE t_states IS (	idle,
@@ -149,14 +152,16 @@ ARCHITECTURE rtl OF ldc1000 IS
 					);
 
 	TYPE t_internal_register IS RECORD
-		state				:t_states;
+		state				: t_states;
+		state_after_wait	: t_states;
 		tx_data 			: STD_LOGIC_VECTOR(TRANSFER_WIDTH -1 DOWNTO 0);
 		tx_start 			: STD_LOGIC;
 		out_config			: t_conf_regs;
 		data				: t_data_regs;
 		update_config		: STD_LOGIC;
 		ratio				: UNSIGNED(PWM_FREQUENCY_RESOLUTION-1 DOWNTO 0);
-		counter				: UNSIGNED(7 DOWNTO 0);
+		counter				: UNSIGNED(COUNTER_WIDTH-1 DOWNTO 0);
+		confi_done			: STD_LOGIC;
 	END RECORD;
 	
 	
@@ -225,7 +230,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 			
 			--standard values
 			vi.tx_start := '0';
-			
+			vi.confi_done := '0';
 			
 			IF isl_update_config = '1' THEN
 				vi.update_config := '1';
@@ -235,7 +240,6 @@ ARCHITECTURE rtl OF ldc1000 IS
 				WHEN idle => 
 					IF vi.update_config = '1' THEN
 						vi.state := write_config_1_start;
-						
 					ELSE
 						vi.state := update_data_regs_start;
 					END IF;
@@ -255,7 +259,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 						vi.out_config.min_sens_freq := slv_rx_data(23 DOWNTO 16);
 						vi.out_config.response_time := slv_rx_data(10 DOWNTO 8);
 						vi.out_config.amplitude := slv_rx_data(12 DOWNTO 11);
-						vi.state := read_config_2_start; 
+						vi.state_after_wait := read_config_2_start;
+						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN read_config_2_start => 
 					vi.tx_data := (OTHERS => '0');
@@ -270,8 +275,10 @@ ARCHITECTURE rtl OF ldc1000 IS
 						vi.out_config.intb_mode := slv_rx_data(10 DOWNTO 8);		
 						vi.out_config.pwr_mode	 := slv_rx_data(0);
 						vi.out_config.frequency_divider := it_config.frequency_divider;
-						vi.state := idle; 
+						vi.state_after_wait := idle;
+						vi.state := wait_for_next_transfer;
 						vi.update_config := '0';
+						vi.confi_done := '1';
 					END IF;
 	
 				
@@ -290,7 +297,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 					vi.state := write_config_1_end;
 				WHEN write_config_1_end => 	
 					IF sl_rx_done = '1' THEN
-						vi.state := write_config_2_start;
+						vi.state_after_wait := write_config_2_start;
+						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN write_config_2_start => 
 					vi.tx_data := (OTHERS => '0');
@@ -304,7 +312,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 					vi.state := write_config_2_end;
 				WHEN write_config_2_end => 	
 					IF sl_rx_done = '1' THEN
-						vi.state := read_config_1_start;
+						vi.state_after_wait := read_config_1_start;
+						vi.state := wait_for_next_transfer;
 					END IF;
 					
 				--######### read data #########	
@@ -322,13 +331,14 @@ ARCHITECTURE rtl OF ldc1000 IS
 						vi.data.comperator:= slv_rx_data(44);
 						vi.data.proximity := slv_rx_data(39 DOWNTO 24);
 						vi.data.frequency_counter := slv_rx_data(23 DOWNTO 0);
+						vi.state_after_wait := idle;
 						vi.state := wait_for_next_transfer;
 					END IF;
 				WHEN wait_for_next_transfer =>
 					vi.counter := vi.counter + 1;
-					if vi.counter >= 100 THEN
+					if vi.counter >= HOLD_TIME THEN
 						vi.counter := (OTHERS => '0');
-						vi.state := idle; 
+						vi.state := vi.state_after_wait; 
 					END IF;
 				
 				
@@ -338,7 +348,8 @@ ARCHITECTURE rtl OF ldc1000 IS
 			
 			--reset
 			IF isl_reset_n = '0' THEN
-				vi.state := read_config_1_start; 
+				vi.state := read_config_1_start; 				
+				vi.state_after_wait := read_config_1_start;
 				vi.tx_data := (OTHERS => '0');
 				vi.tx_start := '0';
 				vi.data.OSC_dead := '0';
@@ -361,6 +372,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 				vi.update_config := '1';
 				vi.ratio := (OTHERS => '0');
 				vi.counter := (OTHERS => '0');
+				vi.confi_done := '0';
 			END IF;
 			-- setting outputs
 			ri_next <= vi;
@@ -380,6 +392,7 @@ ARCHITECTURE rtl OF ldc1000 IS
 		osl_configuring <= ri.update_config;
 		ot_config <= ri.out_config;
 		ot_data	<= ri.data;
+		osl_confi_done <= ri.confi_done;
 		
 END ARCHITECTURE rtl;
 

@@ -57,6 +57,7 @@ ARCHITECTURE sim OF mpu9250_rtl_tb IS
 	SIGNAL in_conf				: t_config;
 	SIGNAL sl_configuring		: STD_LOGIC := '0';
 	SIGNAL sl_update_config		: STD_LOGIC := '0';
+	SIGNAL sl_update_done		: STD_LOGIC := '0';
 	
 BEGIN
 	--create component
@@ -78,7 +79,8 @@ BEGIN
 			it_conf				=> in_conf,
 			ot_conf				=> out_conf,
 			osl_configuring		=> sl_configuring,
-			isl_update_config	=> sl_update_config
+			isl_update_config	=> sl_update_config,
+			osl_update_done		=> sl_update_done
 		);
 		
 	sl_clk 		<= NOT sl_clk after main_period/2;
@@ -113,7 +115,7 @@ BEGIN
 			sl_reset_n	<=	'0';
 		WAIT FOR 2*main_period;
 			sl_reset_n	<=	'1';
-		WAIT FOR 200*spi_period;
+		WAIT FOR 2000*spi_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 

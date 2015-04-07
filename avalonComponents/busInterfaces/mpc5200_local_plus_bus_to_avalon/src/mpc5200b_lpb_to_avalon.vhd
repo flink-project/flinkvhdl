@@ -46,10 +46,8 @@ ENTITY lpb_mpc5200b_to_avalon IS
 			lpb_ack_n	: 	OUT	STD_LOGIC;
 			lpb_ale_n	: 	IN	STD_LOGIC;
 			lpb_rdwr_n	: 	IN	STD_LOGIC;
-			lpb_ts_n	: 	IN	STD_LOGIC;
+			lpb_ts_n	: 	IN	STD_LOGIC
 						
-			-- Interrupt SIGNAL to MPC			
-			lpb_int		: 	OUT STD_LOGIC
 			);
 END lpb_mpc5200b_to_avalon;
 
@@ -84,9 +82,6 @@ BEGIN
 --activation of FPGA with only one chip select SIGNAL
 lpb_rd <= (NOT lpb_cs_n(0) AND NOT lpb_oe_n);
 lpb_wr <= (NOT lpb_cs_n(0) AND NOT lpb_rdwr_n);
-
--- no interrupt function implemented
-lpb_int <= '0';
 
 -- external ack SIGNAL gets internal value
 lpb_ack_n <= NOT lpb_ack_i;

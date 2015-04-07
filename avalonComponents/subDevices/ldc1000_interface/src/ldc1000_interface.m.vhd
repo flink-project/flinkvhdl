@@ -126,26 +126,25 @@ ARCHITECTURE rtl OF ldc1000_interface IS
 			ldc_reset_n			: STD_LOGIC;
 			config_reg			: t_conf_regs;
 			update_config		: STD_LOGIC;
-			wait_for_update		: STD_LOGIC;
 	END RECORD;
 
 	SIGNAL ri,ri_next : t_internal_register;
 	SIGNAL out_config : t_conf_regs;
 	SIGNAL ldc1000_data	: t_data_regs;
 	SIGNAL configuring : STD_LOGIC;
-
+	SIGNAL confi_done : STD_LOGIC;
 	
 BEGIN
 	my_ldc1000 : ldc1000 
 		GENERIC MAP (BASE_CLK,SCLK_FREQUENCY)
 		PORT MAP (isl_clk,ri.ldc_reset_n,
 					osl_sclk,oslv_csb,isl_sdo,osl_sdi,osl_tbclk,					
-					ri.config_reg,out_config,ldc1000_data,configuring,ri.update_config
+					ri.config_reg,out_config,ldc1000_data,configuring,ri.update_config,confi_done
 				);
 
 				
 	-- cobinatoric process
-	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,configuring,out_config,ldc1000_data,islv_avs_byteenable)
+	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,configuring,out_config,ldc1000_data,islv_avs_byteenable,confi_done)
 		VARIABLE vi :	t_internal_register;
 		VARIABLE address: UNSIGNED(c_ldc1000_interface_address_width-1 DOWNTO 0) := to_unsigned(0,c_ldc1000_interface_address_width);
 	BEGIN
@@ -159,12 +158,9 @@ BEGIN
 		address := UNSIGNED(islv_avs_address);
 		vi.update_config := '0';
 		
-		IF vi.wait_for_update = '1' THEN
-			IF configuring = '0' THEN
-				vi.wait_for_update := '0';
-				vi.config_reg := out_config;
-			END IF;
-			
+		
+		IF confi_done = '1' THEN
+			vi.config_reg := out_config;		
 		END IF;
 		
 		
@@ -235,27 +231,27 @@ BEGIN
 				WHEN c_configuration_address =>
 					oslv_avs_read_data(0) <=  NOT vi.global_reset_n;
 					oslv_avs_read_data(1) <= vi.update_config;
-					oslv_avs_read_data(4 DOWNTO 2) <= out_config.response_time;
-					oslv_avs_read_data(6 DOWNTO 5) <= out_config.amplitude;
-					oslv_avs_read_data(10 DOWNTO 8) <= out_config.intb_mode;
-					oslv_avs_read_data(11) <= out_config.pwr_mode;
+					oslv_avs_read_data(4 DOWNTO 2) <= vi.config_reg.response_time;
+					oslv_avs_read_data(6 DOWNTO 5) <= vi.config_reg.amplitude;
+					oslv_avs_read_data(10 DOWNTO 8) <= vi.config_reg.intb_mode;
+					oslv_avs_read_data(11) <= vi.config_reg.pwr_mode;
 				WHEN c_status_address =>	
-					oslv_avs_read_data(7 DOWNTO 0) <= out_config.device_id;
+					oslv_avs_read_data(7 DOWNTO 0) <= vi.config_reg.device_id;
 					oslv_avs_read_data(8) <= configuring;
 					oslv_avs_read_data(9) <= ldc1000_data.comperator;
 					oslv_avs_read_data(10) <= ldc1000_data.wake_up;
 					oslv_avs_read_data(11) <= ldc1000_data.DRDYB;
 					oslv_avs_read_data(12) <= ldc1000_data.OSC_dead;
 				WHEN c_usig_tbclk_frequency_address =>	
-					oslv_avs_read_data <= STD_LOGIC_VECTOR(out_config.frequency_divider);
+					oslv_avs_read_data <= STD_LOGIC_VECTOR(vi.config_reg.frequency_divider);
 				WHEN c_usig_Rp_address =>
-					oslv_avs_read_data(7 DOWNTO 0) <= out_config.rp_min;
-					oslv_avs_read_data(15 DOWNTO 8) <= out_config.rp_max;
+					oslv_avs_read_data(7 DOWNTO 0) <= vi.config_reg.rp_min;
+					oslv_avs_read_data(15 DOWNTO 8) <= vi.config_reg.rp_max;
 				WHEN c_usig_min_sens_freq_address =>
-					oslv_avs_read_data(7 DOWNTO 0) <= out_config.min_sens_freq;
+					oslv_avs_read_data(7 DOWNTO 0) <= vi.config_reg.min_sens_freq;
 				WHEN c_usig_threshold_address =>
-					oslv_avs_read_data(7 DOWNTO 0) <= out_config.threshold_low_msb;
-					oslv_avs_read_data(15 DOWNTO 8) <= out_config.threshold_high_msb;
+					oslv_avs_read_data(7 DOWNTO 0) <= vi.config_reg.threshold_low_msb;
+					oslv_avs_read_data(15 DOWNTO 8) <= vi.config_reg.threshold_high_msb;
 				WHEN c_usig_proximity_address =>
 					oslv_avs_read_data(15 DOWNTO 0) <= ldc1000_data.proximity;
 				WHEN c_usig_frequ_cnt_address =>	
@@ -267,7 +263,6 @@ BEGIN
 		IF isl_reset_n = '0' OR vi.global_reset_n = '0'  THEN
 			vi.ldc_reset_n := '0';
 			vi.update_config := '0';
-			vi.wait_for_update := '1';
 			vi.config_reg.device_id := (OTHERS => '0');
 			vi.config_reg.rp_max := (OTHERS => '0');
 			vi.config_reg.rp_min := (OTHERS => '0');
