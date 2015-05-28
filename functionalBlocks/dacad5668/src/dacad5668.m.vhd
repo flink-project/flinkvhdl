@@ -175,7 +175,7 @@ ARCHITECTURE rtl OF dacad5668 IS
 			
 			--standard values
 			vi.tx_start := '0';
-			vi.LDAC_n := '1';
+			vi.LDAC_n := '0';
 			vi.CLR_n := '1';
 			
 			
