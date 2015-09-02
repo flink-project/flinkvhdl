@@ -1,11 +1,11 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /ppwe_rtl_tb/sl_clk
-add wave -noupdate /ppwe_rtl_tb/sl_reset_n
-add wave -noupdate /ppwe_rtl_tb/sl_measure_signal
-add wave -noupdate -radix unsigned /ppwe_rtl_tb/usig_period_count
-add wave -noupdate -radix unsigned /ppwe_rtl_tb/usig_hightime_count
-add wave -noupdate -expand -subitemconfig {/ppwe_rtl_tb/my_unit_under_test/ri.usig_counter {-radix unsigned}} /ppwe_rtl_tb/my_unit_under_test/ri
+add wave -noupdate /ppwa_rtl_tb/sl_clk
+add wave -noupdate /ppwa_rtl_tb/sl_reset_n
+add wave -noupdate /ppwa_rtl_tb/sl_measure_signal
+add wave -noupdate -radix unsigned /ppwa_rtl_tb/usig_period_count
+add wave -noupdate -radix unsigned /ppwa_rtl_tb/usig_hightime_count
+add wave -noupdate -expand -subitemconfig {/ppwa_rtl_tb/my_unit_under_test/ri.usig_counter {-radix unsigned}} /ppwa_rtl_tb/my_unit_under_test/ri
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {400000 ps} 0}
 configure wave -namecolwidth 150
