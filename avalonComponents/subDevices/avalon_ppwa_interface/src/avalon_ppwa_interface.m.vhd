@@ -104,25 +104,25 @@ ARCHITECTURE rtl OF avalon_ppwa_interface IS
 	Type t_counter_regs IS ARRAY(number_of_ppwas-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
 
 	TYPE t_internal_register IS RECORD
-			global_reset_n			: STD_LOGIC;
-			wd_reset_n 				: STD_LOGIC_VECTOR(number_of_ppwas-1 DOWNTO 0);
+		  config_reg : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 	END RECORD;
 
 	SIGNAL ri,ri_next : t_internal_register;
+	SIGNAL ppwa_reset_n : STD_LOGIC; 
 	SIGNAL usig_period_count_regs :  t_counter_regs;
 	SIGNAL usig_hightime_count_regs : t_counter_regs;
 BEGIN
 	gen_ppwa:
 	FOR i IN 0 TO number_of_ppwas-1 GENERATE
 		my_ppwa : ppwa 
-			GENERIC MAP (c_fLink_avs_data_width)
-			PORT MAP (isl_clk,ri.wd_reset_n(i),islv_signals_to_measure(i),usig_period_count_regs(i),usig_hightime_count_regs(i));		
+			GENERIC MAP (counter_resolution => c_fLink_avs_data_width)
+			PORT MAP (isl_clk,ppwa_reset_n,islv_signals_to_measure(i),usig_period_count_regs(i),usig_hightime_count_regs(i));		
 	END GENERATE gen_ppwa;
 
 	
 	
-	-- cobinatoric process
-	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data)
+	-- combinatorial process
+	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
 		VARIABLE ppwa_part_nr: INTEGER := 0;
 	BEGIN
@@ -131,15 +131,16 @@ BEGIN
 
 		--standard values
 		oslv_avs_read_data <= (OTHERS => '0');
-		vi.global_reset_n := '1';
-		vi.wd_reset_n := (OTHERS => '1');
+		ppwa_reset_n <= '1';
 
 		--avalon slave interface write part
 		IF isl_avs_write = '1' THEN
 			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_ppwa_interface_address_width) THEN
-				IF islv_avs_byteenable(0) = '1' THEN
-					vi.global_reset_n := NOT islv_avs_write_data(0);		
-				END IF;
+				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+					IF islv_avs_byteenable(i) = '1' THEN
+							vi.config_reg((i + 1) * 8 - 1 DOWNTO i * 8) := islv_avs_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+					END IF;
+				END LOOP;
 			END IF;
 		END IF;
 
@@ -170,11 +171,11 @@ BEGIN
 			END CASE;
 		END IF;
 
-		IF isl_reset_n = '0' OR vi.global_reset_n = '0'  THEN
-			vi.wd_reset_n := (OTHERS => '0');
+		IF isl_reset_n = '0' OR  vi.config_reg(c_fLink_reset_bit_num) = '1' THEN
+			vi.config_reg := (OTHERS =>'0');
+			ppwa_reset_n <= '0';
 		END IF;
 		
-		--keep variables stable
 		ri_next <= vi;
 	
 	END PROCESS comb_proc;

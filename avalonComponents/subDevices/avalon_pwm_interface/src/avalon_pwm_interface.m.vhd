@@ -117,8 +117,8 @@ BEGIN
 			PORT MAP (isl_clk,pwm_reset_n,ri.frequency_regs(i),ri.ratio_regs(i),oslv_pwm(i));		
 	END GENERATE gen_pwm;
 
-	-- combinatoric process
-	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data)
+	-- combinatorial process
+	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
 	BEGIN
 		-- keep variables stable

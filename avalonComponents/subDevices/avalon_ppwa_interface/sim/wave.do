@@ -8,10 +8,6 @@ add wave -noupdate /avalon_ppwa_interface_tb/sl_avs_write
 add wave -noupdate /avalon_ppwa_interface_tb/slv_avs_write_data
 add wave -noupdate /avalon_ppwa_interface_tb/slv_avs_read_data
 add wave -noupdate /avalon_ppwa_interface_tb/slv_signals_to_measure
-add wave -noupdate /avalon_ppwa_interface_tb/main_period
-add wave -noupdate /avalon_ppwa_interface_tb/signal_to_measure_0_period
-add wave -noupdate /avalon_ppwa_interface_tb/number_of_ppwas
-add wave -noupdate /avalon_ppwa_interface_tb/unice_id
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {85770911 ps} 0}
 quietly wave cursor active 1

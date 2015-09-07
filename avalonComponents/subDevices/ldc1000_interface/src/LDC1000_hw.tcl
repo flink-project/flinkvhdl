@@ -23,7 +23,7 @@ set_module_property NAME LDC1000
 set_module_property VERSION 0.1.0
 set_module_property INTERNAL false
 set_module_property OPAQUE_ADDRESS_MAP true
-set_module_property GROUP fLink
+set_module_property GROUP "fLink/Sensor"
 set_module_property AUTHOR "NTB (ch.ntb.inf)"
 set_module_property DISPLAY_NAME LDC1000
 set_module_property INSTANTIATE_IN_SYSTEM_MODULE true

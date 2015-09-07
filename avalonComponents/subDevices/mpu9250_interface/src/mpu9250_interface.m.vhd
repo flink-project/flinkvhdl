@@ -63,7 +63,7 @@ PACKAGE mpu9250_interface_pkg IS
 			);
 	END COMPONENT;
 
-	CONSTANT c_mpu9250_subtype_id : STD_LOGIC_VECTOR(c_fLink_subtype_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_subtype_length));
+	CONSTANT c_mpu9250_subtype_id : STD_LOGIC_VECTOR(c_fLink_subtype_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(2,c_fLink_subtype_length));
 	CONSTANT c_mpu9250_interface_version : STD_LOGIC_VECTOR(c_fLink_interface_version_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_interface_version_length));
 
 
@@ -225,7 +225,7 @@ BEGIN
 			CASE address IS
 				WHEN c_typdef_address =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
-												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mpu9250_id,c_fLink_id_length));
+												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_sensor_id,c_fLink_id_length));
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= c_mpu9250_subtype_id;
 					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  c_mpu9250_interface_version;
 				WHEN c_mem_size_address => 

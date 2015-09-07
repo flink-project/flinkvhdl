@@ -18,14 +18,14 @@ package require -exact qsys 13.1
 # 
 # module mpu5200
 # 
-set_module_property DESCRIPTION "Interface for mpu9250 from invensense"
-set_module_property NAME mpu5200
+set_module_property DESCRIPTION "Interface for mpu9250 sensor"
+set_module_property NAME mpu9250
 set_module_property VERSION 0.1.0
 set_module_property INTERNAL false
 set_module_property OPAQUE_ADDRESS_MAP true
-set_module_property GROUP fLink
-set_module_property AUTHOR "NTB (ch.ntb.inf)"
-set_module_property DISPLAY_NAME mpu5200
+set_module_property GROUP "fLink/Sensor"
+set_module_property AUTHOR "NTB (ntb.ch.inf)"
+set_module_property DISPLAY_NAME mpu9250
 set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
 set_module_property EDITABLE true
 set_module_property ANALYZE_HDL AUTO

@@ -99,13 +99,13 @@ BEGIN
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(c_ppwa_interface_version,c_fLink_interface_version_length)) 
-			REPORT "Interface Version Missmatch" SEVERITY FAILURE;
+			REPORT "Interface Version Mismatch" SEVERITY FAILURE;
 			
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length+c_fLink_subtype_length-1 DOWNTO c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_ppwa_subtype_id,c_fLink_subtype_length)) 
-			REPORT "Subtype ID Missmatch" SEVERITY FAILURE;
+			REPORT "Subtype ID Mismatch" SEVERITY FAILURE;
 
 			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_ppwa_id,c_fLink_id_length)) 
-			REPORT "Type ID Missmatch" SEVERITY FAILURE;
+			REPORT "Type ID Mismatch" SEVERITY FAILURE;
 
 --test mem size register register:
 		WAIT FOR 10*main_period;
@@ -117,7 +117,7 @@ BEGIN
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_ppwa_interface_address_width)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**number_of_ppwas))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
---test unic id register:
+--test unique id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_ppwa_interface_address_width));
@@ -125,9 +125,9 @@ BEGIN
 			sl_avs_read <= '0';
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT slv_avs_read_data = unique_id
-			REPORT "Unic Id Error" SEVERITY FAILURE;
+			REPORT "Unique Id Error" SEVERITY FAILURE;
 			
---test number of chanels register:
+--test number of channels register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_ppwa_interface_address_width));				
@@ -136,12 +136,12 @@ BEGIN
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(number_of_ppwas,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
---test register for every chanel
+--test register for every channel
 		FOR i IN 0 TO number_of_ppwas-1 LOOP
 			--test period register:
 			WAIT FOR 1000*main_period;
 				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_watchdog_interface_address_with));
+				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+i,c_ppwa_interface_address_width));
 			WAIT FOR main_period;
 				sl_avs_read <= '0';
 				slv_avs_address <= (OTHERS =>'0');
@@ -151,7 +151,7 @@ BEGIN
 			--test high time register:
 			WAIT FOR 1000*main_period;
 				sl_avs_read <= '1';
-				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+number_of_ppwas+i,c_watchdog_interface_address_with));
+				slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers+1+number_of_ppwas+i,c_ppwa_interface_address_width));
 			WAIT FOR main_period;
 				sl_avs_read <= '0';
 				slv_avs_address <= (OTHERS =>'0');

@@ -84,7 +84,9 @@ ARCHITECTURE rtl OF ppwa IS
 		-- synchronize signals 
 		sl_measure_signal_1		: STD_LOGIC;
 		sl_measure_signal_2		: STD_LOGIC;
-		usig_counter 			: UNSIGNED(counter_resolution - 1 DOWNTO 0);
+		usig_counter_running	: UNSIGNED(counter_resolution - 1 DOWNTO 0);
+		usig_counter_period		: UNSIGNED(counter_resolution - 1 DOWNTO 0);
+		usig_counter_high		: UNSIGNED(counter_resolution - 1 DOWNTO 0);
 	END RECORD;
 	
 	SIGNAL ri, ri_next : t_internal_register;
@@ -106,21 +108,21 @@ ARCHITECTURE rtl OF ppwa IS
 			vi.sl_measure_signal_2 := vi.sl_measure_signal_1;
 			vi.sl_measure_signal_1 := isl_measure_signal;
             
-			vi.usig_counter := vi.usig_counter + 1;
+			vi.usig_counter_running := vi.usig_counter_running + 1;
 			
 			
 			IF vi.sl_measure_signal_2 = '0' AND vi.sl_measure_signal_1 = '1' THEN --rising edge
-					ousig_period_count <= vi.usig_counter;
-					vi.usig_counter  := (OTHERS => '0');
+					vi.usig_counter_period := vi.usig_counter_running;
+					vi.usig_counter_running  := (OTHERS => '0');
 			ELSIF vi.sl_measure_signal_2 = '1' AND vi.sl_measure_signal_1 = '0' THEN --falling edge
-					ousig_hightime_count <= vi.usig_counter;
+					vi.usig_counter_high := vi.usig_counter_running;
 			END IF;
 			
             -- reset
             IF isl_reset_n = '0' THEN
-				 ousig_period_count <= (OTHERS => '0');	
-				 ousig_hightime_count <= (OTHERS => '0');	
-                 vi.usig_counter  := (OTHERS => '0');
+				 vi.usig_counter_period := (OTHERS => '0');	
+				 vi.usig_counter_high := (OTHERS => '0');	
+                 vi.usig_counter_running  := (OTHERS => '0');
             END IF;
 				
 			-- setting outputs
@@ -138,6 +140,12 @@ ARCHITECTURE rtl OF ppwa IS
 				ri <= ri_next;
 			END IF;
 		END PROCESS reg_process;
+
+		--------------------------------------------
+		-- output assignment
+		--------------------------------------------
+		ousig_period_count <= ri.usig_counter_period;
+		ousig_hightime_count <= ri.usig_counter_high;
 		
 END ARCHITECTURE rtl;
 

@@ -64,7 +64,7 @@ PACKAGE ldc1000_interface_pkg IS
 			);
 	END COMPONENT;
 
-	CONSTANT c_ldc1000_subtype_id : STD_LOGIC_VECTOR(c_fLink_subtype_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_subtype_length));
+	CONSTANT c_ldc1000_subtype_id : STD_LOGIC_VECTOR(c_fLink_subtype_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1,c_fLink_subtype_length));
 	CONSTANT c_ldc1000_interface_version : STD_LOGIC_VECTOR(c_fLink_interface_version_length-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_interface_version_length));
 
 
@@ -217,7 +217,7 @@ BEGIN
 			CASE address IS
 				WHEN c_typdef_address =>
 					oslv_avs_read_data ((c_fLink_interface_version_length + c_fLink_subtype_length + c_fLink_id_length - 1) DOWNTO 
-												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_ldc100_id,c_fLink_id_length));
+												(c_fLink_interface_version_length + c_fLink_subtype_length)) <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_sensor_id,c_fLink_id_length));
 					oslv_avs_read_data((c_fLink_interface_version_length + c_fLink_subtype_length - 1) DOWNTO c_fLink_interface_version_length) <= c_ldc1000_subtype_id;
 					oslv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) <=  c_ldc1000_interface_version;
 				WHEN c_mem_size_address => 

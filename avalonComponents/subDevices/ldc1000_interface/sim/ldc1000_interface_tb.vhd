@@ -108,7 +108,7 @@ BEGIN
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length+c_fLink_subtype_length-1 DOWNTO c_fLink_interface_version_length) = c_ldc1000_subtype_id
 			REPORT "Subtype ID Missmatch" SEVERITY FAILURE;
 
-			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_ldc100_id,c_fLink_id_length)) 
+			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_sensor_id,c_fLink_id_length)) 
 			REPORT "Type ID Missmatch" SEVERITY FAILURE;
 
 --test mem size register register:
@@ -121,7 +121,7 @@ BEGIN
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_ldc1000_interface_address_width)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**1))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 
---test uniqu id register:
+--test unique id register:
 		WAIT FOR 10*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_ldc1000_interface_address_width));

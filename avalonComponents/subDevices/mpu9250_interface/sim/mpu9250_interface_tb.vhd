@@ -106,7 +106,7 @@ BEGIN
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length+c_fLink_subtype_length-1 DOWNTO c_fLink_interface_version_length) = c_mpu9250_subtype_id
 			REPORT "Subtype ID Missmatch" SEVERITY FAILURE;
 
-			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_mpu9250_id,c_fLink_id_length)) 
+			ASSERT slv_avs_read_data(c_fLink_avs_data_width-1 DOWNTO c_fLink_interface_version_length+c_fLink_interface_version_length) = STD_LOGIC_VECTOR(to_unsigned(c_fLink_sensor_id,c_fLink_id_length)) 
 			REPORT "Type ID Missmatch" SEVERITY FAILURE;
 
 --test mem size register register:

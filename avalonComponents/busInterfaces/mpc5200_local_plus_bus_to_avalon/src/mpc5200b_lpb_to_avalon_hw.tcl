@@ -18,14 +18,14 @@ package require -exact qsys 13.1
 # 
 # module lpb_mpc5200b_to_avalon
 # 
-set_module_property DESCRIPTION ""
-set_module_property NAME lpb_mpc5200b_to_avalon
+set_module_property DESCRIPTION "Interface between local plus bus of mpc5200 slave and avalon master"
+set_module_property NAME lpb_mpc5200b_slave_to_avalon_master
 set_module_property VERSION 1.0.1
 set_module_property INTERNAL false
 set_module_property OPAQUE_ADDRESS_MAP true
-set_module_property GROUP PHYTEC
-set_module_property AUTHOR ""
-set_module_property DISPLAY_NAME lpb_mpc5200b_to_avalon
+set_module_property GROUP fLink
+set_module_property AUTHOR "NTB (ntb.ch.inf)"
+set_module_property DISPLAY_NAME "LPB mpc5200b Slave to Avalon Master"
 set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
 set_module_property EDITABLE true
 set_module_property ANALYZE_HDL AUTO
