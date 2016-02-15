@@ -10,6 +10,11 @@
 --                                                                           --
 -- fLink definitions                                                         --
 --                                                                           --
+--  THIS FILE WAS CREATED AUTOMATICALLY - do not change                      --
+--                                                                           --
+--  Created with: flinkinterface/func_id/                                    --
+--                   create_flink_definitions.vhd_flinkVHDL.sh               --
+--                                                                           --
 -------------------------------------------------------------------------------
 -- Copyright 2014 NTB University of Applied Sciences in Technology           --
 --                                                                           --
@@ -54,17 +59,16 @@ PACKAGE fLink_definitions IS
 	
 	-- Interface IDs:
 	CONSTANT c_fLink_info_id							: INTEGER := 0;
-	CONSTANT c_fLink_analog_input_id 					: INTEGER := 1;
-	CONSTANT c_fLink_analog_output_id			 		: INTEGER := 2;
-	CONSTANT c_fLink_digital_io_id 						: INTEGER := 5;
-	CONSTANT c_fLink_counter_id 						: INTEGER := 6;
-	CONSTANT c_fLink_timer_id 							: INTEGER := 7;
-	CONSTANT c_fLink_memory_id 							: INTEGER := 8;
-	CONSTANT c_fLink_pwm_out_id 						: INTEGER := 12;
-	CONSTANT c_fLink_ppwa_id 							: INTEGER := 13;
-	CONSTANT c_fLink_watchdog_id 						: INTEGER := 16;
+	CONSTANT c_fLink_analog_input_id							: INTEGER := 1;
+	CONSTANT c_fLink_analog_output_id							: INTEGER := 2;
+	CONSTANT c_fLink_digital_io_id							: INTEGER := 5;
+	CONSTANT c_fLink_counter_id							: INTEGER := 6;
+	CONSTANT c_fLink_timer_id							: INTEGER := 7;
+	CONSTANT c_fLink_memory_id							: INTEGER := 8;
+	CONSTANT c_fLink_pwm_out_id							: INTEGER := 12;
+	CONSTANT c_fLink_ppwa_id							: INTEGER := 13;
+	CONSTANT c_fLink_watchdog_id							: INTEGER := 16;
 	CONSTANT c_fLink_sensor_id							: INTEGER := 17;
-	
-END PACKAGE fLink_definitions;
-
+ 
+ END PACKAGE fLink_definitions; 
 
