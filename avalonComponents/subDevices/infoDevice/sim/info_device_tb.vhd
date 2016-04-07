@@ -152,4 +152,3 @@ BEGIN
 	END PROCESS tb_main_proc;
 
 END ARCHITECTURE sim;
-
