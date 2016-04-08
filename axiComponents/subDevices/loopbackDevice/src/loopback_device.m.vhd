@@ -221,7 +221,7 @@ BEGIN
 
 
 	-- combinatorial process
-	comb_proc : PROCESS (axi_areset_n,ri,sl_write_valid,slv_write_address,slv_write_data,slv_read_address)
+	comb_proc : PROCESS (axi_areset_n,ri,sl_write_valid,slv_write_address,slv_write_data,slv_read_address,axi_wstrb)
 		VARIABLE vi :	t_internal_register := INTERNAL_REG_RESET;
 		VARIABLE reg_number: INTEGER := 0;
 	BEGIN
@@ -232,7 +232,19 @@ BEGIN
 		IF sl_write_valid = '1' THEN
 			IF slv_write_address >= c_usig_register_address THEN
 				reg_number := to_integer(slv_write_address- c_usig_register_address)/4; 
-				vi.mem_reg(reg_number) := slv_write_data;
+				IF(axi_wstrb(0) = '1') THEN
+					vi.mem_reg(reg_number)(7 DOWNTO 0) := slv_write_data(7 DOWNTO 0);
+				END IF;
+				IF(axi_wstrb(1) = '1') THEN
+					vi.mem_reg(reg_number)(15 DOWNTO 8) := slv_write_data(15 DOWNTO 8);
+				END IF;
+				IF(axi_wstrb(2) = '1')THEN 
+					vi.mem_reg(reg_number)(23 DOWNTO 16) := slv_write_data(23 DOWNTO 16);
+				END IF;
+				IF(axi_wstrb(3) = '1') THEN 
+					vi.mem_reg(reg_number)(31 DOWNTO 24) := slv_write_data(31 DOWNTO 24);
+				END IF;
+				
 			END IF;
 		END IF;
 		

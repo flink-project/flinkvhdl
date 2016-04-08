@@ -142,11 +142,16 @@ BEGIN
 		WAIT FOR 3*main_period;	
 			axi_araddr <= STD_LOGIC_VECTOR(to_unsigned(0,loopback_device_address_width));
 			axi_arvalid <= '0';
-		WAIT FOR 2*main_period;	
+		WAIT FOR 1*main_period;	
 			axi_rready <= '0';
 		END PROCEDURE axi_read;
 	
-	
+		CONSTANT NUMBER_OF_REGISTERS : INTEGER := 56;
+		TYPE t_values IS ARRAY (0 TO NUMBER_OF_REGISTERS-1) OF INTEGER;
+		
+		VARIABLE testvalues : t_values;
+		VARIABLE seed1, seed2 : positive;
+		VARIABLE rand         : real;
 	
 	BEGIN
 			axi_wstrb <= "1111";
@@ -156,42 +161,30 @@ BEGIN
 			axi_arsize <= "010";
 			axi_arburst <= "01";
 			axi_areset_n	<=	'0';
+			
+			
+			FOR i IN 0 TO NUMBER_OF_REGISTERS-1 LOOP
+				UNIFORM(seed1, seed2, rand);
+				testvalues(i) := integer(rand*268435455.0);
+			END LOOP;
+			
 		WAIT FOR 100*main_period;
 			axi_areset_n	<=	'1';
 		WAIT FOR 100*main_period;
 		WAIT FOR main_period/2;
-			axi_write(32,2709);
-		WAIT FOR 100*main_period;
-			axi_write(36,123);
-		WAIT FOR 100*main_period;
-			axi_write(40,4353);
-		WAIT FOR 100*main_period;
-			axi_write(44,13);
-		WAIT FOR 100*main_period;
-			axi_write(48,1);
-		WAIT FOR 100*main_period;
-			axi_write(52,67876);
-		WAIT FOR 100*main_period;
-			axi_write(56,1623);
-		WAIT FOR 100*main_period;
-			axi_write(60,30676);	
-		WAIT FOR 100*main_period;
-			axi_read(32);
-		WAIT FOR 100*main_period;
-			axi_read(36);
-		WAIT FOR 100*main_period;
-			axi_read(40);
-		WAIT FOR 100*main_period;
-			axi_read(44);
-		WAIT FOR 100*main_period;
-			axi_read(48);
-		WAIT FOR 100*main_period;
-			axi_read(52);
-		WAIT FOR 100*main_period;
-			axi_read(56);
-		WAIT FOR 100*main_period;
-			axi_read(60);
-		WAIT FOR 100*main_period;
+			FOR i IN 0 TO NUMBER_OF_REGISTERS-1 LOOP
+				axi_write(c_fLink_number_of_std_registers*4+i*4,testvalues(i));
+				WAIT FOR 100*main_period;
+			END LOOP;
+		
+		
+			FOR i IN 0 TO NUMBER_OF_REGISTERS-1 LOOP
+				axi_read(c_fLink_number_of_std_registers*4+i*4);
+				ASSERT testvalues(i) = to_integer(unsigned(axi_rdata)) REPORT "Read write missmatch" SEVERITY WARNING;
+				WAIT FOR 100*main_period;
+			END LOOP;
+			
+		
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 

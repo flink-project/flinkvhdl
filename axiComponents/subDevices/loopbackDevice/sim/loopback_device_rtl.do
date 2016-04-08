@@ -11,7 +11,7 @@ vcom -2008  -quiet -work work {../../axiSlave/src/axi_slave.m.vhd}
 vcom -2008  -quiet -work work {../src/loopback_device.m.vhd}
 vcom -2008  -quiet -work work {../sim/loopback_device_tb.vhd}
 
-vsim -quiet -t 1ps -L rtl_work -L work -voptargs="+acc" loopback_device_tb 
+vsim -quiet -t 1ps -L rtl_work -L work  loopback_device_tb 
 
 if {[file exists wave.do]} {
 	do wave.do 
