@@ -32,14 +32,14 @@ PACKAGE mpc5200b_to_axi_master_pkg IS
 			axi_awburst 		: OUT STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information, determine how the address for each transfer within the burst is calculated.
 			axi_awvalid 		: OUT STD_LOGIC; -- Write address valid. This signal indicates that the channel is signaling valid write address and control information.
 			axi_awready 		: IN STD_LOGIC; -- Write address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-			axi_awprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); 
+			axi_awprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); --Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access.
 
 			-- Write Data Channel
 			axi_wdata 			: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0); -- Write Data
 			axi_wstrb 			: OUT STD_LOGIC_VECTOR(3 downto 0); -- Write strobes. This signal indicates which byte lanes hold valid data. There is one write strobe bit for each eight bits of the write data bus.
 			axi_wvalid 			: OUT STD_LOGIC; -- Write valid. This signal indicates that valid write data and strobes are available.
 			axi_wready 			: IN STD_LOGIC; -- Write ready. This signal indicates that the slave can accept the write data.
-			axi_wlast			: OUT STD_LOGIC;
+			axi_wlast			: OUT STD_LOGIC; --Write last. This signal indicates the last transfer in a write burst
 			
 			
 			-- Read Address Channel
@@ -50,7 +50,7 @@ PACKAGE mpc5200b_to_axi_master_pkg IS
 			axi_arlen 			: OUT STD_LOGIC_VECTOR(7 downto 0); -- Burst length. The burst length gives the exact number of transfers in a burst
 			axi_arsize 			: OUT STD_LOGIC_VECTOR(2 downto 0); -- Burst size. This signal indicates the size of each transfer in the burst
 			axi_arburst 		: OUT STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information,  determine how the address for each transfer within the burst is calculated.
-			axi_arprot 			: OUT STD_LOGIC_VECTOR(2 downto 0);
+			axi_arprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); --Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access
 			-- Read Data Channel
 			axi_rdata 			: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0); -- Read Data
 			axi_rresp 			: IN STD_LOGIC_VECTOR(1 downto 0); -- Read response. This signal indicates the status of the read transfer.
@@ -107,14 +107,14 @@ ENTITY lpb_mpc5200b_to_axi_master IS
 			axi_awburst 		: OUT STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information, determine how the address for each transfer within the burst is calculated.
 			axi_awvalid 		: OUT STD_LOGIC; -- Write address valid. This signal indicates that the channel is signaling valid write address and control information.
 			axi_awready 		: IN STD_LOGIC; -- Write address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-			axi_awprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); 
+			axi_awprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); --Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access.
 
 			-- Write Data Channel
 			axi_wdata 			: OUT STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0); -- Write Data
 			axi_wstrb 			: OUT STD_LOGIC_VECTOR(3 downto 0); -- Write strobes. This signal indicates which byte lanes hold valid data. There is one write strobe bit for each eight bits of the write data bus.
 			axi_wvalid 			: OUT STD_LOGIC; -- Write valid. This signal indicates that valid write data and strobes are available.
 			axi_wready 			: IN STD_LOGIC; -- Write ready. This signal indicates that the slave can accept the write data.
-			axi_wlast			: OUT STD_LOGIC;
+			axi_wlast			: OUT STD_LOGIC; --Write last. This signal indicates the last transfer in a write burst
 			
 			
 			-- Read Address Channel
@@ -125,7 +125,7 @@ ENTITY lpb_mpc5200b_to_axi_master IS
 			axi_arlen 			: OUT STD_LOGIC_VECTOR(7 downto 0); -- Burst length. The burst length gives the exact number of transfers in a burst
 			axi_arsize 			: OUT STD_LOGIC_VECTOR(2 downto 0); -- Burst size. This signal indicates the size of each transfer in the burst
 			axi_arburst 		: OUT STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information,  determine how the address for each transfer within the burst is calculated.
-			axi_arprot 			: OUT STD_LOGIC_VECTOR(2 downto 0);
+			axi_arprot 			: OUT STD_LOGIC_VECTOR(2 downto 0); --Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access
 			-- Read Data Channel
 			axi_rdata 			: IN STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0); -- Read Data
 			axi_rresp 			: IN STD_LOGIC_VECTOR(1 downto 0); -- Read response. This signal indicates the status of the read transfer.
@@ -175,6 +175,7 @@ SIGNAL lpb_ad_o				: STD_LOGIC_VECTOR(31 DOWNTO 0);
 SIGNAL lpb_ad_en			: STD_LOGIC;
 
 SIGNAL arvalid_i			: STD_LOGIC := '0';
+SIGNAL awvalid_i			: STD_LOGIC := '0';
 
 type state IS (init, act, rst);
 SIGNAL axistate 			: state;
@@ -189,7 +190,8 @@ lpb_ack_n <= NOT lpb_ack_i;
 
 axi_awid <= (OTHERS =>'1');
 axi_arid <= (OTHERS =>'1');
-
+axi_awprot <= (OTHERS =>'0');
+axi_arprot <= (OTHERS =>'0');
 -- ############################# MPC interface functions ##############################
 -- tristate buffer generation
 
@@ -262,35 +264,6 @@ lpb_write_data_latching : PROCESS (clk, reset_n)
 		END IF;
 END PROCESS lpb_write_data_latching;
 
--- lpb_read_data_switching
--- reading of data of avalon register AND applying at the LPB bus
-
---lpb_read_data_switching : PROCESS (clk, reset_n)
-
---	BEGIN
-	--	IF reset_n = '0' THEN
-			--lpb_ad_o <= (OTHERS => '0');
-	--		lpb_ad_en <= '0';
-	--	ELSIF rising_edge(clk) THEN
-	--		IF lpb_rd = '1' AND lpb_ack_i = '0' THEN
-			--	CASE lpb_tsize_q IS
-					--WHEN "001" => lpb_ad_o <= (readdata(7 DOWNTO 0) & readdata(15 DOWNTO 8) & readdata(23 DOWNTO 16) & readdata(31 DOWNTO 24));				
-					
-					--WHEN "010" => lpb_ad_o <= (readdata(15 DOWNTO 0) & readdata(31 DOWNTO 16));
-					
-					--WHEN OTHERS =>	lpb_ad_o  <= readdata;						
-			--	END CASE;
-			--lpb_ad_o <= axi_rdata;		
-	--			lpb_ad_en <= '1';								
-	--		ELSE 
-	--			lpb_ad_en <= '0';
-	--		END IF;
-	--	END IF;
-	
---END PROCESS lpb_read_data_switching;
-
-
-	
 axi_read_address_channel : PROCESS (reset_n, clk)
 	BEGIN
 		IF reset_n = '0' THEN
@@ -321,74 +294,74 @@ axi_read_data_channel : PROCESS (reset_n, clk)
 			lpb_ad_en <= '0';
 			lpb_ack_i <= '0';	
 		ELSIF rising_edge(clk) THEN	
+			axi_rready <= '1';
 			IF axi_rvalid = '1' THEN --start read transfer
 				IF lpb_rd = '1' AND lpb_ack_i = '0' THEN
 					lpb_ad_en <= '1';
-					lpb_ack_i <= '1';								
-				ELSE 
-					lpb_ad_en <= '0';
-					lpb_ack_i <= '0';	
+					lpb_ack_i <= '1';
+					lpb_ad_o <=axi_rdata;	
+					axi_rready <= '0';
 				END IF;
-				axi_rready <= '1';
-				lpb_ad_o <=axi_rdata;
+				
 			ELSE
-				axi_rready <= '0';
 				lpb_ack_i <= '0';	
+				lpb_ad_en <= '0';
 			END IF;
 		END IF;
 END PROCESS axi_read_data_channel;
 
+axi_write_address_channel : PROCESS (reset_n, clk)
+	BEGIN
+		IF reset_n = '0' THEN
+			axi_awaddr <= (OTHERS => '0');
+			axi_awlen 	<= "00000000";	--only one transfer
+			axi_awsize 	<= "010";
+			axi_awburst <= "01";
+			axi_awvalid <= '0';
+		ELSIF rising_edge(clk) THEN	
+			IF lpb_start = '1' AND lpb_wr = '1' THEN --start read transfer
+				axi_awaddr <= lpb_adr_q;
+				axi_awvalid <= '1';		
+				awvalid_i <= '1';				
+			ELSIF(awvalid_i = '1' AND axi_awready = '1') THEN
+				axi_awvalid <= '0';
+				awvalid_i <= '0';
+				axi_awaddr <= (OTHERS => '0');
+			END IF;
+		END IF;
+END PROCESS axi_write_address_channel;
 
+axi_write_data_channel : PROCESS (reset_n, clk)
+	BEGIN
+		IF reset_n = '0' THEN
+			axi_wstrb <= (OTHERS => '1');
+			axi_wdata <= (OTHERS => '0');
+			axi_wvalid <= '0';
+			axi_wlast <= '0';
+		ELSIF rising_edge(clk) THEN	
+			IF axi_wready = '1' THEN
+				axi_wvalid <= '0';
+				axi_wlast <= '0';
+			ELSE
+				axi_wvalid <= '1';
+				axi_wlast <= '1';
+				axi_wdata <= lpb_data_q;
+			END IF;
+		
+		END IF;
+END PROCESS axi_write_data_channel;
 
-
-
-
-
-
-
-
-
-		--		address <= lpb_adr_q;		
-		--		write <= lpb_wr;								-- avalon SIGNAL generation we				
-		--		read <= lpb_rd;
-
-		--		CASE lpb_tsize_q IS								-- swap bytes for little endian access
-		--			WHEN "100" => byteenable <= "1111";
-		--						  writedata <= lpb_data_q;
-		--			WHEN "010" => CASE lpb_adr_q(1 DOWNTO 0) IS
-		--								WHEN "00" => byteenable <= "0011";
-		--											 writedata(15 DOWNTO 0) <= lpb_data_q(31 DOWNTO 16); 
-		--								WHEN "10" => byteenable <= "1100";
-		--											 writedata <= lpb_data_q;
-		--								WHEN OTHERS => byteenable <= "1111";
-		--											 writedata <= lpb_data_q;
-		--						  END CASE;
-		--			WHEN "001" => CASE lpb_adr_q(1 DOWNTO 0) IS
-		--								WHEN "00" => byteenable <= "0001";
-		--											 writedata(7 DOWNTO 0) <= lpb_data_q(31 DOWNTO 24);
-		--								WHEN "01" => byteenable <= "0010";
-		--											 writedata(15 DOWNTO 8) <= lpb_data_q(31 DOWNTO 24);
-		--								WHEN "10" => byteenable <= "0100";								
-		--											 writedata(23 DOWNTO 16) <= lpb_data_q(31 DOWNTO 24);																										
-		--								WHEN "11" => byteenable <= "1000";					
-		--											 writedata <= lpb_data_q;
-		--						  END CASE;
-		--			WHEN OTHERS =>byteenable <= "1111";
-		--						  writedata <= lpb_data_q;
-		--		END CASE;						
-		--	END IF;
-			
-		--	IF axistate = act THEN
-				--readdata_q <= readdata;
-		--		IF waitrequest = '0' THEN
-		--			read 		<= '0';
-		--			write 		<= '0';
-		--			address   	<= (OTHERS => '0');
-		--			writedata 	<= (OTHERS => '0');
-		--		END IF;		
-		--	END IF;
-	--END IF;
-
---END PROCESS avalon_bus;
+axi_write_response_channel : PROCESS (reset_n, clk)
+	BEGIN
+		IF reset_n = '0' THEN
+			axi_bready <= '1';
+		ELSIF rising_edge(clk) THEN	
+			IF axi_bvalid = '1' THEN
+				axi_bready <= '0';
+			ELSE
+				axi_bready <= '1';
+			END IF;
+		END IF;
+END PROCESS axi_write_response_channel;
 
 END rtl;

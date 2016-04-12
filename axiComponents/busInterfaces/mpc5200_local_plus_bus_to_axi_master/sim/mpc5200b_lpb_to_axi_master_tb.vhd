@@ -198,6 +198,8 @@ BEGIN
 		WAIT FOR main_period/2;
 			lpb_read(10);
 		WAIT FOR 100*main_period;
+			lpb_read(10);	
+		WAIT FOR 100*main_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 	
