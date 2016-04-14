@@ -151,13 +151,17 @@ ENTITY gpio_device IS
 		oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
 	);
 	
-	CONSTANT c_configuration_reg_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address, c_gpio_interface_address_with);
-	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_gpio_interface_address_with);
-	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
-	CONSTANT c_usig_value_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_dir_regs_address + c_usig_number_of_regs; 
-	CONSTANT c_usig_value_regs_max_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_value_regs_address + c_usig_number_of_regs;
 	
+	
+	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
 	CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/c_fLink_avs_data_width;
+	
+	CONSTANT c_configuration_reg_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address*4, c_gpio_interface_address_with);
+	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers*4,c_gpio_interface_address_with);
+	CONSTANT c_usig_value_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_dir_regs_address + to_unsigned(to_integer(c_usig_number_of_regs)*4,c_gpio_interface_address_with); 
+	CONSTANT c_usig_value_regs_max_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_value_regs_address + to_unsigned(to_integer(c_usig_number_of_regs)*4,c_gpio_interface_address_with); 
+	
+	
 	
 	
 END ENTITY gpio_device;
@@ -293,10 +297,10 @@ BEGIN
 		
 		
 		--read part:
-		IF (slv_read_address >= c_configuration_reg_address) THEN
+		IF (slv_read_address = c_configuration_reg_address) THEN
 			axi_rdata_internal <= vi.conf_reg;
-		ELSIF slv_read_address >= c_usig_dir_regs_address AND slv_read_address< c_usig_value_regs_address THEN
-			gpio_part_nr := to_integer(slv_read_address)/4-c_fLink_number_of_std_registers;
+		ELSIF slv_read_address >= c_usig_dir_regs_address AND slv_read_address < c_usig_value_regs_address THEN
+			gpio_part_nr := to_integer(slv_read_address - c_usig_dir_regs_address)/4;
 			
 			IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
 				axi_rdata_internal <= vi.dir_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width);
