@@ -160,7 +160,7 @@ ARCHITECTURE rtl OF lpb_mpc5200b_to_axi_master IS
 
 SIGNAL lpb_adr_q 			: STD_LOGIC_VECTOR((LPBADDRWIDTH-1) DOWNTO 0);
 SIGNAL lpb_data_q			: STD_LOGIC_VECTOR((LPBDATAWIDTH-1) DOWNTO 0);
-SIGNAL lpb_tsize_q 			: STD_LOGIC_VECTOR ((LPBTSIZEWIDTH-1) DOWNTO 0);
+--SIGNAL lpb_tsize_q 			: STD_LOGIC_VECTOR ((LPBTSIZEWIDTH-1) DOWNTO 0);
 
 SIGNAL lpb_data_en			: STD_LOGIC;
 SIGNAL lpb_start			: STD_LOGIC;
@@ -215,11 +215,11 @@ lpb_address_latching : PROCESS (clk, reset_n)
 	BEGIN
 		IF reset_n = '0' THEN
 			lpb_adr_q <= (OTHERS => '0');
-			lpb_tsize_q <= (OTHERS => '0');
+			--lpb_tsize_q <= (OTHERS => '0');
 		ELSIF rising_edge(clk) THEN									
 			IF lpb_ale_n = '0' THEN
 				lpb_adr_q <= lpb_ad((LPBADDRWIDTH-1) DOWNTO 0);
-				lpb_tsize_q   <= lpb_ad((LPBDATAWIDTH-2) DOWNTO (LPBDATAWIDTH-4));
+				--lpb_tsize_q   <= lpb_ad((LPBDATAWIDTH-2) DOWNTO (LPBDATAWIDTH-4));
 			END IF;	
 		END IF;	
 		
@@ -264,15 +264,17 @@ lpb_write_data_latching : PROCESS (clk, reset_n)
 		END IF;
 END PROCESS lpb_write_data_latching;
 
+
+axi_arlen 	<= "00000000";	--only one transfer
+axi_arsize 	<= "010";
+axi_arburst <= "01"; --increment	
+
 axi_read_address_channel : PROCESS (reset_n, clk)
 	BEGIN
 		IF reset_n = '0' THEN
 			axi_arvalid <= '0';
 			arvalid_i <= '0';
-			axi_araddr <= (OTHERS => '0');
-			axi_arlen 	<= "00000000";	--only one transfer
-			axi_arsize 	<= "010";
-			axi_arburst <= "01"; --increment	
+			axi_araddr <= (OTHERS => '0');		
 		ELSIF rising_edge(clk) THEN	
 			IF lpb_start = '1' AND lpb_rd = '1' THEN --start read transfer
 				axi_araddr <= lpb_adr_q;
@@ -310,13 +312,15 @@ axi_read_data_channel : PROCESS (reset_n, clk)
 		END IF;
 END PROCESS axi_read_data_channel;
 
+
+
+axi_awlen 	<= "00000000";	--only one transfer
+axi_awsize 	<= "010";
+axi_awburst <= "01";
 axi_write_address_channel : PROCESS (reset_n, clk)
 	BEGIN
 		IF reset_n = '0' THEN
 			axi_awaddr <= (OTHERS => '0');
-			axi_awlen 	<= "00000000";	--only one transfer
-			axi_awsize 	<= "010";
-			axi_awburst <= "01";
 			axi_awvalid <= '0';
 		ELSIF rising_edge(clk) THEN	
 			IF lpb_start = '1' AND lpb_wr = '1' THEN --start read transfer
@@ -331,10 +335,13 @@ axi_write_address_channel : PROCESS (reset_n, clk)
 		END IF;
 END PROCESS axi_write_address_channel;
 
+
+
+axi_wstrb <= (OTHERS => '1');
 axi_write_data_channel : PROCESS (reset_n, clk)
 	BEGIN
 		IF reset_n = '0' THEN
-			axi_wstrb <= (OTHERS => '1');
+			
 			axi_wdata <= (OTHERS => '0');
 			axi_wvalid <= '0';
 			axi_wlast <= '0';

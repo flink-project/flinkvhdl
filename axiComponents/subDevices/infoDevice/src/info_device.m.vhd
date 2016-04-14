@@ -86,6 +86,8 @@ PACKAGE info_device_pkg IS
 			);
 	END COMPONENT;
 	
+	
+	
 	CONSTANT info_device_subtype_id : INTEGER := 0;
 	CONSTANT info_device_interface_version : INTEGER := 0;
 
@@ -158,7 +160,8 @@ BEGIN
 	--create component
 	axi_slave_interface : axi_slave 
 	GENERIC MAP(
-		axi_device_address_width => info_device_address_width
+		axi_device_address_width => info_device_address_width,
+		unique_id => unique_id
 	)
 	PORT MAP(
 			axi_aclk => axi_aclk,
@@ -203,7 +206,7 @@ BEGIN
 		IF slv_read_address = c_usig_dev_size_address THEN
 			axi_rdata_internal <= std_logic_vector(to_unsigned(dev_size,c_fLink_avs_data_width));
 		ELSIF slv_read_address >= c_usig_description_address AND slv_read_address <= c_usig_max_address THEN
-			description_part := to_integer(slv_read_address - c_usig_description_address); 
+			description_part := to_integer(slv_read_address/4 - c_usig_description_address/4); 
 			axi_rdata_internal <= description(((c_int_number_of_descr_register-description_part))*32-1 DOWNTO (c_int_number_of_descr_register-description_part-1)*32);
 		ELSE
 			axi_rdata_internal <= (OTHERS =>'0');
