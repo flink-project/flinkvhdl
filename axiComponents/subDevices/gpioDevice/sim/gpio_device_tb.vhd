@@ -54,7 +54,7 @@ ARCHITECTURE sim OF gpio_device_tb IS
 	SIGNAL axi_awvalid   	: STD_LOGIC := '0';
 	SIGNAL axi_wdata 		: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0) := (OTHERS =>'0');
 	SIGNAL axi_awready 		: STD_LOGIC;
-	SIGNAL axi_wstrb 		: STD_LOGIC_VECTOR(3 downto 0) := (OTHERS =>'0');
+	SIGNAL axi_wstrb 		: STD_LOGIC_VECTOR(3 downto 0) := (OTHERS =>'1');
 	SIGNAL axi_wvalid 		: STD_LOGIC  := '0';
 	SIGNAL axi_wready 		: STD_LOGIC;
 	SIGNAL axi_araddr 		: STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 downto 0) := (OTHERS =>'0');
@@ -119,12 +119,44 @@ BEGIN
 	axi_aclk 		<= NOT axi_aclk after main_period/2;
 
 	tb_main_proc : PROCESS
+	
+	PROCEDURE  axi_write(address : IN INTEGER; data : IN INTEGER) IS
+	BEGIN
+		axi_awaddr <= STD_LOGIC_VECTOR(to_unsigned(address,c_gpio_interface_address_with));
+		axi_wdata <= STD_LOGIC_VECTOR(to_unsigned(data,c_fLink_avs_data_width));
+		axi_wvalid <= '1';
+		axi_awvalid <= '1';
+		WAIT FOR 2*main_period;
+		axi_awvalid <= '0';
+		axi_awaddr <= STD_LOGIC_VECTOR(to_unsigned(0,c_gpio_interface_address_with));
+		axi_wdata <= STD_LOGIC_VECTOR(to_unsigned(0,c_fLink_avs_data_width));
+		axi_wvalid <= '0';
+	END PROCEDURE axi_write;
+		
+		
+	PROCEDURE  axi_read(address : IN INTEGER) IS
+	BEGIN
+		axi_araddr <= STD_LOGIC_VECTOR(to_unsigned(address,c_gpio_interface_address_with));
+		axi_arvalid <= '1';
+		axi_rready <= '1';
+	WAIT FOR 3*main_period;	
+		axi_araddr <= STD_LOGIC_VECTOR(to_unsigned(0,c_gpio_interface_address_with));
+		axi_arvalid <= '0';
+	WAIT FOR 1*main_period;	
+		axi_rready <= '0';
+	END PROCEDURE axi_read;
+	
+	
 	BEGIN
 			axi_areset_n	<=	'0';
 		WAIT FOR 2*main_period;
 			axi_areset_n	<=	'1';
-		WAIT FOR main_period/2;		
-	WAIT FOR 1000*main_period;
+		WAIT FOR main_period/2;	
+
+		axi_write(c_fLink_number_of_std_registers*4,1);	
+	WAIT FOR 100*main_period;
+		axi_read(c_fLink_number_of_std_registers*4);	
+	WAIT FOR 100*main_period;
 			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 
