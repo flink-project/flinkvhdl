@@ -35,7 +35,7 @@ USE work.axi_slave_pkg.ALL;
 
 
 PACKAGE gpio_device_pkg IS
-	CONSTANT c_max_number_of_GPIOs : INTEGER := 64;
+	CONSTANT c_max_number_of_GPIOs : INTEGER := 128;
 	CONSTANT c_gpio_interface_address_with : INTEGER := 8;
 	
 	
