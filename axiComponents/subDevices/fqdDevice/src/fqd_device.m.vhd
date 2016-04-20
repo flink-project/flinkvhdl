@@ -42,8 +42,8 @@ PACKAGE fqd_device_pkg IS
 	
 	COMPONENT fqd_device IS
 			GENERIC (
-				number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1;
-				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1; --number of fqds which will be generated
+				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0') --unique id 
 			);
 			PORT (
 					-- Clock and Reset
@@ -105,8 +105,8 @@ USE work.axi_slave_pkg.ALL;
 
 ENTITY fqd_device IS
 	GENERIC (
-		number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1;
-		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+		number_of_fqds: INTEGER RANGE 0 TO c_max_number_of_FQDs := 1; --number of fqds which will be generated
+		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0') --unique id 
 	);
 	PORT (
 			-- Clock and Reset
@@ -194,7 +194,7 @@ BEGIN
 	axi_slave_interface : axi_slave 
 	GENERIC MAP(
 		axi_device_address_width => c_counter_interface_address_width,
-		id => c_fLink_digital_io_id,
+		id => c_fLink_counter_id,
 		subtype_id => c_fqd_subtype_id, 
 		interface_version => c_fqd_interface_version,
 		number_of_channels => number_of_fqds,
@@ -267,7 +267,7 @@ BEGIN
 		--read part:
 		IF (slv_read_address = c_configuration_reg_address) THEN
 			axi_rdata_internal <= vi.conf_reg;
-		ELSIF (slv_read_address >= c_counter_reg_address AND slv_read_address < c_counter_reg_address) THEN
+		ELSIF (slv_read_address >= c_counter_reg_address AND slv_read_address < c_max_address) THEN
 			axi_rdata_internal(c_fLink_avs_data_width-1 DOWNTO avs_fqd_pos_length) <= (OTHERS=>'0');
 			axi_rdata_internal(avs_fqd_pos_length-1 DOWNTO 0) <= STD_LOGIC_VECTOR(pos_regs(to_integer(UNSIGNED(slv_read_address))-c_fLink_number_of_std_registers));
 		ELSE

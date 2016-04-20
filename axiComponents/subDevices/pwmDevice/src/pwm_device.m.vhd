@@ -8,7 +8,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 --                                                                           --
--- Avalon MM interface for GPIO                                               --
+-- Avalon MM interface for FQD                                               --
 --                                                                           --
 -------------------------------------------------------------------------------
 -- Copyright 2014 NTB University of Applied Sciences in Technology           --
@@ -34,23 +34,25 @@ USE work.fLink_definitions.ALL;
 USE work.axi_slave_pkg.ALL;
 
 
-PACKAGE outio_device_pkg IS
-	CONSTANT c_max_number_of_GPIOs : INTEGER := 128;
-	CONSTANT c_gpio_interface_address_with : INTEGER := 8;
+
+PACKAGE pwm_device_pkg IS
+	CONSTANT c_max_number_of_PWMs : INTEGER := 16; --Depens off the address with and the number of registers per pwm
+	CONSTANT c_pwm_interface_address_width				: INTEGER := 6;
 	
 	
-	COMPONENT outio_device IS
+	COMPONENT pwm_device IS
 			GENERIC (
-				number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+				number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;
+				base_clk: INTEGER := 125000000;
 				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
-				-- Clock and Reset
+					-- Clock and Reset
 				axi_aclk 		: IN STD_LOGIC;
 				axi_areset_n 	: IN STD_LOGIC;
 				-- Write Address Channel
 				axi_awid 		: IN STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Write Address ID
-				axi_awaddr 		: IN STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 downto 0); -- Write address
+				axi_awaddr 		: IN STD_LOGIC_VECTOR(c_pwm_interface_address_width-1 downto 0); -- Write address
 				axi_awlen 		: IN STD_LOGIC_VECTOR(7 downto 0); -- Burst length. The burst length gives the exact number of transfers in a burst
 				axi_awsize 		: IN STD_LOGIC_VECTOR(2 downto 0); -- Burst size. This signal indicates the size of each transfer in the burst
 				axi_awburst 	: IN STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information, determine how the address for each transfer within the burst is calculated.
@@ -63,7 +65,7 @@ PACKAGE outio_device_pkg IS
 				axi_wvalid 		: IN STD_LOGIC; -- Write valid. This signal indicates that valid write data and strobes are available.
 				axi_wready 		: OUT STD_LOGIC; -- Write ready. This signal indicates that the slave can accept the write data.
 				-- Read Address Channel
-				axi_araddr 		: IN STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 downto 0); -- Read address. This signal indicates the initial address of a read burst transaction.
+				axi_araddr 		: IN STD_LOGIC_VECTOR(c_pwm_interface_address_width-1 downto 0); -- Read address. This signal indicates the initial address of a read burst transaction.
 				axi_arvalid 	: IN STD_LOGIC; -- Read address valid. This signal indicates that the channel is signaling valid read address and control information.
 				axi_arready		: OUT STD_LOGIC; -- Read address ready. This signal indicates that the slave is ready to accept an address and associated  control signals.
 				axi_arid 		: IN STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Read address ID. This signal is the identification tag for the read address group of signals.
@@ -82,36 +84,38 @@ PACKAGE outio_device_pkg IS
 				axi_bvalid 		: OUT STD_LOGIC; -- Write response valid. This signal indicates that the channel is signaling a valid write response.
 				axi_bready 		: IN STD_LOGIC;	-- Response ready. This signal indicates that the master can accept a write response.
 				axi_bid 		: OUT STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Response ID tag. This signal is the ID tag of the write response.
-				-- External Signals
-				oslv_gpios				: OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
+				-- External Signals	
+				oslv_pwm				: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
 			);
 	END COMPONENT;
+	
+	CONSTANT c_pwm_subtype_id : INTEGER := 0;
+	CONSTANT c_pwm_interface_version : INTEGER := 0;
 
-	CONSTANT c_gpio_subtype_id : INTEGER := 1;
-	CONSTANT c_gpio_interface_version : INTEGER := 0;
-
-END PACKAGE outio_device_pkg;
+END PACKAGE pwm_device_pkg;
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE IEEE.math_real.ALL;
-USE work.outio_device_pkg.ALL;
+USE work.adjustable_pwm_pkg.ALL;
+USE work.pwm_device_pkg.ALL;
 USE work.fLink_definitions.ALL;
 USE work.axi_slave_pkg.ALL;
 
-ENTITY outio_device IS
+ENTITY pwm_device IS
 	GENERIC (
-		number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+		number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;
+		base_clk: INTEGER := 125000000;
 		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 	);
 	PORT (
-		-- Clock and Reset
+			-- Clock and Reset
 		axi_aclk 		: IN STD_LOGIC;
 		axi_areset_n 	: IN STD_LOGIC;
 		-- Write Address Channel
 		axi_awid 		: IN STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Write Address ID
-		axi_awaddr 		: IN STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 downto 0); -- Write address
+		axi_awaddr 		: IN STD_LOGIC_VECTOR(c_pwm_interface_address_width-1 downto 0); -- Write address
 		axi_awlen 		: IN STD_LOGIC_VECTOR(7 downto 0); -- Burst length. The burst length gives the exact number of transfers in a burst
 		axi_awsize 		: IN STD_LOGIC_VECTOR(2 downto 0); -- Burst size. This signal indicates the size of each transfer in the burst
 		axi_awburst 	: IN STD_LOGIC_VECTOR(1 downto 0); -- Burst type. The burst type and the size information, determine how the address for each transfer within the burst is calculated.
@@ -124,7 +128,7 @@ ENTITY outio_device IS
 		axi_wvalid 		: IN STD_LOGIC; -- Write valid. This signal indicates that valid write data and strobes are available.
 		axi_wready 		: OUT STD_LOGIC; -- Write ready. This signal indicates that the slave can accept the write data.
 		-- Read Address Channel
-		axi_araddr 		: IN STD_LOGIC_VECTOR(c_gpio_interface_address_with-1 downto 0); -- Read address. This signal indicates the initial address of a read burst transaction.
+		axi_araddr 		: IN STD_LOGIC_VECTOR(c_pwm_interface_address_width-1 downto 0); -- Read address. This signal indicates the initial address of a read burst transaction.
 		axi_arvalid 	: IN STD_LOGIC; -- Read address valid. This signal indicates that the channel is signaling valid read address and control information.
 		axi_arready		: OUT STD_LOGIC; -- Read address ready. This signal indicates that the slave is ready to accept an address and associated  control signals.
 		axi_arid 		: IN STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Read address ID. This signal is the identification tag for the read address group of signals.
@@ -143,55 +147,59 @@ ENTITY outio_device IS
 		axi_bvalid 		: OUT STD_LOGIC; -- Write response valid. This signal indicates that the channel is signaling a valid write response.
 		axi_bready 		: IN STD_LOGIC;	-- Response ready. This signal indicates that the master can accept a write response.
 		axi_bid 		: OUT STD_LOGIC_VECTOR(c_axi_id_width-1 downto 0); -- Response ID tag. This signal is the ID tag of the write response.
-		-- External Signals
-		oslv_gpios				: OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
+		-- External Signals	
+		oslv_pwm				: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
 	);
 	
+	CONSTANT c_configuration_reg_address: UNSIGNED(c_pwm_interface_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address*4, c_pwm_interface_address_width);
+	CONSTANT c_usig_base_clk_address	: UNSIGNED(c_pwm_interface_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers*4, c_pwm_interface_address_width);
+	CONSTANT c_usig_frequency_address	: UNSIGNED(c_pwm_interface_address_width-1 DOWNTO 0) := c_usig_base_clk_address + 4;
+	CONSTANT c_usig_ratio_address		: UNSIGNED(c_pwm_interface_address_width-1 DOWNTO 0) := c_usig_frequency_address + number_of_pwms*4;
+	CONSTANT c_usig_max_address			: UNSIGNED(c_pwm_interface_address_width-1 DOWNTO 0) := c_usig_ratio_address + number_of_pwms*4;
 	
-	
-	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
-	CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/c_fLink_avs_data_width;
-	
-	CONSTANT c_configuration_reg_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address*4, c_gpio_interface_address_with);
-	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers*4,c_gpio_interface_address_with);
-	CONSTANT c_usig_value_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_dir_regs_address + to_unsigned(to_integer(c_usig_number_of_regs)*4,c_gpio_interface_address_with); 
-	CONSTANT c_usig_value_regs_max_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_value_regs_address + to_unsigned(to_integer(c_usig_number_of_regs)*4,c_gpio_interface_address_with); 
-	
-	
-	
-	
-END ENTITY outio_device;
+END ENTITY pwm_device;
 
-ARCHITECTURE rtl OF outio_device IS
-	SIGNAL slv_read_address	: UNSIGNED(c_gpio_interface_address_with-1 downto 0);
-	SIGNAL sl_write_valid : STD_LOGIC;
-	SIGNAL slv_write_address : UNSIGNED(c_gpio_interface_address_with-1 downto 0);
-	SIGNAL slv_write_data : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0);
-	SIGNAL axi_rdata_internal 	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0);
+ARCHITECTURE rtl OF pwm_device IS
+	Type t_pwm_regs IS ARRAY(number_of_pwms-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
 
 	TYPE t_internal_register IS RECORD
-			conf_reg			: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
-			value_reg			: STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);
+		  	frequency_regs				: t_pwm_regs;	  
+			ratio_regs					: t_pwm_regs;	
+			conf_reg  					: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 	END RECORD;
-
-	CONSTANT INTERNAL_REG_RESET : t_internal_register := (
-                              conf_reg=> (OTHERS=>'0'),
-							   value_reg=> (OTHERS=>'0')
-							  );
-		
 	
+	CONSTANT INTERNAL_REG_RESET : t_internal_register := (
+							  frequency_regs=> ((OTHERS=> (OTHERS=>'0'))),
+							  ratio_regs=> ((OTHERS=> (OTHERS=>'0'))),
+                              conf_reg=> (OTHERS=>'0')
+	);
+	
+	SIGNAL slv_read_address	: UNSIGNED(c_pwm_interface_address_width-1 downto 0);
+	SIGNAL sl_write_valid : STD_LOGIC;
+	SIGNAL slv_write_address : UNSIGNED(c_pwm_interface_address_width-1 downto 0);
+	SIGNAL slv_write_data : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0);
+	SIGNAL axi_rdata_internal 	: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0);	
+	
+	SIGNAL pwm_reset_n : STD_LOGIC; 
 	SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
 	
-BEGIN
 	
+BEGIN
 	--create component
+	gen_pwm:
+	FOR i IN 0 TO number_of_pwms-1 GENERATE
+		my_adjustable_pwm :  adjustable_pwm 
+			GENERIC MAP (frequency_resolution =>c_fLink_avs_data_width)
+			PORT MAP (axi_aclk,pwm_reset_n,ri.frequency_regs(i),ri.ratio_regs(i),oslv_pwm(i));		
+	END GENERATE gen_pwm;
+	
 	axi_slave_interface : axi_slave 
 	GENERIC MAP(
-		axi_device_address_width => c_gpio_interface_address_with,
-		id => c_fLink_digital_io_id,
-		subtype_id => c_gpio_subtype_id, 
-		interface_version => c_gpio_interface_version,
-		number_of_channels => number_of_gpios,
+		axi_device_address_width => c_pwm_interface_address_width,
+		id => c_fLink_pwm_out_id,
+		subtype_id => c_pwm_subtype_id, 
+		interface_version => c_pwm_interface_version,
+		number_of_channels => number_of_pwms,
 		unique_id => unique_id
 	)
 	PORT MAP(
@@ -231,69 +239,66 @@ BEGIN
 			oslv_write_address => slv_write_address,
 			oslv_write_data => slv_write_data
 	);
-		
 	
 	
 	
 	
-	
-	
-	
-	-- combinatoric process
+	-- cobinatoric process
 	comb_proc : PROCESS (axi_areset_n,ri,sl_write_valid,slv_write_address,slv_write_data,slv_read_address,axi_wstrb)
-		VARIABLE vi : t_internal_register := INTERNAL_REG_RESET;
-		VARIABLE gpio_part_nr: INTEGER := 0;
-		
+		VARIABLE vi : t_internal_register;
 	BEGIN
-		-- Keep variables stable
-		vi := ri;	
+		-- keep variables stable
+		vi := ri;
+		
+		--standard values
+		pwm_reset_n <= '1';
 		
 		
 		--write part: 
 		IF sl_write_valid = '1' THEN
 			-- Write to config register
 			IF slv_write_address = c_configuration_reg_address THEN
-				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+				FOR i IN 0 TO 3 LOOP
 					IF axi_wstrb(i) = '1' THEN
-						vi.conf_reg((i + 1) * 8 - 1 DOWNTO i * 8) := slv_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+							vi.conf_reg((i + 1) * 8 - 1 DOWNTO i * 8) := slv_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
 					END IF;
 				END LOOP;
-			-- Write to value registers
-			ELSIF slv_write_address>= c_usig_value_regs_address AND slv_write_address < c_usig_value_regs_max_address THEN
-				gpio_part_nr := to_integer(slv_write_address-c_usig_value_regs_address)/4;
-				FOR i IN 0 TO c_fLink_avs_data_width_in_byte-1 LOOP
+			ELSIF slv_write_address >= c_usig_frequency_address AND slv_write_address < c_usig_ratio_address THEN
+				FOR i IN 0 TO 3 LOOP	
 					IF axi_wstrb(i) = '1' THEN
-						vi.value_reg(gpio_part_nr * c_fLink_avs_data_width + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * c_fLink_avs_data_width + i * 8) 	:=	slv_write_data((i + 1) * 8 - 1 DOWNTO i * 8);
+							vi.frequency_regs(to_integer(slv_write_address-c_usig_frequency_address)/4)((i + 1) * 8 - 1 DOWNTO i * 8) := UNSIGNED(slv_write_data((i + 1) * 8 - 1 DOWNTO i * 8));
 					END IF;
+				END LOOP;	
+			ELSIF slv_write_address >= c_usig_ratio_address AND slv_write_address < c_usig_max_address THEN 
+				FOR i IN 0 TO 3 LOOP	
+					IF axi_wstrb(i) = '1' THEN
+						vi.ratio_regs(to_integer(slv_write_address-c_usig_ratio_address)/4)((i + 1) * 8 - 1 DOWNTO i * 8) := UNSIGNED(slv_write_data((i + 1) * 8 - 1 DOWNTO i * 8));
+					END IF;	
 				END LOOP;
-			END IF;
+			END IF;	
 		END IF;
-		
+			
 		--read part:
-		IF (slv_read_address = c_configuration_reg_address) THEN
+		IF (slv_read_address = c_pwm_interface_address_width) THEN
 			axi_rdata_internal <= vi.conf_reg;
-		ELSIF slv_read_address >= c_usig_dir_regs_address AND slv_read_address < c_usig_value_regs_address THEN
-			axi_rdata_internal <= (OTHERS => '1'); --all pins are allway output
-		ELSIF slv_read_address >= c_usig_value_regs_address AND slv_read_address < c_usig_value_regs_max_address THEN
-			gpio_part_nr := to_integer(slv_read_address-c_usig_value_regs_address)/4;
-			IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
-				axi_rdata_internal <= vi.value_reg((gpio_part_nr+1) * c_fLink_avs_data_width -1 DOWNTO gpio_part_nr * c_fLink_avs_data_width);
-			ELSE
-				axi_rdata_internal <= (OTHERS => '0');
-				FOR i IN 0 TO (number_of_gpios mod c_fLink_avs_data_width)-1 LOOP
-					axi_rdata_internal(i) <= vi.value_reg(i+gpio_part_nr*c_fLink_avs_data_width);
-				END LOOP;
-			END IF;
+		ELSIF (slv_read_address = c_pwm_interface_address_width) THEN
+			axi_rdata_internal <= std_logic_vector(to_unsigned(base_clk,c_fLink_avs_data_width));
+		ELSIF slv_read_address >= c_usig_frequency_address AND slv_read_address < c_usig_ratio_address THEN
+			axi_rdata_internal <= STD_LOGIC_VECTOR(vi.frequency_regs(to_integer(slv_read_address - c_usig_frequency_address)/4));
+		ELSIF slv_read_address >= c_usig_ratio_address AND slv_read_address < c_usig_max_address THEN 
+			axi_rdata_internal <= STD_LOGIC_VECTOR(vi.ratio_regs(to_integer(slv_read_address - c_usig_ratio_address)/4));
 		ELSE
 			axi_rdata_internal <= (OTHERS => '0');
-		END IF;
+		END IF;	
 
+		
+		
 		IF axi_areset_n = '0' OR  vi.conf_reg(c_fLink_reset_bit_num) = '1' THEN
 			vi := INTERNAL_REG_RESET;
 		END IF;
 		
 		ri_next <= vi;
-	
+		
 	END PROCESS comb_proc;
 	
 	reg_proc : PROCESS (axi_aclk)
@@ -302,9 +307,5 @@ BEGIN
 			ri <= ri_next;
 		END IF;
 	END PROCESS reg_proc;
-	
-	
-	
-	oslv_gpios <= ri.value_reg(number_of_gpios-1 DOWNTO 0);
-	
+		
 END rtl;
