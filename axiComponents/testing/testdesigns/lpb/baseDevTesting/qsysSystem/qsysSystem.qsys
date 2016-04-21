@@ -20,23 +20,47 @@
          type = "int";
       }
    }
-   element pwm_device_0.altera_axi4_slave
-   {
-      datum baseAddress
-      {
-         value = "1152";
-         type = "String";
-      }
-   }
    element inio_device_0.altera_axi4_slave
    {
       datum baseAddress
       {
-         value = "256";
+         value = "768";
+         type = "String";
+      }
+   }
+   element pwm_device_0.altera_axi4_slave
+   {
+      datum baseAddress
+      {
+         value = "1536";
+         type = "String";
+      }
+   }
+   element gpio_device_0.altera_axi4_slave
+   {
+      datum baseAddress
+      {
+         value = "512";
          type = "String";
       }
    }
    element fqd_device_0.altera_axi4_slave
+   {
+      datum baseAddress
+      {
+         value = "1664";
+         type = "String";
+      }
+   }
+   element outio_device_0.altera_axi4_slave
+   {
+      datum baseAddress
+      {
+         value = "1280";
+         type = "String";
+      }
+   }
+   element outio_device_1.altera_axi4_slave
    {
       datum baseAddress
       {
@@ -52,19 +76,11 @@
          type = "boolean";
       }
    }
-   element outio_device_0.altera_axi4_slave
+   element gpio_device_1.altera_axi4_slave
    {
       datum baseAddress
       {
-         value = "768";
-         type = "String";
-      }
-   }
-   element outio_device_1.altera_axi4_slave
-   {
-      datum baseAddress
-      {
-         value = "512";
+         value = "256";
          type = "String";
       }
    }
@@ -81,6 +97,22 @@
       datum _sortIndex
       {
          value = "3";
+         type = "int";
+      }
+   }
+   element gpio_device_0
+   {
+      datum _sortIndex
+      {
+         value = "8";
+         type = "int";
+      }
+   }
+   element gpio_device_1
+   {
+      datum _sortIndex
+      {
+         value = "9";
          type = "int";
       }
    }
@@ -139,7 +171,7 @@
  <parameter name="projectName" value="" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1461136945516" />
+ <parameter name="timeStamp" value="1461221140264" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
@@ -170,7 +202,7 @@
  <module kind="Info_Device" version="1.0" enabled="1" name="Info_Device_0">
   <parameter name="unique_id" value="1" />
   <parameter name="description">33477206241924123920969029910507941359207</parameter>
-  <parameter name="dev_size" value="1279" />
+  <parameter name="dev_size" value="1791" />
   <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
  </module>
  <module kind="fqd_device" version="1.0" enabled="1" name="fqd_device_0">
@@ -190,13 +222,23 @@
  </module>
  <module kind="pwm_device" version="1.0" enabled="1" name="pwm_device_0">
   <parameter name="number_of_pwms" value="4" />
-  <parameter name="base_clk" value="50000000" />
-  <parameter name="unique_id" value="4" />
+  <parameter name="base_clk" value="33000000" />
+  <parameter name="unique_id" value="5" />
   <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
  </module>
  <module kind="inio_device" version="1.0" enabled="1" name="inio_device_0">
   <parameter name="number_of_gpios" value="4" />
-  <parameter name="unique_id" value="5" />
+  <parameter name="unique_id" value="6" />
+  <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
+ </module>
+ <module kind="gpio_device" version="1.0" enabled="1" name="gpio_device_0">
+  <parameter name="number_of_gpios" value="128" />
+  <parameter name="unique_id" value="7" />
+  <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
+ </module>
+ <module kind="gpio_device" version="1.0" enabled="1" name="gpio_device_1">
+  <parameter name="number_of_gpios" value="128" />
+  <parameter name="unique_id" value="8" />
   <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
  </module>
  <connection
@@ -244,7 +286,7 @@
    start="lbp_slave_to_axi_master_0.altera_axi4_master"
    end="fqd_device_0.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="baseAddress" value="0x0680" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -253,7 +295,7 @@
    start="lbp_slave_to_axi_master_0.altera_axi4_master"
    end="outio_device_0.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0300" />
+  <parameter name="baseAddress" value="0x0500" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -282,7 +324,7 @@
    start="lbp_slave_to_axi_master_0.altera_axi4_master"
    end="outio_device_1.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0200" />
+  <parameter name="baseAddress" value="0x0400" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -323,7 +365,7 @@
    start="lbp_slave_to_axi_master_0.altera_axi4_master"
    end="pwm_device_0.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0480" />
+  <parameter name="baseAddress" value="0x0600" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -332,7 +374,7 @@
    start="lbp_slave_to_axi_master_0.altera_axi4_master"
    end="inio_device_0.altera_axi4_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0100" />
+  <parameter name="baseAddress" value="0x0300" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -350,6 +392,55 @@
    version="13.0"
    start="pwm_device_0.conduit_end"
    end="inio_device_0.conduit_end">
+  <parameter name="endPort" value="" />
+  <parameter name="endPortLSB" value="0" />
+  <parameter name="startPort" value="" />
+  <parameter name="startPortLSB" value="0" />
+  <parameter name="width" value="0" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="lbp_slave_to_axi_master_0.altera_axi4_master"
+   end="gpio_device_0.altera_axi4_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0200" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clk_0.clk"
+   end="gpio_device_0.clock_sink" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="clk_0.clk_reset"
+   end="gpio_device_0.reset_sink" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="clk_0.clk_reset"
+   end="gpio_device_1.reset_sink" />
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clk_0.clk"
+   end="gpio_device_1.clock_sink" />
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="lbp_slave_to_axi_master_0.altera_axi4_master"
+   end="gpio_device_1.altera_axi4_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0100" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="conduit"
+   version="13.0"
+   start="gpio_device_0.conduit_end"
+   end="gpio_device_1.conduit_end">
   <parameter name="endPort" value="" />
   <parameter name="endPortLSB" value="0" />
   <parameter name="startPort" value="" />
