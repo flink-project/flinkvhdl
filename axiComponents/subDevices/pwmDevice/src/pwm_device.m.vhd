@@ -37,14 +37,14 @@ USE work.axi_slave_pkg.ALL;
 
 PACKAGE pwm_device_pkg IS
 	CONSTANT c_max_number_of_PWMs : INTEGER := 16; --Depens off the address with and the number of registers per pwm
-	CONSTANT c_pwm_interface_address_width				: INTEGER := 6;
+	CONSTANT c_pwm_interface_address_width				: INTEGER := 7;
 	
 	
 	COMPONENT pwm_device IS
 			GENERIC (
-				number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;
-				base_clk: INTEGER := 125000000;
-				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;--number of pwms which will be generated
+				base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
+				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')--unique id
 			);
 			PORT (
 					-- Clock and Reset
@@ -105,9 +105,9 @@ USE work.axi_slave_pkg.ALL;
 
 ENTITY pwm_device IS
 	GENERIC (
-		number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;
-		base_clk: INTEGER := 125000000;
-		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+		number_of_pwms: INTEGER RANGE 0 TO c_max_number_of_PWMs := 1;--number of pwms which will be generated
+		base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
+		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')--unique id
 	);
 	PORT (
 			-- Clock and Reset
@@ -279,9 +279,9 @@ BEGIN
 		END IF;
 			
 		--read part:
-		IF (slv_read_address = c_pwm_interface_address_width) THEN
+		IF (slv_read_address = c_configuration_reg_address) THEN
 			axi_rdata_internal <= vi.conf_reg;
-		ELSIF (slv_read_address = c_pwm_interface_address_width) THEN
+		ELSIF (slv_read_address = c_usig_base_clk_address) THEN
 			axi_rdata_internal <= std_logic_vector(to_unsigned(base_clk,c_fLink_avs_data_width));
 		ELSIF slv_read_address >= c_usig_frequency_address AND slv_read_address < c_usig_ratio_address THEN
 			axi_rdata_internal <= STD_LOGIC_VECTOR(vi.frequency_regs(to_integer(slv_read_address - c_usig_frequency_address)/4));
