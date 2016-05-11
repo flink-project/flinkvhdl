@@ -42,7 +42,7 @@ PACKAGE loopback_device_pkg IS
 	
 	COMPONENT loopback_device IS
 			GENERIC (
-				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				unique_id: STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 				-- Clock and Reset
@@ -102,7 +102,7 @@ USE work.axi_slave_pkg.ALL;
 
 ENTITY loopback_device IS
 	GENERIC (
-				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
+				unique_id: STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
 				-- Clock and Reset
@@ -178,7 +178,7 @@ BEGIN
 		id => c_fLink_loopback_id,
 		subtype_id => loopback_device_subtype_id, 
 		interface_version => loopback_device_interface_version,
-		number_of_channels => 0,
+		number_of_channels => nr_of_regs,
 		unique_id => unique_id
 	)
 	PORT MAP(

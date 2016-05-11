@@ -47,7 +47,7 @@ PACKAGE axi_slave_pkg IS
 				subtype_id : INTEGER := 0; 
 				interface_version : INTEGER := 0;
 				number_of_channels : INTEGER := 0;
-				unique_id : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0) := (OTHERS=>'0')
+				unique_id : STD_LOGIC_VECTOR(31 downto 0) := (OTHERS=>'0')
 			);
 			
 			PORT (
@@ -117,7 +117,7 @@ ENTITY axi_slave IS
 				subtype_id : INTEGER := 0; 
 				interface_version : INTEGER := 0;
 				number_of_channels : INTEGER := 0;
-				unique_id : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 downto 0) := (OTHERS=>'0')
+				unique_id : STD_LOGIC_VECTOR(31 downto 0) := (OTHERS=>'0')
 			);
 	PORT (
 		-- Clock and Reset
