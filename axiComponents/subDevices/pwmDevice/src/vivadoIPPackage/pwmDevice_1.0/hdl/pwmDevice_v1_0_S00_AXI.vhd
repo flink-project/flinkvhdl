@@ -9,7 +9,7 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
         number_of_pwms: INTEGER RANGE 0 TO 16 := 1;--number of pwms which will be generated
-        base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
+        base_clk: INTEGER RANGE 0 TO 2147483647 := 125000000;--clock frequency which is used on the clock input signal of this block
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -174,9 +174,9 @@ architecture arch_imp of pwmDevice_v1_0_S00_AXI is
     CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_number_of_channels_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4,C_S_AXI_ADDR_WIDTH));
-	
-	
 	CONSTANT c_configuration_reg_address: STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4,C_S_AXI_ADDR_WIDTH));
+	
+	
 	
     CONSTANT c_usig_base_clk_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4,C_S_AXI_ADDR_WIDTH)); 
     CONSTANT c_usig_frequency_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_base_clk_address) + 4); 
@@ -505,6 +505,8 @@ begin
 	       axi_rdata <= std_logic_vector(to_unsigned(number_of_pwms, axi_rdata'length));
 	    ELSIF(axi_araddr = c_usig_unique_id_address) THEN
 	        axi_rdata <= unique_id;
+	    ELSIF(axi_araddr = c_configuration_reg_address) THEN
+            axi_rdata <= ri.conf_reg;    
 	    ELSIF(axi_araddr = c_usig_base_clk_address) THEN
 	        axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,C_S_AXI_DATA_WIDTH));
 	    ELSIF (axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
@@ -520,14 +522,14 @@ begin
 	end process;
 	
 	
-	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB) 
+	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri) 
 	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_pwms := 0; 
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
 	BEGIN
 	   vi := ri;
 	   IF(axi_wready = '1') THEN
-	       IF(axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
-	           reg_number := (to_integer(unsigned(axi_araddr)) - to_integer(UNSIGNED(c_usig_frequency_address)))/4;  
+	       IF(axi_awaddr >= c_usig_frequency_address AND axi_awaddr < c_usig_ratio_address) THEN
+	           reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_frequency_address)))/4;  
                IF(S_AXI_WSTRB(0) = '1')THEN
                     vi.frequency_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
                END IF;
@@ -540,8 +542,12 @@ begin
                IF(S_AXI_WSTRB(3) = '1')THEN
                   vi.frequency_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
                END IF;
-            ELSIF(axi_araddr >= c_usig_ratio_address AND axi_araddr < c_usig_max_address) THEN
-                  reg_number := (to_integer(unsigned(axi_araddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
+            ELSIF(axi_awaddr = c_configuration_reg_address) THEN
+                   IF(S_AXI_WSTRB(0) = '1')THEN
+                        vi.conf_reg(7 DOWNTO 0) := S_AXI_WDATA(7 DOWNTO 0);
+                   END IF;
+            ELSIF(axi_awaddr >= c_usig_ratio_address AND axi_awaddr < c_usig_max_address) THEN
+                  reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
                   IF(S_AXI_WSTRB(0) = '1')THEN
                        vi.ratio_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
                   END IF;
