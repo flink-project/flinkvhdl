@@ -193,7 +193,7 @@ architecture arch_imp of pwmDevice_v1_0_S00_AXI is
      TYPE t_internal_register IS RECORD
         frequency_regs                : t_pwm_regs;      
         ratio_regs                    : t_pwm_regs;    
-        conf_reg                      : STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
+        conf_reg                      : STD_LOGIC_VECTOR(0 DOWNTO 0);
      END RECORD;
      
      CONSTANT INTERNAL_REG_RESET : t_internal_register := (
@@ -204,7 +204,7 @@ architecture arch_imp of pwmDevice_v1_0_S00_AXI is
      
      SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
      
-     
+     SIGNAL pwm_reset : STD_LOGIC := '1';
      
      
 	------------------------------------------------
@@ -506,7 +506,8 @@ begin
 	    ELSIF(axi_araddr = c_usig_unique_id_address) THEN
 	        axi_rdata <= unique_id;
 	    ELSIF(axi_araddr = c_configuration_reg_address) THEN
-            axi_rdata <= ri.conf_reg;    
+	        axi_rdata <= (others => '0');
+            axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);    
 	    ELSIF(axi_araddr = c_usig_base_clk_address) THEN
 	        axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,C_S_AXI_DATA_WIDTH));
 	    ELSIF (axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
@@ -522,7 +523,7 @@ begin
 	end process;
 	
 	
-	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri) 
+	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
 	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_pwms := 0; 
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
 	BEGIN
@@ -544,7 +545,7 @@ begin
                END IF;
             ELSIF(axi_awaddr = c_configuration_reg_address) THEN
                    IF(S_AXI_WSTRB(0) = '1')THEN
-                        vi.conf_reg(7 DOWNTO 0) := S_AXI_WDATA(7 DOWNTO 0);
+                        vi.conf_reg(c_fLink_reset_bit_num) := S_AXI_WDATA(c_fLink_reset_bit_num);
                    END IF;
             ELSIF(axi_awaddr >= c_usig_ratio_address AND axi_awaddr < c_usig_max_address) THEN
                   reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
@@ -558,10 +559,20 @@ begin
                       vi.ratio_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
                   END IF;               
                   IF(S_AXI_WSTRB(3) = '1')THEN
-                     vi.frequency_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
+                     vi.ratio_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
                   END IF;
 	        END IF;
 	   END IF;
+	   
+	   
+	   IF(S_AXI_ARESETN = '0' OR vi.conf_reg(c_fLink_reset_bit_num) = '1' )THEN
+	        vi := INTERNAL_REG_RESET;
+	        pwm_reset <= '0';
+	   ELSE
+	       pwm_reset <= '1';
+	   END IF;
+	   
+	   
 	   ri_next <= vi;
 	END PROCESS;
 	
@@ -573,7 +584,7 @@ begin
     FOR i IN 0 TO number_of_pwms-1 GENERATE
         my_adjustable_pwm :  adjustable_pwm 
             GENERIC MAP (frequency_resolution =>C_S_AXI_DATA_WIDTH)
-            PORT MAP (S_AXI_ACLK,S_AXI_ARESETN,ri.frequency_regs(i),ri.ratio_regs(i),S_oslv_pwm(i));        
+            PORT MAP (S_AXI_ACLK,pwm_reset,ri.frequency_regs(i),ri.ratio_regs(i),S_oslv_pwm(i));        
     END GENERATE gen_pwm;
 	
 	
