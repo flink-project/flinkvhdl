@@ -6,8 +6,8 @@ USE work.fLink_definitions.ALL;
 entity gpioDevice_v1_0_S00_AXI is
 	generic (
 		-- Users to add parameters here
-        unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-        number_of_gpios: INTEGER RANGE 1 TO 128 := 1;
+         number_of_gpios: INTEGER RANGE 1 TO 128 := 1;
+         unique_id: STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0');
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -20,7 +20,7 @@ entity gpioDevice_v1_0_S00_AXI is
 	);
 	port (
 		-- Users to add ports here
-
+         oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -112,9 +112,7 @@ entity gpioDevice_v1_0_S00_AXI is
 		S_AXI_RVALID	: out std_logic;
 		-- Read ready. This signal indicates that the master can
     -- accept the read data and response information.
-		S_AXI_RREADY	: in std_logic;
-		
-		oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0)
+		S_AXI_RREADY	: in std_logic
 	);
 end gpioDevice_v1_0_S00_AXI;
 
@@ -176,8 +174,8 @@ architecture arch_imp of gpioDevice_v1_0_S00_AXI is
 	
 	
 	
-	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
-    CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/c_fLink_avs_data_width;
+	CONSTANT c_usig_number_of_regs: INTEGER := (number_of_gpios-1)/C_S_AXI_DATA_WIDTH+1;
+    CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/C_S_AXI_DATA_WIDTH;
     
     CONSTANT c_usig_dir_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4,C_S_AXI_ADDR_WIDTH)); 
     CONSTANT c_usig_value_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_dir_regs_address) + c_usig_number_of_regs*4); 
@@ -192,8 +190,8 @@ architecture arch_imp of gpioDevice_v1_0_S00_AXI is
      
     TYPE t_internal_register IS RECORD
                  conf_reg            : STD_LOGIC_VECTOR(0 DOWNTO 0);
-                 dir_reg                : STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);
-                 value_reg            : STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);
+                 dir_reg                : STD_LOGIC_VECTOR(127 DOWNTO 0);
+                 value_reg            : STD_LOGIC_VECTOR(127 DOWNTO 0);
     END RECORD;
      
     CONSTANT INTERNAL_REG_RESET : t_internal_register := (
@@ -488,8 +486,11 @@ begin
 
 	--read data
 	process( axi_rvalid,axi_araddr,ri ) is
-	   VARIABLE reg_number: INTEGER := 0;
+	   VARIABLE gpio_part_nr: INTEGER := 0;
 	begin
+	
+	
+	
 	  if (axi_rvalid = '1') then
 	    -- output the read dada 
 	    IF(axi_araddr = c_usig_typdef_address) THEN
@@ -500,94 +501,95 @@ begin
 	       axi_rdata <= (others => '0');
 	       axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
 	    ELSIF(axi_araddr = c_number_of_channels_address)THEN
-	       axi_rdata <= std_logic_vector(to_unsigned(number_of_pwms, axi_rdata'length));
+	       axi_rdata <= std_logic_vector(to_unsigned(number_of_gpios, axi_rdata'length));
 	    ELSIF(axi_araddr = c_usig_unique_id_address) THEN
 	        axi_rdata <= unique_id;
 	    ELSIF(axi_araddr = c_configuration_reg_address) THEN
 	        axi_rdata <= (others => '0');
             axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);   
-            
-            
-            
-
-	    ELSIF (axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
-            axi_rdata <= STD_LOGIC_VECTOR(ri.frequency_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_frequency_address))/4));
-        ELSIF (axi_araddr >= c_usig_ratio_address AND axi_araddr < c_usig_max_address) THEN 
-            axi_rdata <= STD_LOGIC_VECTOR(ri.ratio_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_ratio_address))/4));
+        ELSIF axi_araddr >= c_usig_dir_regs_address AND axi_araddr < c_usig_value_regs_address THEN
+            gpio_part_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_dir_regs_address))/4;
+            IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
+                axi_rdata <= ri.dir_reg((gpio_part_nr+1) * C_S_AXI_DATA_WIDTH -1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH);
+            ELSE
+                axi_rdata <= (OTHERS => '0');
+                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
+                    axi_rdata(i) <= ri.dir_reg(i+gpio_part_nr*C_S_AXI_DATA_WIDTH);
+                END LOOP;
+            END IF;
+        ELSIF axi_araddr >= c_usig_value_regs_address AND axi_araddr< c_usig_max_address THEN
+            gpio_part_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_value_regs_address))/4;
+            IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
+                axi_rdata <= ri.value_reg((gpio_part_nr+1) * C_S_AXI_DATA_WIDTH -1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH);
+            ELSE
+                axi_rdata <= (OTHERS => '0');
+                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
+                    axi_rdata(i) <= ri.value_reg(i+gpio_part_nr*C_S_AXI_DATA_WIDTH);
+                END LOOP;
+            END IF;
 	    ELSE
 	      axi_rdata <= (others => '0');
 	    END IF;
 	  else
 	    axi_rdata <= (others => '0');
 	  end if;  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+
+	  
 	end process;
 	
 	
-	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
-	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_pwms := 0; 
+	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN,oslv_gpios)  
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
+	   VARIABLE gpio_part_nr: INTEGER := 0;
 	BEGIN
 	   vi := ri;
 	   IF(axi_wready = '1') THEN
-	       IF(axi_awaddr >= c_usig_frequency_address AND axi_awaddr < c_usig_ratio_address) THEN
-	           reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_frequency_address)))/4;  
-               IF(S_AXI_WSTRB(0) = '1')THEN
-                    vi.frequency_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
-               END IF;
-               IF(S_AXI_WSTRB(1) = '1')THEN
-                   vi.frequency_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
-               END IF;
-               IF(S_AXI_WSTRB(2) = '1')THEN
-                   vi.frequency_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
-               END IF;               
-               IF(S_AXI_WSTRB(3) = '1')THEN
-                  vi.frequency_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
-               END IF;
-            ELSIF(axi_awaddr = c_configuration_reg_address) THEN
-                   IF(S_AXI_WSTRB(0) = '1')THEN
-                        vi.conf_reg(c_fLink_reset_bit_num) := S_AXI_WDATA(c_fLink_reset_bit_num);
+	   
+	   -- Write to direction registers
+          IF axi_awaddr >= c_usig_dir_regs_address AND axi_awaddr < c_usig_value_regs_address THEN
+               gpio_part_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_dir_regs_address))/4;
+               
+               FOR i IN 0 TO C_S_AXI_DATA_WIDTH/8-1 LOOP
+                   IF S_AXI_WSTRB(i) = '1' THEN
+                       vi.dir_reg(gpio_part_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH + i * 8)     :=    S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
                    END IF;
-            ELSIF(axi_awaddr >= c_usig_ratio_address AND axi_awaddr < c_usig_max_address) THEN
-                  reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
-                  IF(S_AXI_WSTRB(0) = '1')THEN
-                       vi.ratio_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
-                  END IF;
-                  IF(S_AXI_WSTRB(1) = '1')THEN
-                      vi.ratio_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
-                  END IF;
-                  IF(S_AXI_WSTRB(2) = '1')THEN
-                      vi.ratio_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
-                  END IF;               
-                  IF(S_AXI_WSTRB(3) = '1')THEN
-                     vi.ratio_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
-                  END IF;
-	        END IF;
+               END LOOP;
+           
+           -- Write to value registers
+           ELSIF axi_awaddr>= c_usig_value_regs_address AND axi_awaddr< c_usig_max_address THEN
+               gpio_part_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_value_regs_address))/4;
+               FOR i IN 0 TO C_S_AXI_DATA_WIDTH/8-1 LOOP
+                   IF S_AXI_WSTRB(i) = '1' THEN
+                       vi.value_reg(gpio_part_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH + i * 8)     :=    S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
+                   END IF;
+               END LOOP;
+           END IF;
+
 	   END IF;
 	   
+	  FOR i IN 0 TO number_of_gpios-1 LOOP
+           IF ri.dir_reg(i) = '1' THEN --output
+               oslv_gpios(i) <= ri.value_reg(i);
+           ELSE --input
+               oslv_gpios(i) <= 'Z';
+               vi.value_reg(i) := oslv_gpios(i);
+           END IF;
+       END LOOP;
+	  
 	   
-	   IF(S_AXI_ARESETN = '0' OR vi.conf_reg(c_fLink_reset_bit_num) = '1' )THEN
-	        vi := INTERNAL_REG_RESET;
-	        pwm_reset <= '0';
-	   ELSE
-	       pwm_reset <= '1';
-	   END IF;
 	   
 	   
 	   ri_next <= vi;
 	END PROCESS;
 	
 	-- Add user logic here
-	
-	
-	--create component
-    gen_pwm:
-    FOR i IN 0 TO number_of_pwms-1 GENERATE
-        my_adjustable_pwm :  adjustable_pwm 
-            GENERIC MAP (frequency_resolution =>C_S_AXI_DATA_WIDTH)
-            PORT MAP (S_AXI_ACLK,pwm_reset,ri.frequency_regs(i),ri.ratio_regs(i),S_oslv_pwm(i));        
-    END GENERATE gen_pwm;
-	
-	
 	
 	
 	reg_proc : PROCESS (S_AXI_ACLK)
