@@ -181,7 +181,7 @@ architecture arch_imp of fqdDevice_v1_0_S00_AXI is
     CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_counter_reg_address) + number_of_fqds*4);
 
 
-	 CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := x"0013";
+	 CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_counter_id,16));
      CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
      CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
      
