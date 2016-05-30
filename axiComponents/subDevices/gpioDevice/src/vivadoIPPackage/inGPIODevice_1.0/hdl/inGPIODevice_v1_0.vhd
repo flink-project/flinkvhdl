@@ -14,12 +14,7 @@ entity inGPIODevice_v1_0 is
 		-- Parameters of Axi Slave Bus Interface S00_AXI
 		C_S00_AXI_ID_WIDTH	: integer	:= 1;
 		C_S00_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S00_AXI_ADDR_WIDTH	: integer	:= 6;
-		C_S00_AXI_AWUSER_WIDTH	: integer	:= 0;
-		C_S00_AXI_ARUSER_WIDTH	: integer	:= 0;
-		C_S00_AXI_WUSER_WIDTH	: integer	:= 0;
-		C_S00_AXI_RUSER_WIDTH	: integer	:= 0;
-		C_S00_AXI_BUSER_WIDTH	: integer	:= 0
+		C_S00_AXI_ADDR_WIDTH	: integer	:= 12
 	);
 	port (
 		-- Users to add ports here
@@ -72,12 +67,7 @@ architecture arch_imp of inGPIODevice_v1_0 is
         unique_id: STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0');
 		C_S_AXI_ID_WIDTH	: integer	:= 1;
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S_AXI_ADDR_WIDTH	: integer	:= 6;
-		C_S_AXI_AWUSER_WIDTH	: integer	:= 0;
-		C_S_AXI_ARUSER_WIDTH	: integer	:= 0;
-		C_S_AXI_WUSER_WIDTH	: integer	:= 0;
-		C_S_AXI_RUSER_WIDTH	: integer	:= 0;
-		C_S_AXI_BUSER_WIDTH	: integer	:= 0
+		C_S_AXI_ADDR_WIDTH	: integer	:= 12
 		);
 		port (
 		islv_gpios				: IN STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
@@ -124,8 +114,7 @@ inGPIODevice_v1_0_S00_AXI_inst : inGPIODevice_v1_0_S00_AXI
         unique_id => unique_id,
 		C_S_AXI_ID_WIDTH	=> C_S00_AXI_ID_WIDTH,
 		C_S_AXI_DATA_WIDTH	=> C_S00_AXI_DATA_WIDTH,
-		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH,
-		C_S_AXI_BUSER_WIDTH	=> C_S00_AXI_BUSER_WIDTH
+		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH
 	)
 	port map (
 	    islv_gpios => islv_gpios,

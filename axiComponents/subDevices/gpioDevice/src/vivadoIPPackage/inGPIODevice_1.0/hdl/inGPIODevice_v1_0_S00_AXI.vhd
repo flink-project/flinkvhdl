@@ -183,7 +183,7 @@ architecture arch_imp of inGPIODevice_v1_0_S00_AXI is
 
 
 	 CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_digital_io_id,16));
-     CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := x"01"; 
+     CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := x"02"; 
      CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
      
     
@@ -539,7 +539,12 @@ begin
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
 	BEGIN
 	   vi := ri;
-       vi.value_reg := islv_gpios;
+	   
+	   FOR i IN 0 TO number_of_gpios-1 LOOP
+           vi.value_reg(i) := islv_gpios(i);
+       END LOOP;
+	   
+       
 	   ri_next <= vi;
 	END PROCESS;
 	
