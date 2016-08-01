@@ -38,7 +38,8 @@ USE work.i2c_master_pkg.ALL;
 -------------------------------------------------------------------------------
 PACKAGE itg3200_pkg IS
 	CONSTANT NR_OF_DATA_REGS : INTEGER := 6;
-
+	CONSTANT WAIT_CYCLES : INTEGER := 2014;
+	
 	CONSTANT WHO_AM_I : STD_LOGIC_VECTOR(REGISTER_WIDTH - 1 DOWNTO 0) := x"00";
 	CONSTANT SMPLRT_DIV : STD_LOGIC_VECTOR(REGISTER_WIDTH - 1 DOWNTO 0) := x"15";
 	CONSTANT DLPF_FS : STD_LOGIC_VECTOR(REGISTER_WIDTH - 1 DOWNTO 0) := x"16";
@@ -113,7 +114,7 @@ ARCHITECTURE rtl OF itg3200 IS
 	TYPE t_internal_register IS RECORD
 		state				: t_states;
 		dev_address	: STD_LOGIC_VECTOR(DEV_ADDRESS_WIDTH-1 DOWNTO 0);
-		byte_count : UNSIGNED(2 DOWNTO 0);
+		byte_count : UNSIGNED(3 DOWNTO 0);
 		out_data : t_data_regs;
 		register_address : STD_LOGIC_VECTOR(REGISTER_WIDTH-1 DOWNTO 0);
 		write_data : STD_LOGIC_VECTOR(REGISTER_WIDTH-1 DOWNTO 0);
@@ -210,21 +211,28 @@ ARCHITECTURE rtl OF itg3200 IS
 					IF(transfer_done = '1') THEN
 						vi.start_transfer := '0';
 						vi.state := read_gyro_out;
+						vi.byte_count := (OTHERS => '0');
+						vi.enable_burst_transfer := '1';
 					END IF;
 				WHEN read_gyro_out => 
 					vi.dev_address := "1101000";
 					vi.register_address := GYRO_XOUT_H;
 					vi.start_transfer := '1';
 					vi.write_n_read := '0';
-					vi.enable_burst_transfer := '1';
 					IF(transfer_done = '1') THEN
 						vi.out_data(to_integer(vi.byte_count)) := read_data;
 						vi.byte_count := vi.byte_count + 1;
-						IF(vi.byte_count = NR_OF_DATA_REGS) THEN
+						IF(vi.byte_count = NR_OF_DATA_REGS-1) THEN
+							vi.enable_burst_transfer := '0';
+						
+						ELSIF(vi.byte_count = NR_OF_DATA_REGS) THEN
 							vi.start_transfer := '0';
+							vi.enable_burst_transfer := '1';
+							vi.byte_count := (OTHERS => '0');
 							vi.state := read_gyro_out;
 						END IF;
-					END IF;			
+					END IF;
+				
 				WHEN OTHERS =>
 					vi.state := idle; 
 			END CASE;
