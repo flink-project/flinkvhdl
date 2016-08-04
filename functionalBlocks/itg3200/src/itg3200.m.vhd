@@ -192,8 +192,8 @@ ARCHITECTURE rtl OF itg3200 IS
 				
 				WHEN write_power_mode => 
 					vi.dev_address := "1101000";
-					vi.register_address := PWR_MGM;
-					vi.write_data := x"03";
+					vi.register_address := DLPF_FS;
+					vi.write_data := x"19";
 					vi.start_transfer := '1';
 					vi.write_n_read := '1';
 					vi.enable_burst_transfer := '0';
@@ -203,8 +203,8 @@ ARCHITECTURE rtl OF itg3200 IS
 					END IF;
 				WHEN write_samplerate => 
 					vi.dev_address := "1101000";
-					vi.register_address := SMPLRT_DIV;
-					vi.write_data := x"00";
+					vi.register_address := PWR_MGM;
+					vi.write_data := x"03";
 					vi.start_transfer := '1';
 					vi.write_n_read := '1';
 					vi.enable_burst_transfer := '0';
