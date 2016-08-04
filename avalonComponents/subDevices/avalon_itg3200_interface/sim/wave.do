@@ -42,7 +42,7 @@ add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/isl_write_n_read
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/isl_enable_burst_transfer
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/osl_transfer_done
-add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/ri
+add wave -noupdate -expand /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/ri
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/ri_next
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/I2C_PERIOD_COUNT
 add wave -noupdate /avalon_itg3200_interface_tb/my_unit_under_test/my_itg3200/my_i2c/I2C_HALF_PERIOD_COUNT

@@ -102,7 +102,7 @@ END ENTITY i2c_master;
 ARCHITECTURE rtl OF i2c_master IS	
 	CONSTANT I2C_PERIOD_COUNT : INTEGER := BASE_CLK/400000;	
 	CONSTANT I2C_HALF_PERIOD_COUNT : INTEGER := BASE_CLK/400000/2;	
-	CONSTANT START_CONDITION_HOLD_CYCLES : INTEGER := I2C_PERIOD_COUNT/5;-- min 0.6usec with a clk frequency of 400Hz (2.5us) this is around 4.16 so 5 cycles!	
+	CONSTANT START_CONDITION_HOLD_CYCLES : INTEGER := I2C_PERIOD_COUNT/4;-- min 0.6usec with a clk frequency of 400Hz (2.5us) this is around 4.16 so 5 cycles!	
 		
 	TYPE t_states IS (	idle,start_condition,address_write,read_write,wait_for_ack,register_address_write,
 						burst_read_1,wait_for_ack_2,write_data,wait_for_ack_3,stop_transfer,repeated_start,address_read,read_bit,wait_for_ack_4,read_data,send_ack,send_nack,wait_bevore_restart
@@ -232,7 +232,7 @@ ARCHITECTURE rtl OF i2c_master IS
 							vi.state := write_data;
 						ELSE
 							vi.scl := '1';
-							vi.sda := '0';
+							vi.sda := '1';
 							vi.state := repeated_start;
 						END IF;
 						
@@ -302,7 +302,7 @@ ARCHITECTURE rtl OF i2c_master IS
 						vi.scl := '1';
 						vi.clk_count := vi.clk_count + 1;
 						IF(vi.clk_count = START_CONDITION_HOLD_CYCLES) THEN
-							vi.sda := '1';
+							vi.sda := '0';
 						ELSIF(vi.clk_count >= I2C_HALF_PERIOD_COUNT + START_CONDITION_HOLD_CYCLES) THEN
 							vi.scl := '0';
 							vi.state := address_read;
