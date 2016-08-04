@@ -91,7 +91,7 @@ BEGIN
 		WAIT FOR main_period/2;		
 
 --test id register:
-		WAIT FOR 10*main_period;
+		WAIT FOR 100*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address,c_itg3200_address_width));				
 		WAIT FOR main_period;
@@ -107,7 +107,7 @@ BEGIN
 			REPORT "Type ID Missmatch" SEVERITY FAILURE;
 
 --test mem size register register:
-		WAIT FOR 10*main_period;
+		WAIT FOR 100*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address,c_itg3200_address_width));
 		WAIT FOR main_period;
@@ -116,7 +116,7 @@ BEGIN
 			ASSERT to_integer(UNSIGNED(slv_avs_read_data)) = 4*INTEGER(2**c_itg3200_address_width)
 			REPORT "Memory Size Error: "&INTEGER'IMAGE(4*INTEGER(2**NR_OF_DATA_REGS))&"/"&INTEGER'IMAGE(to_integer(UNSIGNED(slv_avs_read_data))) 				SEVERITY FAILURE;
 --test unique id register:
-		WAIT FOR 10*main_period;
+		WAIT FOR 100*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address,c_itg3200_address_width));
 		WAIT FOR main_period;
@@ -126,7 +126,7 @@ BEGIN
 			REPORT "Unic Id Error" SEVERITY FAILURE;
 			
 --test number of channels register:
-		WAIT FOR 10*main_period;
+		WAIT FOR 100*main_period;
 			sl_avs_read <= '1';
 			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address,c_itg3200_address_width));				
 		WAIT FOR main_period;
@@ -134,9 +134,22 @@ BEGIN
 			slv_avs_address <= (OTHERS =>'0');
 			ASSERT slv_avs_read_data(c_fLink_interface_version_length-1 DOWNTO 0) = STD_LOGIC_VECTOR(to_unsigned(NR_OF_DATA_REGS,c_fLink_interface_version_length)) 
 			REPORT "Number of Channels Error" SEVERITY FAILURE;
-
+		
+-- send start condition		
+		WAIT FOR 100*main_period;
+			sl_avs_write <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address,c_itg3200_address_width));	
+			slv_avs_write_data <= (OTHERS =>'0');
+			slv_avs_write_data(0) <= '0';
+			slv_avs_write_data(1) <= '1';
+		WAIT FOR main_period;
+			sl_avs_write <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+			slv_avs_write_data <= (OTHERS =>'0');
+		
+		
 		WAIT FOR 200000*main_period;
-			ASSERT false REPORT "End of simulation" SEVERITY FAILURE;
+			ASSERT false REPORT "End of simulation!!!" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 
 END ARCHITECTURE sim;

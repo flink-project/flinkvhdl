@@ -72,7 +72,9 @@ PACKAGE itg3200_pkg IS
 			osl_scl						: OUT STD_LOGIC;
 			oisl_sda					: INOUT STD_LOGIC;
 			--internal signals
+			isl_start					: IN STD_LOGIC;
 			ot_data						: OUT t_data_regs
+			
 		);
 	END COMPONENT itg3200;
 
@@ -99,6 +101,7 @@ ENTITY itg3200 IS
 			osl_scl						: OUT STD_LOGIC;
 			oisl_sda					: INOUT STD_LOGIC;
 			--internal signals
+			isl_start					: IN STD_LOGIC;
 			ot_data						: OUT t_data_regs
 		);
 END ENTITY itg3200;
@@ -177,7 +180,7 @@ ARCHITECTURE rtl OF itg3200 IS
 		--------------------------------------------
 		-- combinatorial process
 		--------------------------------------------
-		comb_process: PROCESS(ri, isl_reset_n,transfer_done,read_data)
+		comb_process: PROCESS(ri, isl_reset_n,transfer_done,read_data,isl_start)
 		
 		VARIABLE vi: t_internal_register;
 		
@@ -187,9 +190,10 @@ ARCHITECTURE rtl OF itg3200 IS
 			vi:=ri;
 			
 			CASE vi.state IS 
-				WHEN idle => 
-					vi.state := write_power_mode;
-				
+				WHEN idle =>
+					IF(isl_start = '1') THEN
+						vi.state := write_power_mode;
+					END IF;
 				WHEN write_power_mode => 
 					vi.dev_address := "1101000";
 					vi.register_address := DLPF_FS;

@@ -107,6 +107,7 @@ ARCHITECTURE rtl OF avalon_itg3200_interface IS
 	TYPE t_internal_register IS RECORD
 			global_reset_n		: STD_LOGIC;
 			itg3200_reset_n			: STD_LOGIC;
+			sl_start	: STD_LOGIC;
 	END RECORD;
 
 	SIGNAL ri,ri_next : t_internal_register;
@@ -115,7 +116,7 @@ ARCHITECTURE rtl OF avalon_itg3200_interface IS
 BEGIN
 	my_itg3200 : itg3200 
 		GENERIC MAP (BASE_CLK)
-		PORT MAP (isl_clk,ri.itg3200_reset_n,osl_scl,oisl_sda,itg3200_data);
+		PORT MAP (isl_clk,ri.itg3200_reset_n,osl_scl,oisl_sda,ri.sl_start,itg3200_data);
 
 		
 		
@@ -132,13 +133,14 @@ BEGIN
 		oslv_avs_read_data <= (OTHERS => '0');
 		vi.global_reset_n := '1';
 		vi.itg3200_reset_n := '1';
-		
+		vi.sl_start := '0';
 		
 		--avalon slave interface write part
 		IF isl_avs_write = '1' THEN
 			IF UNSIGNED(islv_avs_address) = to_unsigned(c_fLink_configuration_address,c_itg3200_address_width) THEN
 				IF islv_avs_byteenable(0) = '1' THEN
-					vi.global_reset_n := NOT islv_avs_write_data(0);		
+					vi.global_reset_n := NOT islv_avs_write_data(0);	
+					vi.sl_start := islv_avs_write_data(1);
 				END IF;
 			END IF;
 		END IF;
@@ -167,6 +169,7 @@ BEGIN
 
 		IF isl_reset_n = '0' OR vi.global_reset_n = '0'  THEN
 			vi.itg3200_reset_n := '0';
+			vi.sl_start := '0';
 		END IF;
 		
 		--keep variables stable
