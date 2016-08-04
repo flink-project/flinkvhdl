@@ -97,7 +97,11 @@ ENTITY avalon_itg3200_interface IS
 			);
 
 	CONSTANT c_usig_data_0_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_itg3200_address_width);
-	CONSTANT c_usig_last_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_0_address + NR_OF_DATA_REGS;
+	CONSTANT c_usig_data_1_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_0_address + 1;
+	CONSTANT c_usig_data_2_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_1_address + 1;
+	CONSTANT c_usig_data_3_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_2_address + 1;
+	CONSTANT c_usig_data_4_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_3_address + 1;
+	CONSTANT c_usig_data_5_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := c_usig_data_4_address + 1;
 	
 	
 END ENTITY avalon_itg3200_interface;
@@ -123,7 +127,6 @@ BEGIN
 	-- cobinatoric process
 	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,itg3200_data)
 		VARIABLE vi :	t_internal_register;
-		VARIABLE itg3200_part_nr: INTEGER := 0;
 	BEGIN
 		-- keep variables stable
 		vi := ri;	
@@ -159,12 +162,21 @@ BEGIN
 					oslv_avs_read_data <= std_logic_vector(to_unsigned(NR_OF_DATA_REGS,c_fLink_avs_data_width));
 				WHEN to_unsigned(c_fLink_unique_id_address,c_itg3200_address_width) => 
 					oslv_avs_read_data <= UNIQUE_ID;
+				WHEN c_usig_data_0_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(0);
+				WHEN c_usig_data_1_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(1);
+				WHEN c_usig_data_2_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(2);
+				WHEN c_usig_data_3_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(3);
+				WHEN c_usig_data_4_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(4);
+				WHEN c_usig_data_5_address => 
+					oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(5);
 				WHEN OTHERS => 
-					IF UNSIGNED(islv_avs_address)>= c_usig_data_0_address AND UNSIGNED(islv_avs_address)< c_usig_last_address THEN
-						itg3200_part_nr := to_integer(UNSIGNED(islv_avs_address) - c_usig_data_0_address);
-						oslv_avs_read_data(REGISTER_WIDTH-1 DOWNTO 0) <= itg3200_data(itg3200_part_nr);
-					END IF;
-			END CASE;
+					oslv_avs_read_data <= (OTHERS => '0');
+			END CASE;	
 		END IF;
 
 		IF isl_reset_n = '0' OR vi.global_reset_n = '0'  THEN

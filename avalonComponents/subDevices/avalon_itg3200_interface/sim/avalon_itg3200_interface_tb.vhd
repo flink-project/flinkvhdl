@@ -45,6 +45,7 @@ ARCHITECTURE sim OF avalon_itg3200_interface_tb IS
 	
 	CONSTANT main_period : TIME := 8 ns; -- 125MHz
 	CONSTANT unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := x"00616463"; --adc
+	CONSTANT c_usig_data_0_address: UNSIGNED(c_itg3200_address_width-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_itg3200_address_width);
 
 	SIGNAL sl_clk					: STD_LOGIC := '0';
 	SIGNAL sl_reset_n				: STD_LOGIC := '1';
@@ -149,6 +150,56 @@ BEGIN
 		
 		
 		WAIT FOR 200000*main_period;
+		
+		
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address+1);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address+2);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address+3);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address+4);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		WAIT FOR 100*main_period;
+			sl_avs_read <= '1';
+			slv_avs_address <= STD_LOGIC_VECTOR(c_usig_data_0_address+5);				
+		WAIT FOR main_period;
+			sl_avs_read <= '0';
+			slv_avs_address <= (OTHERS =>'0');
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 			ASSERT false REPORT "End of simulation!!!" SEVERITY FAILURE;
 	END PROCESS tb_main_proc;
 
