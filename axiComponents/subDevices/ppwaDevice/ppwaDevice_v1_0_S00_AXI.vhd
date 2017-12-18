@@ -8,10 +8,10 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 --                                                                           --
--- Avalon MM interface for PWM                                               --
+-- AXI interface for PPWA                                               --
 --                                                                           --
 -------------------------------------------------------------------------------
--- Copyright 2014 NTB University of Applied Sciences in Technology           --
+-- Copyright 2017 NTB University of Applied Sciences in Technology           --
 --                                                                           --
 -- Licensed under the Apache License, Version 2.0 (the "License");           --
 -- you may not use this file except in compliance with the License.          --
@@ -30,14 +30,15 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 USE work.fLink_definitions.ALL;
-USE work.adjustable_pwm_pkg.ALL;
+USE work.ppwa_pkg.ALL;
 
-entity pwmDevice_v1_0_S00_AXI is
+
+entity ppwaDevice_v1_0_S00_AXI is
 	generic (
 		-- Users to add parameters here
-        unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-        number_of_pwms: INTEGER RANGE 0 TO 16 := 1;--number of pwms which will be generated
-        base_clk: INTEGER RANGE 0 TO 2147483647 := 125000000;--clock frequency which is used on the clock input signal of this block
+        number_of_ppwas: INTEGER RANGE 1 TO 11 := 1;
+        unique_id: STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
+        base_clk: INTEGER  := 125000000;--clock frequency which is used on the clock input signal of this block
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -46,7 +47,17 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Width of S_AXI data bus
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
 		-- Width of S_AXI address bus
-		C_S_AXI_ADDR_WIDTH	: integer	:= 12
+		C_S_AXI_ADDR_WIDTH	: integer	:= 12;
+		-- Width of optional user defined signal in write address channel
+		C_S_AXI_AWUSER_WIDTH	: integer	:= 0;
+		-- Width of optional user defined signal in read address channel
+		C_S_AXI_ARUSER_WIDTH	: integer	:= 0;
+		-- Width of optional user defined signal in write data channel
+		C_S_AXI_WUSER_WIDTH	: integer	:= 0;
+		-- Width of optional user defined signal in read data channel
+		C_S_AXI_RUSER_WIDTH	: integer	:= 0;
+		-- Width of optional user defined signal in write response channel
+		C_S_AXI_BUSER_WIDTH	: integer	:= 0
 	);
 	port (
 		-- Users to add ports here
@@ -69,7 +80,24 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Burst type. The burst type and the size information, 
     -- determine how the address for each transfer within the burst is calculated.
 		S_AXI_AWBURST	: in std_logic_vector(1 downto 0);
-	
+		-- Lock type. Provides additional information about the
+    -- atomic characteristics of the transfer.
+		S_AXI_AWLOCK	: in std_logic;
+		-- Memory type. This signal indicates how transactions
+    -- are required to progress through a system.
+		S_AXI_AWCACHE	: in std_logic_vector(3 downto 0);
+		-- Protection type. This signal indicates the privilege
+    -- and security level of the transaction, and whether
+    -- the transaction is a data access or an instruction access.
+		S_AXI_AWPROT	: in std_logic_vector(2 downto 0);
+		-- Quality of Service, QoS identifier sent for each
+    -- write transaction.
+		S_AXI_AWQOS	: in std_logic_vector(3 downto 0);
+		-- Region identifier. Permits a single physical interface
+    -- on a slave to be used for multiple logical interfaces.
+		S_AXI_AWREGION	: in std_logic_vector(3 downto 0);
+		-- Optional User-defined signal in the write address channel.
+		S_AXI_AWUSER	: in std_logic_vector(C_S_AXI_AWUSER_WIDTH-1 downto 0);
 		-- Write address valid. This signal indicates that
     -- the channel is signaling valid write address and
     -- control information.
@@ -87,6 +115,8 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Write last. This signal indicates the last transfer
     -- in a write burst.
 		S_AXI_WLAST	: in std_logic;
+		-- Optional User-defined signal in the write data channel.
+		S_AXI_WUSER	: in std_logic_vector(C_S_AXI_WUSER_WIDTH-1 downto 0);
 		-- Write valid. This signal indicates that valid write
     -- data and strobes are available.
 		S_AXI_WVALID	: in std_logic;
@@ -99,6 +129,8 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Write response. This signal indicates the status
     -- of the write transaction.
 		S_AXI_BRESP	: out std_logic_vector(1 downto 0);
+		-- Optional User-defined signal in the write response channel.
+		S_AXI_BUSER	: out std_logic_vector(C_S_AXI_BUSER_WIDTH-1 downto 0);
 		-- Write response valid. This signal indicates that the
     -- channel is signaling a valid write response.
 		S_AXI_BVALID	: out std_logic;
@@ -118,8 +150,27 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Burst type. The burst type and the size information, 
     -- determine how the address for each transfer within the burst is calculated.
 		S_AXI_ARBURST	: in std_logic_vector(1 downto 0);
+		-- Lock type. Provides additional information about the
+    -- atomic characteristics of the transfer.
+		S_AXI_ARLOCK	: in std_logic;
+		-- Memory type. This signal indicates how transactions
+    -- are required to progress through a system.
+		S_AXI_ARCACHE	: in std_logic_vector(3 downto 0);
+		-- Protection type. This signal indicates the privilege
+    -- and security level of the transaction, and whether
+    -- the transaction is a data access or an instruction access.
+		S_AXI_ARPROT	: in std_logic_vector(2 downto 0);
 		-- Quality of Service, QoS identifier sent for each
     -- read transaction.
+		S_AXI_ARQOS	: in std_logic_vector(3 downto 0);
+		-- Region identifier. Permits a single physical interface
+    -- on a slave to be used for multiple logical interfaces.
+		S_AXI_ARREGION	: in std_logic_vector(3 downto 0);
+		-- Optional User-defined signal in the read address channel.
+		S_AXI_ARUSER	: in std_logic_vector(C_S_AXI_ARUSER_WIDTH-1 downto 0);
+		-- Write address valid. This signal indicates that
+    -- the channel is signaling valid read address and
+    -- control information.
 		S_AXI_ARVALID	: in std_logic;
 		-- Read address ready. This signal indicates that
     -- the slave is ready to accept an address and associated
@@ -136,7 +187,8 @@ entity pwmDevice_v1_0_S00_AXI is
 		-- Read last. This signal indicates the last transfer
     -- in a read burst.
 		S_AXI_RLAST	: out std_logic;
-
+		-- Optional User-defined signal in the read address channel.
+		S_AXI_RUSER	: out std_logic_vector(C_S_AXI_RUSER_WIDTH-1 downto 0);
 		-- Read valid. This signal indicates that the channel
     -- is signaling the required read data.
 		S_AXI_RVALID	: out std_logic;
@@ -144,21 +196,25 @@ entity pwmDevice_v1_0_S00_AXI is
     -- accept the read data and response information.
 		S_AXI_RREADY	: in std_logic;
 		
-		S_oslv_pwm				: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
+		S_islv_ppwa		: IN STD_LOGIC_VECTOR(number_of_ppwas-1 DOWNTO 0)
 	);
-end pwmDevice_v1_0_S00_AXI;
+end ppwaDevice_v1_0_S00_AXI;
 
-architecture arch_imp of pwmDevice_v1_0_S00_AXI is
+architecture arch_imp of ppwaDevice_v1_0_S00_AXI is
 
 	-- AXI4FULL signals
 	signal axi_awaddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
 	signal axi_awready	: std_logic;
 	signal axi_wready	: std_logic;
+	signal axi_bresp	: std_logic_vector(1 downto 0);
+	signal axi_buser	: std_logic_vector(C_S_AXI_BUSER_WIDTH-1 downto 0);
 	signal axi_bvalid	: std_logic;
 	signal axi_araddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
 	signal axi_arready	: std_logic;
 	signal axi_rdata	: std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+	signal axi_rresp	: std_logic_vector(1 downto 0);
 	signal axi_rlast	: std_logic;
+	signal axi_ruser	: std_logic_vector(C_S_AXI_RUSER_WIDTH-1 downto 0);
 	signal axi_rvalid	: std_logic;
 	-- aw_wrap_en determines wrap boundary and enables wrapping
 	signal  aw_wrap_en : std_logic; 
@@ -194,46 +250,38 @@ architecture arch_imp of pwmDevice_v1_0_S00_AXI is
 	constant USER_NUM_MEM: integer := 1;
 	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := (OTHERS => '0');
 	
-	
-	
-	
-	
 	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_number_of_channels_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4,C_S_AXI_ADDR_WIDTH));
-	CONSTANT c_configuration_reg_address: STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4,C_S_AXI_ADDR_WIDTH));
-	
-	
-	
+    CONSTANT c_configuration_reg_address: STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4,C_S_AXI_ADDR_WIDTH));
+    
     CONSTANT c_usig_base_clk_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4,C_S_AXI_ADDR_WIDTH)); 
     CONSTANT c_usig_frequency_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_base_clk_address) + 4); 
-    CONSTANT c_usig_ratio_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_frequency_address) + number_of_pwms*4); 
-    CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_ratio_address) + number_of_pwms*4);
-
-
-	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_pwm_out_id,16));
-	CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
-	CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-     
-	Type t_pwm_regs IS ARRAY(number_of_pwms-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
-     
-	TYPE t_internal_register IS RECORD
-        frequency_regs                : t_pwm_regs;      
-        ratio_regs                    : t_pwm_regs;    
+    CONSTANT c_usig_ratio_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_frequency_address) + number_of_ppwas*4); 
+    CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_ratio_address) + number_of_ppwas*4);
+    
+    CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_ppwa_id,16));
+    CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
+    CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
+        
+    Type t_ppwa_regs IS ARRAY(number_of_ppwas-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
+    
+    TYPE t_internal_register IS RECORD
+        frequency_regs                : t_ppwa_regs;      
+        ratio_regs                    : t_ppwa_regs;    
         conf_reg                      : STD_LOGIC_VECTOR(0 DOWNTO 0);
-	END RECORD;
-     
-	CONSTANT INTERNAL_REG_RESET : t_internal_register := (
+     END RECORD;
+    
+    CONSTANT INTERNAL_REG_RESET : t_internal_register := (
                                    frequency_regs=> ((OTHERS=> (OTHERS=>'0'))),
                                    ratio_regs=> ((OTHERS=> (OTHERS=>'0'))),
                                    conf_reg=> (OTHERS=>'0')
-	);
-     
-	SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
-     
-	SIGNAL pwm_reset : STD_LOGIC := '1';
-     
+    );
+    
+    SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
+    
+    SIGNAL ppwa_reset : STD_LOGIC := '1';
 	------------------------------------------------
 	---- Signals for user logic memory space example
 	--------------------------------------------------
@@ -251,12 +299,14 @@ begin
 
 	S_AXI_AWREADY	<= axi_awready;
 	S_AXI_WREADY	<= axi_wready;
-	S_AXI_BRESP	<= (OTHERS => '0');
+	S_AXI_BRESP	<= axi_bresp;
+	S_AXI_BUSER	<= axi_buser;
 	S_AXI_BVALID	<= axi_bvalid;
 	S_AXI_ARREADY	<= axi_arready;
 	S_AXI_RDATA	<= axi_rdata;
-	S_AXI_RRESP	<= (OTHERS => '0');
+	S_AXI_RRESP	<= axi_rresp;
 	S_AXI_RLAST	<= axi_rlast;
+	S_AXI_RUSER	<= axi_ruser;
 	S_AXI_RVALID	<= axi_rvalid;
 	S_AXI_BID <= S_AXI_AWID;
 	S_AXI_RID <= S_AXI_ARID;
@@ -321,21 +371,8 @@ begin
 	            axi_awaddr     <= axi_awaddr;       ----for awsize = 4 bytes (010)
 	          when "01" => --incremental burst
 	            -- The write address for all the beats in the transaction are increments by awsize
-	            
-	            IF(S_AXI_AWSIZE = "000") THEN
-                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 1);
-	            ELSIF(S_AXI_AWSIZE = "001") THEN
-                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 2);
-	            ELSIF(S_AXI_AWSIZE = "010") THEN
-                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 4);
-                ELSIF(S_AXI_AWSIZE = "011") THEN
-                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 8);
-                ELSIF(S_AXI_AWSIZE = "100") THEN
-                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 16);
-                ELSE
-                     axi_awaddr     <= axi_awaddr;
-	            END IF;
-	            
+	            axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB)) + 1);--awaddr aligned to 4 byte boundary
+	            axi_awaddr(ADDR_LSB-1 downto 0)  <= (others => '0');  ----for awsize = 4 bytes (010)
 	          when "10" => --Wrapping burst
 	            -- The write address wraps when the address reaches wrap boundary 
 	            if (aw_wrap_en = '1') then
@@ -386,9 +423,12 @@ begin
 	  if rising_edge(S_AXI_ACLK) then 
 	    if S_AXI_ARESETN = '0' then
 	      axi_bvalid  <= '0';
+	      axi_bresp  <= "00"; --need to work more on the responses
+	      axi_buser <= (others => '0');
 	    else
 	      if (axi_awv_awr_flag = '1' and axi_wready = '1' and S_AXI_WVALID = '1' and axi_bvalid = '0' and S_AXI_WLAST = '1' ) then
 	        axi_bvalid <= '1';
+	        axi_bresp  <= "00"; 
 	      elsif (S_AXI_BREADY = '1' and axi_bvalid = '1') then  
 	      --check if bready is asserted while bvalid is high)
 	        axi_bvalid <= '0';                      
@@ -436,6 +476,7 @@ begin
 	      axi_arlen <= (others => '0'); 
 	      axi_arlen_cntr <= (others => '0');
 	      axi_rlast <= '0';
+	      axi_ruser <= (others => '0');
 	    else
 	      if (axi_arready = '0' and S_AXI_ARVALID = '1' and axi_arv_arr_flag = '0') then
 	        -- address latching 
@@ -454,19 +495,8 @@ begin
 	            axi_araddr     <= axi_araddr;      ----for arsize = 4 bytes (010)
 	          when "01" =>  --incremental burst
 	            -- The read address for all the beats in the transaction are increments by awsize
-                    IF(S_AXI_ARSIZE = "000") THEN
-                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 1);
-                    ELSIF(S_AXI_ARSIZE = "001") THEN
-                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 2);
-                    ELSIF(S_AXI_ARSIZE = "010") THEN
-                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 4);
-                    ELSIF(S_AXI_ARSIZE = "011") THEN
-                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 8);
-                    ELSIF(S_AXI_ARSIZE = "100") THEN
-                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 16);
-                    ELSE
-                        axi_araddr  <= axi_araddr;
-                    END IF;
+	            axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB)) + 1); --araddr aligned to 4 byte boundary
+	            axi_araddr(ADDR_LSB-1 downto 0)  <= (others => '0');  ----for awsize = 4 bytes (010)
 	          when "10" =>  --Wrapping burst
 	            -- The read address wraps when the address reaches wrap boundary 
 	            if (ar_wrap_en = '1') then   
@@ -502,18 +532,20 @@ begin
 	  if rising_edge(S_AXI_ACLK) then
 	    if S_AXI_ARESETN = '0' then
 	      axi_rvalid <= '0';
+	      axi_rresp  <= "00";
 	    else
 	      if (axi_arv_arr_flag = '1' and axi_rvalid = '0') then
 	        axi_rvalid <= '1';
+	        axi_rresp  <= "00"; -- 'OKAY' response
 	      elsif (axi_rvalid = '1' and S_AXI_RREADY = '1') then
 	        axi_rvalid <= '0';
 	      end  if;      
 	    end if;
 	  end if;
 	end  process;
-
-
-
+	-- ------------------------------------------
+	-- -- Example code to access user logic memory region
+	-- ------------------------------------------
 
 	--read data
 	process( axi_rvalid,axi_araddr,ri ) is
@@ -529,7 +561,7 @@ begin
 	       axi_rdata <= (others => '0');
 	       axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
 	    ELSIF(axi_araddr = c_number_of_channels_address)THEN
-	       axi_rdata <= std_logic_vector(to_unsigned(number_of_pwms, axi_rdata'length));
+	       axi_rdata <= std_logic_vector(to_unsigned(number_of_ppwas, axi_rdata'length));
 	    ELSIF(axi_araddr = c_usig_unique_id_address) THEN
 	        axi_rdata <= unique_id;
 	    ELSIF(axi_araddr = c_configuration_reg_address) THEN
@@ -551,7 +583,7 @@ begin
 	
 	
 	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
-	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_pwms := 0; 
+	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_ppwas := 0; 
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
 	BEGIN
 	   vi := ri;
@@ -594,9 +626,9 @@ begin
 	   
 	   IF(S_AXI_ARESETN = '0' OR vi.conf_reg(c_fLink_reset_bit_num) = '1' )THEN
 	        vi := INTERNAL_REG_RESET;
-	        pwm_reset <= '0';
+	        ppwa_reset <= '0';
 	   ELSE
-	       pwm_reset <= '1';
+	       ppwa_reset <= '1';
 	   END IF;
 	   
 	   
@@ -605,14 +637,13 @@ begin
 	
 	-- Add user logic here
 	
-	
 	--create component
-    gen_pwm:
-    FOR i IN 0 TO number_of_pwms-1 GENERATE
-        my_adjustable_pwm :  adjustable_pwm 
-            GENERIC MAP (frequency_resolution =>C_S_AXI_DATA_WIDTH)
-            PORT MAP (S_AXI_ACLK,pwm_reset,ri.frequency_regs(i),ri.ratio_regs(i),S_oslv_pwm(i));        
-    END GENERATE gen_pwm;
+    gen_ppwa:
+    FOR i IN 0 TO number_of_ppwas-1 GENERATE
+        my_ppwa :  ppwa
+            GENERIC MAP (counter_resolution =>C_S_AXI_DATA_WIDTH)
+            PORT MAP (S_AXI_ACLK,ppwa_reset,S_islv_ppwa(i),ri.frequency_regs(i),ri.ratio_regs(i));        
+    END GENERATE gen_ppwa;
 	
 	
 	
@@ -625,6 +656,8 @@ begin
     END PROCESS reg_proc;
 	
 	
+
+	-- Add user logic here
 
 	-- User logic ends
 

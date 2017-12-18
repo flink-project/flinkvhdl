@@ -1,32 +1,29 @@
 -------------------------------------------------------------------------------
---     ____  _____          __    __    ________    _______
---    |    | \    \        |   \ |  |  |__    __|  |   __  \
---    |____|  \____\       |    \|  |     |  |     |  |__>  ) 
---     ____   ____         |  |\ \  |     |  |     |   __  <
---    |    | |    |        |  | \   |     |  |     |  |__>  )
---    |____| |____|        |__|  \__|     |__|     |_______/
---
---    NTB University of Applied Sciences in Technology
---
---    Campus Buchs - Werdenbergstrasse 4 - 9471 Buchs - Switzerland
---    Campus Waldau - Schoenauweg 4 - 9013 St. Gallen - Switzerland
---
---    Web http://www.ntb.ch        Tel. +41 81 755 33 11
---
+--  _________    _____       _____    ____  _____    ___  ____               --
+-- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
+--   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
+--   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
+--  _| |_        _| |__/ |   _| |_    _| |_\   |_    _| |  \ \_              --
+-- |_____|      |________|  |_____|  |_____|\____|  |____||____|             --
+--                                                                           --
 -------------------------------------------------------------------------------
--- Copyright 2013 NTB University of Applied Sciences in Technology
+--                                                                           --
+-- Avalon MM interface for PPWA                                               --
+--                                                                           --
 -------------------------------------------------------------------------------
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
--- 
--- http://www.apache.org/licenses/LICENSE-2.0
---   
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
+-- Copyright 2014 NTB University of Applied Sciences in Technology           --
+--                                                                           --
+-- Licensed under the Apache License, Version 2.0 (the "License");           --
+-- you may not use this file except in compliance with the License.          --
+-- You may obtain a copy of the License at                                   --
+--                                                                           --
+-- http://www.apache.org/licenses/LICENSE-2.0                                --
+--                                                                           --
+-- Unless required by applicable law or agreed to in writing, software       --
+-- distributed under the License is distributed on an "AS IS" BASIS,         --
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  --
+-- See the License for the specific language governing permissions and       --
+-- limitations under the License.                                            --
 -------------------------------------------------------------------------------
 
 LIBRARY IEEE;
@@ -37,7 +34,7 @@ USE IEEE.math_real.ALL;
 USE work.fLink_definitions.ALL;
 
 PACKAGE avalon_ppwa_interface_pkg IS
-	CONSTANT c_max_number_of_ppwas : INTEGER := 11;
+	CONSTANT c_max_number_of_ppwas 			: INTEGER := 11;
 	CONSTANT c_ppwa_interface_address_width : INTEGER := 5;
 	
 	COMPONENT avalon_ppwa_interface IS
@@ -62,7 +59,6 @@ PACKAGE avalon_ppwa_interface_pkg IS
 
 	CONSTANT c_ppwa_subtype_id : INTEGER := 0;
 	CONSTANT c_ppwa_interface_version : INTEGER := 0;
-
 
 END PACKAGE avalon_ppwa_interface_pkg;
 
@@ -111,6 +107,7 @@ ARCHITECTURE rtl OF avalon_ppwa_interface IS
 	SIGNAL ppwa_reset_n : STD_LOGIC; 
 	SIGNAL usig_period_count_regs :  t_counter_regs;
 	SIGNAL usig_hightime_count_regs : t_counter_regs;
+	
 BEGIN
 	gen_ppwa:
 	FOR i IN 0 TO number_of_ppwas-1 GENERATE
@@ -119,8 +116,6 @@ BEGIN
 			PORT MAP (isl_clk,ppwa_reset_n,islv_signals_to_measure(i),usig_period_count_regs(i),usig_hightime_count_regs(i));		
 	END GENERATE gen_ppwa;
 
-	
-	
 	-- combinatorial process
 	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
