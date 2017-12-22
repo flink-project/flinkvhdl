@@ -1,37 +1,8 @@
--------------------------------------------------------------------------------
---  _________    _____       _____    ____  _____    ___  ____               --
--- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
---   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
---   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
---  _| |_        _| |__/ |   _| |_    _| |_\   |_    _| |  \ \_              --
--- |_____|      |________|  |_____|  |_____|\____|  |____||____|             --
---                                                                           --
--------------------------------------------------------------------------------
---                                                                           --
--- AXI interface for PPWA                                               --
---                                                                           --
--------------------------------------------------------------------------------
--- Copyright 2017 NTB University of Applied Sciences in Technology           --
---                                                                           --
--- Licensed under the Apache License, Version 2.0 (the "License");           --
--- you may not use this file except in compliance with the License.          --
--- You may obtain a copy of the License at                                   --
---                                                                           --
--- http://www.apache.org/licenses/LICENSE-2.0                                --
---                                                                           --
--- Unless required by applicable law or agreed to in writing, software       --
--- distributed under the License is distributed on an "AS IS" BASIS,         --
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  --
--- See the License for the specific language governing permissions and       --
--- limitations under the License.                                            --
--------------------------------------------------------------------------------
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 USE work.fLink_definitions.ALL;
 USE work.ppwa_pkg.ALL;
-
 
 entity ppwaDevice_v1_0_S00_AXI is
 	generic (
@@ -264,7 +235,7 @@ architecture arch_imp of ppwaDevice_v1_0_S00_AXI is
     CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_ppwa_id,16));
     CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
     CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-        
+    
     Type t_ppwa_regs IS ARRAY(number_of_ppwas-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
     
     TYPE t_internal_register IS RECORD
@@ -548,114 +519,113 @@ begin
 	-- ------------------------------------------
 
 	--read data
-	process( axi_rvalid,axi_araddr,ri ) is
-	   VARIABLE reg_number: INTEGER := 0;
-	begin
-	  if (axi_rvalid = '1') then
-	    -- output the read dada 
-	    IF(axi_araddr = c_usig_typdef_address) THEN
-	       axi_rdata(31 DOWNTO 16) <= id;
-	       axi_rdata(15 DOWNTO 8) <= subtype_id;
-	       axi_rdata(7 DOWNTO 0) <= interface_version;
-	    ELSIF(axi_araddr = c_usig_mem_size_address)THEN
-	       axi_rdata <= (others => '0');
-	       axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
-	    ELSIF(axi_araddr = c_number_of_channels_address)THEN
-	       axi_rdata <= std_logic_vector(to_unsigned(number_of_ppwas, axi_rdata'length));
-	    ELSIF(axi_araddr = c_usig_unique_id_address) THEN
-	        axi_rdata <= unique_id;
-	    ELSIF(axi_araddr = c_configuration_reg_address) THEN
-	        axi_rdata <= (others => '0');
-            axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);    
-	    ELSIF(axi_araddr = c_usig_base_clk_address) THEN
-	        axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,C_S_AXI_DATA_WIDTH));
-	    ELSIF (axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
-            axi_rdata <= STD_LOGIC_VECTOR(ri.frequency_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_frequency_address))/4));
-        ELSIF (axi_araddr >= c_usig_ratio_address AND axi_araddr < c_usig_max_address) THEN 
-            axi_rdata <= STD_LOGIC_VECTOR(ri.ratio_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_ratio_address))/4));
-	    ELSE
-	      axi_rdata <= (others => '0');
-	    END IF;
-	  else
-	    axi_rdata <= (others => '0');
-	  end if;  
-	end process;
-	
-	
-	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
-	   VARIABLE reg_number: INTEGER RANGE 0 TO number_of_ppwas := 0; 
-	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
-	BEGIN
-	   vi := ri;
-	   IF(axi_wready = '1') THEN
-	       IF(axi_awaddr >= c_usig_frequency_address AND axi_awaddr < c_usig_ratio_address) THEN
-	           reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_frequency_address)))/4;  
-               IF(S_AXI_WSTRB(0) = '1')THEN
-                    vi.frequency_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
-               END IF;
-               IF(S_AXI_WSTRB(1) = '1')THEN
-                   vi.frequency_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
-               END IF;
-               IF(S_AXI_WSTRB(2) = '1')THEN
-                   vi.frequency_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
-               END IF;               
-               IF(S_AXI_WSTRB(3) = '1')THEN
-                  vi.frequency_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
-               END IF;
-            ELSIF(axi_awaddr = c_configuration_reg_address) THEN
+        process( axi_rvalid,axi_araddr,ri ) is
+           VARIABLE reg_number: INTEGER := 0;
+        begin
+          if (axi_rvalid = '1') then
+            -- output the read dada 
+            IF(axi_araddr = c_usig_typdef_address) THEN
+               axi_rdata(31 DOWNTO 16) <= id;
+               axi_rdata(15 DOWNTO 8) <= subtype_id;
+               axi_rdata(7 DOWNTO 0) <= interface_version;
+            ELSIF(axi_araddr = c_usig_mem_size_address)THEN
+               axi_rdata <= (others => '0');
+               axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
+            ELSIF(axi_araddr = c_number_of_channels_address)THEN
+               axi_rdata <= std_logic_vector(to_unsigned(number_of_ppwas, axi_rdata'length));
+            ELSIF(axi_araddr = c_usig_unique_id_address) THEN
+                axi_rdata <= unique_id;
+            ELSIF(axi_araddr = c_configuration_reg_address) THEN
+                axi_rdata <= (others => '0');
+                axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);    
+            ELSIF(axi_araddr = c_usig_base_clk_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,C_S_AXI_DATA_WIDTH));
+            ELSIF (axi_araddr >= c_usig_frequency_address AND axi_araddr < c_usig_ratio_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(ri.frequency_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_frequency_address))/4));
+            ELSIF (axi_araddr >= c_usig_ratio_address AND axi_araddr < c_usig_max_address) THEN 
+                axi_rdata <= STD_LOGIC_VECTOR(ri.ratio_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_ratio_address))/4));
+            ELSE
+              axi_rdata <= (others => '0');
+            END IF;
+          else
+            axi_rdata <= (others => '0');
+          end if;  
+        end process;
+        
+        
+        process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
+           VARIABLE reg_number: INTEGER RANGE 0 TO number_of_ppwas := 0; 
+           VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
+        BEGIN
+           vi := ri;
+           IF(axi_wready = '1') THEN
+               IF(axi_awaddr >= c_usig_frequency_address AND axi_awaddr < c_usig_ratio_address) THEN
+                   reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_frequency_address)))/4;  
                    IF(S_AXI_WSTRB(0) = '1')THEN
-                        vi.conf_reg(c_fLink_reset_bit_num) := S_AXI_WDATA(c_fLink_reset_bit_num);
+                        vi.frequency_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
                    END IF;
-            ELSIF(axi_awaddr >= c_usig_ratio_address AND axi_awaddr < c_usig_max_address) THEN
-                  reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
-                  IF(S_AXI_WSTRB(0) = '1')THEN
-                       vi.ratio_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
-                  END IF;
-                  IF(S_AXI_WSTRB(1) = '1')THEN
-                      vi.ratio_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
-                  END IF;
-                  IF(S_AXI_WSTRB(2) = '1')THEN
-                      vi.ratio_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
-                  END IF;               
-                  IF(S_AXI_WSTRB(3) = '1')THEN
-                     vi.ratio_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
-                  END IF;
-	        END IF;
-	   END IF;
-	   
-	   
-	   IF(S_AXI_ARESETN = '0' OR vi.conf_reg(c_fLink_reset_bit_num) = '1' )THEN
-	        vi := INTERNAL_REG_RESET;
-	        ppwa_reset <= '0';
-	   ELSE
-	       ppwa_reset <= '1';
-	   END IF;
-	   
-	   
-	   ri_next <= vi;
-	END PROCESS;
-	
-	-- Add user logic here
-	
-	--create component
-    gen_ppwa:
-    FOR i IN 0 TO number_of_ppwas-1 GENERATE
-        my_ppwa :  ppwa
-            GENERIC MAP (counter_resolution =>C_S_AXI_DATA_WIDTH)
-            PORT MAP (S_AXI_ACLK,ppwa_reset,S_islv_ppwa(i),ri.frequency_regs(i),ri.ratio_regs(i));        
-    END GENERATE gen_ppwa;
-	
-	
-	
-	
-	reg_proc : PROCESS (S_AXI_ACLK)
-    BEGIN
-        IF rising_edge(S_AXI_ACLK) THEN
-            ri <= ri_next;
-        END IF;
-    END PROCESS reg_proc;
-	
-	
+                   IF(S_AXI_WSTRB(1) = '1')THEN
+                       vi.frequency_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
+                   END IF;
+                   IF(S_AXI_WSTRB(2) = '1')THEN
+                       vi.frequency_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
+                   END IF;               
+                   IF(S_AXI_WSTRB(3) = '1')THEN
+                      vi.frequency_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
+                   END IF;
+                ELSIF(axi_awaddr = c_configuration_reg_address) THEN
+                       IF(S_AXI_WSTRB(0) = '1')THEN
+                            vi.conf_reg(c_fLink_reset_bit_num) := S_AXI_WDATA(c_fLink_reset_bit_num);
+                       END IF;
+                ELSIF(axi_awaddr >= c_usig_ratio_address AND axi_awaddr < c_usig_max_address) THEN
+                      reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_ratio_address)))/4;  
+                      IF(S_AXI_WSTRB(0) = '1')THEN
+                           vi.ratio_regs(reg_number)(7 DOWNTO 0) := UNSIGNED(S_AXI_WDATA(7 DOWNTO 0));
+                      END IF;
+                      IF(S_AXI_WSTRB(1) = '1')THEN
+                          vi.ratio_regs(reg_number)(15 DOWNTO 8) := UNSIGNED(S_AXI_WDATA(15 DOWNTO 8));
+                      END IF;
+                      IF(S_AXI_WSTRB(2) = '1')THEN
+                          vi.ratio_regs(reg_number)(23 DOWNTO 16) := UNSIGNED(S_AXI_WDATA(23 DOWNTO 16));
+                      END IF;               
+                      IF(S_AXI_WSTRB(3) = '1')THEN
+                         vi.ratio_regs(reg_number)(31 DOWNTO 24) := UNSIGNED(S_AXI_WDATA(31 DOWNTO 24));
+                      END IF;
+                END IF;
+           END IF;
+           
+           
+           IF(S_AXI_ARESETN = '0' OR vi.conf_reg(c_fLink_reset_bit_num) = '1' )THEN
+                vi := INTERNAL_REG_RESET;
+                ppwa_reset <= '0';
+           ELSE
+               ppwa_reset <= '1';
+           END IF;
+           
+           
+           ri_next <= vi;
+        END PROCESS;
+        
+        -- Add user logic here
+        
+        
+        --create component
+        gen_ppwa:
+        FOR i IN 0 TO number_of_ppwas-1 GENERATE
+            my_ppwa :  ppwa
+                GENERIC MAP (counter_resolution =>C_S_AXI_DATA_WIDTH)
+                PORT MAP (S_AXI_ACLK,ppwa_reset,S_islv_ppwa(i),ri.frequency_regs(i),ri.ratio_regs(i));        
+        END GENERATE gen_ppwa;
+        
+        
+        
+        
+        reg_proc : PROCESS (S_AXI_ACLK)
+        BEGIN
+            IF rising_edge(S_AXI_ACLK) THEN
+                ri <= ri_next;
+            END IF;
+        END PROCESS reg_proc;
 
 	-- Add user logic here
 

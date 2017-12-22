@@ -113,7 +113,7 @@ set_interface_property conduit_end_1 EXPORT_OF ""
 set_interface_property conduit_end_1 PORT_NAME_MAP ""
 set_interface_property conduit_end_1 SVD_ADDRESS_GROUP ""
 
-add_interface_port conduit_end_1 s00_oslv_ppwa export Output number_of_ppwas
+add_interface_port conduit_end_1 s00_islv_ppwa export Input number_of_ppwas
 
 
 # 

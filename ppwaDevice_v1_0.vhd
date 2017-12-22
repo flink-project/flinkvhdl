@@ -8,7 +8,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 --                                                                           --
--- Avalon MM interface for PPWA                                               --
+-- AXI MM interface for PPWA                                               --
 --                                                                           --
 -------------------------------------------------------------------------------
 -- Copyright 2014 NTB University of Applied Sciences in Technology           --

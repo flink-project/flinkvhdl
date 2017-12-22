@@ -151,7 +151,7 @@ begin
 -- Instantiation of Axi Bus Interface S00_AXI
 ppwaDevice_v1_0_S00_AXI_inst : ppwaDevice_v1_0_S00_AXI
 	generic map (
-	    unique_id => unique_id,
+	   unique_id => unique_id,
         number_of_ppwas => number_of_ppwas,
         base_clk => base_clk,
 		C_S_AXI_ID_WIDTH	=> C_S00_AXI_ID_WIDTH,
