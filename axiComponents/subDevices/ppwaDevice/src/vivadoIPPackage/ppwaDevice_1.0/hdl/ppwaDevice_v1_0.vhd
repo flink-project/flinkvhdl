@@ -1,3 +1,30 @@
+-------------------------------------------------------------------------------
+--  _________    _____       _____    ____  _____    ___  ____               --
+-- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
+--   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
+--   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
+--  _| |_        _| |__/ |   _| |_    _| |_\   |_    _| |  \ \_              --
+-- |_____|      |________|  |_____|  |_____|\____|  |____||____|             --
+--                                                                           --
+-------------------------------------------------------------------------------
+--                                                                           --
+-- AXI interface for PPWA	        	                                     --
+--                                                                           --
+-------------------------------------------------------------------------------
+-- Copyright 2014 NTB University of Applied Sciences in Technology           --
+--                                                                           --
+-- Licensed under the Apache License, Version 2.0 (the "License");           --
+-- you may not use this file except in compliance with the License.          --
+-- You may obtain a copy of the License at                                   --
+--                                                                           --
+-- http://www.apache.org/licenses/LICENSE-2.0                                --
+--                                                                           --
+-- Unless required by applicable law or agreed to in writing, software       --
+-- distributed under the License is distributed on an "AS IS" BASIS,         --
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  --
+-- See the License for the specific language governing permissions and       --
+-- limitations under the License.                                            --
+-------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -13,7 +40,7 @@ entity ppwaDevice_v1_0 is
 
 
 		-- Parameters of Axi Slave Bus Interface S00_AXI
-		C_S00_AXI_ID_WIDTH	: integer	:= 1;
+		C_S00_AXI_ID_WIDTH		: integer	:= 1;
 		C_S00_AXI_DATA_WIDTH	: integer	:= 32;
 		C_S00_AXI_ADDR_WIDTH	: integer	:= 12;
 		C_S00_AXI_AWUSER_WIDTH	: integer	:= 0;
@@ -142,7 +169,8 @@ architecture arch_imp of ppwaDevice_v1_0 is
 		S_AXI_RLAST	: out std_logic;
 		S_AXI_RUSER	: out std_logic_vector(C_S_AXI_RUSER_WIDTH-1 downto 0);
 		S_AXI_RVALID	: out std_logic;
-		S_AXI_RREADY	: in std_logic
+		S_AXI_RREADY	: in std_logic;
+		S_islv_ppwa		: IN STD_LOGIC_VECTOR(number_of_ppwas-1 DOWNTO 0)
 		);
 	end component ppwaDevice_v1_0_S00_AXI;
 
@@ -151,7 +179,7 @@ begin
 -- Instantiation of Axi Bus Interface S00_AXI
 ppwaDevice_v1_0_S00_AXI_inst : ppwaDevice_v1_0_S00_AXI
 	generic map (
-	   unique_id => unique_id,
+	    unique_id => unique_id,
         number_of_ppwas => number_of_ppwas,
         base_clk => base_clk,
 		C_S_AXI_ID_WIDTH	=> C_S00_AXI_ID_WIDTH,
@@ -209,7 +237,8 @@ ppwaDevice_v1_0_S00_AXI_inst : ppwaDevice_v1_0_S00_AXI
 		S_AXI_RLAST	=> s00_axi_rlast,
 		S_AXI_RUSER	=> s00_axi_ruser,
 		S_AXI_RVALID	=> s00_axi_rvalid,
-		S_AXI_RREADY	=> s00_axi_rready
+		S_AXI_RREADY	=> s00_axi_rready,
+		S_islv_ppwa		=> s00_islv_ppwa
 	);
 
 	-- Add user logic here

@@ -8,7 +8,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 --                                                                           --
--- Avalon MM interface for PWM                                               --
+-- AXI interface for PWM                                               		 --
 --                                                                           --
 -------------------------------------------------------------------------------
 -- Copyright 2014 NTB University of Applied Sciences in Technology           --
@@ -41,7 +41,7 @@ entity pwmDevice_v1_0 is
 
 
 		-- Parameters of Axi Slave Bus Interface S00_AXI
-		C_S00_AXI_ID_WIDTH	: integer	:= 1;
+		C_S00_AXI_ID_WIDTH		: integer	:= 1;
 		C_S00_AXI_DATA_WIDTH	: integer	:= 32;
 		C_S00_AXI_ADDR_WIDTH	: integer	:= 12
 	);
