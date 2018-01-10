@@ -1,6 +1,6 @@
 
 /***************************** Include Files *******************************/
-#include "ppwaDevice.h"
+#include "watchdogDevice.h"
 #include "xparameters.h"
 #include "stdio.h"
 #include "xil_io.h"
@@ -17,7 +17,7 @@
  * If the hardware system is not built correctly, this function may never
  * return to the caller.
  *
- * @param   baseaddr_p is the base address of the PPWADEVICEinstance to be worked on.
+ * @param   baseaddr_p is the base address of the WATCHDOGDEVICEinstance to be worked on.
  *
  * @return
  *
@@ -28,7 +28,7 @@
  * @note    Self test may fail if data memory and device are not on the same bus.
  *
  */
-XStatus PPWADEVICE_Mem_SelfTest(void * baseaddr_p)
+XStatus WATCHDOGDEVICE_Mem_SelfTest(void * baseaddr_p)
 {
 	int     Index;
 	u32 baseaddr;
@@ -48,12 +48,12 @@ XStatus PPWADEVICE_Mem_SelfTest(void * baseaddr_p)
 	xil_printf("   - write pattern to local BRAM and read back\n\r");
 	for ( Index = 0; Index < 16; Index++ )
 	{
-	  PPWADEVICE_mWriteMemory(baseaddr+4*Index, (0xDEADBEEF % Index));
+	  WATCHDOGDEVICE_mWriteMemory(baseaddr+4*Index, (0xDEADBEEF % Index));
 	}
 
 	for ( Index = 0; Index < 16; Index++ )
 	{
-	  Mem32Value = PPWADEVICE_mReadMemory(baseaddr+4*Index);
+	  Mem32Value = WATCHDOGDEVICE_mReadMemory(baseaddr+4*Index);
 	  if ( Mem32Value != (0xDEADBEEF % Index) )
 	  {
 	    xil_printf("   - write/read memory failed on address 0x%08x\n\r", baseaddr+4*Index);

@@ -1,6 +1,6 @@
 
-#ifndef PPWADEVICE_H
-#define PPWADEVICE_H
+#ifndef WATCHDOGDEVICE_H
+#define WATCHDOGDEVICE_H
 
 
 /****************** Include Files ********************/
@@ -11,22 +11,22 @@
 /**************************** Type Definitions *****************************/
 /**
  *
- * Write/Read 32 bit value to/from PPWADEVICE user logic memory (BRAM).
+ * Write/Read 32 bit value to/from WATCHDOGDEVICE user logic memory (BRAM).
  *
- * @param   Address is the memory address of the PPWADEVICE device.
+ * @param   Address is the memory address of the WATCHDOGDEVICE device.
  * @param   Data is the value written to user logic memory.
  *
  * @return  The data from the user logic memory.
  *
  * @note
  * C-style signature:
- * 	void PPWADEVICE_mWriteMemory(u32 Address, u32 Data)
- * 	u32 PPWADEVICE_mReadMemory(u32 Address)
+ * 	void WATCHDOGDEVICE_mWriteMemory(u32 Address, u32 Data)
+ * 	u32 WATCHDOGDEVICE_mReadMemory(u32 Address)
  *
  */
-#define PPWADEVICE_mWriteMemory(Address, Data) \
+#define WATCHDOGDEVICE_mWriteMemory(Address, Data) \
     Xil_Out32(Address, (u32)(Data))
-#define PPWADEVICE_mReadMemory(Address) \
+#define WATCHDOGDEVICE_mReadMemory(Address) \
     Xil_In32(Address)
 
 /************************** Function Prototypes ****************************/
@@ -38,7 +38,7 @@
  * If the hardware system is not built correctly, this function may never
  * return to the caller.
  *
- * @param   baseaddr_p is the base address of the PPWADEVICEinstance to be worked on.
+ * @param   baseaddr_p is the base address of the WATCHDOGDEVICEinstance to be worked on.
  *
  * @return
  *
@@ -49,6 +49,6 @@
  * @note    Self test may fail if data memory and device are not on the same bus.
  *
  */
-XStatus PPWADEVICE_Mem_SelfTest(void * baseaddr_p);
+XStatus WATCHDOGDEVICE_Mem_SelfTest(void * baseaddr_p);
 
-#endif // PPWADEVICE_H
+#endif // WATCHDOGDEVICE_H

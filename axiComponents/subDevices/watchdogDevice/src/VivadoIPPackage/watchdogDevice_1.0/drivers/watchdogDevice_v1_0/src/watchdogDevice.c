@@ -1,6 +1,6 @@
 
 
 /***************************** Include Files *******************************/
-#include "ppwaDevice.h"
+#include "watchdogDevice.h"
 
 /************************** Function Definitions ***************************/

@@ -36,57 +36,58 @@ USE IEEE.numeric_std.ALL;
 -------------------------------------------------------------------------------
 -- PACKAGE DEFINITION
 -------------------------------------------------------------------------------
-PACKAGE ppwa_pkg IS
+PACKAGE watchdog_pkg IS
 	
-	COMPONENT ppwa IS
+	COMPONENT watchdog IS
 		GENERIC(
-			counter_resolution : INTEGER := 32
+			gi_counter_resolution : INTEGER := 32
 		);
 		PORT(
-			isl_clk					: IN STD_LOGIC;
-			isl_reset_n    			: IN STD_LOGIC;
-			isl_measure_signal 		: IN STD_LOGIC;
-			ousig_period_count		: OUT UNSIGNED(counter_resolution - 1 DOWNTO 0);
-			ousig_hightime_count	: OUT UNSIGNED(counter_resolution - 1 DOWNTO 0)
+			isl_clk					: IN STD_LOGIC; 
+			isl_reset_n    			: IN STD_LOGIC; 
+			iusig_counter_set		: IN UNSIGNED(gi_counter_resolution-1 DOWNTO 0); -- value the internal counter is set after set isl_counter_change to high
+			isl_counter_change		: IN STD_LOGIC; -- every time this value is set high the internal counter is set to iusig_counter_set's value; this signal should only be assigned for one cycle.
+			isl_rearm				: IN STD_LOGIC; --if the watchdog fired this signal has to be set to high for one cycle before the watchdog starts counting again. 
+			osl_counter_val			: OUT UNSIGNED(gi_counter_resolution-1 DOWNTO 0); --the actual value of the internal counter
+			osl_granted				: OUT STD_LOGIC -- '1' if the counter is higher than zero and the rearm was set after the watchdog fired
 		);
-	END COMPONENT ppwa;
+	END COMPONENT watchdog;
 
-END PACKAGE ppwa_pkg;	
+END PACKAGE watchdog_pkg;	
 
 
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.numeric_std.ALL;
-USE work.ppwa_pkg.ALL;
+USE work.watchdog_pkg.ALL;
 
 -------------------------------------------------------------------------------
 -- ENTITIY
 -------------------------------------------------------------------------------
-ENTITY ppwa IS
+ENTITY watchdog IS
 		GENERIC(
-			counter_resolution : INTEGER := 32
+			gi_counter_resolution : INTEGER := 32
 		);
 		PORT(
 			isl_clk					: IN STD_LOGIC;
 			isl_reset_n    			: IN STD_LOGIC;
-			isl_measure_signal 		: IN STD_LOGIC;
-			ousig_period_count		: OUT UNSIGNED(counter_resolution - 1 DOWNTO 0);
-			ousig_hightime_count	: OUT UNSIGNED(counter_resolution - 1 DOWNTO 0)
+			iusig_counter_set		: IN UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
+			isl_counter_change			: IN STD_LOGIC;
+			isl_rearm				: IN STD_LOGIC;
+			osl_counter_val			: OUT UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
+			osl_granted				: OUT STD_LOGIC
 		);
-END ENTITY ppwa;
+END ENTITY watchdog;
 
 -------------------------------------------------------------------------------
 -- ARCHITECTURE
 -------------------------------------------------------------------------------
-ARCHITECTURE rtl OF ppwa IS
+ARCHITECTURE rtl OF watchdog IS
 
 	TYPE t_internal_register IS RECORD
-		-- synchronize signals 
-		sl_measure_signal_1		: STD_LOGIC;
-		sl_measure_signal_2		: STD_LOGIC;
-		usig_counter_running	: UNSIGNED(counter_resolution - 1 DOWNTO 0);
-		usig_counter_period		: UNSIGNED(counter_resolution - 1 DOWNTO 0);
-		usig_counter_high		: UNSIGNED(counter_resolution - 1 DOWNTO 0);
+		watchdog_fired					: STD_LOGIC;
+		granted							: STD_LOGIC;
+		counter							: UNSIGNED(gi_counter_resolution-1 DOWNTO 0);
 	END RECORD;
 	
 	SIGNAL ri, ri_next : t_internal_register;
@@ -96,7 +97,7 @@ ARCHITECTURE rtl OF ppwa IS
 		--------------------------------------------
 		-- combinatorial process
 		--------------------------------------------
-		comb_process: PROCESS(ri, isl_reset_n,isl_measure_signal)
+		comb_process: PROCESS(ri, isl_reset_n,iusig_counter_set,isl_counter_change,isl_rearm)
 		
 		VARIABLE vi: t_internal_register;
 		
@@ -104,25 +105,36 @@ ARCHITECTURE rtl OF ppwa IS
 			-- keep variables stable
 			vi:=ri;
 			
-			-- input buffer, to synchronize asynchronous inputs
-			vi.sl_measure_signal_2 := vi.sl_measure_signal_1;
-			vi.sl_measure_signal_1 := isl_measure_signal;
-            
-			vi.usig_counter_running := vi.usig_counter_running + 1;
-			
-			
-			IF vi.sl_measure_signal_2 = '0' AND vi.sl_measure_signal_1 = '1' THEN --rising edge
-					vi.usig_counter_period := vi.usig_counter_running;
-					vi.usig_counter_running  := (OTHERS => '0');
-			ELSIF vi.sl_measure_signal_2 = '1' AND vi.sl_measure_signal_1 = '0' THEN --falling edge
-					vi.usig_counter_high := vi.usig_counter_running;
+			IF isl_rearm = '1' THEN
+				vi.watchdog_fired := '0';
 			END IF;
+			
+			
+			IF isl_counter_change = '1' THEN
+				vi.counter := iusig_counter_set;
+			END IF;
+			
+			IF vi.watchdog_fired = '0' THEN
+				IF vi.counter > to_unsigned(0,gi_counter_resolution) THEN
+					vi.counter := vi.counter -1;
+					vi.granted := '1';
+				END IF;
+			ELSE
+				vi.granted := '0';
+			END IF;
+			
+			
+			IF vi.counter = to_unsigned(0,gi_counter_resolution) THEN
+				vi.watchdog_fired := '1';
+			END IF;
+			
+			
 			
             -- reset
             IF isl_reset_n = '0' THEN
-				 vi.usig_counter_period := (OTHERS => '0');	
-				 vi.usig_counter_high := (OTHERS => '0');	
-                 vi.usig_counter_running  := (OTHERS => '0');
+                 vi.counter := (OTHERS => '0');
+				 vi.watchdog_fired := '1';
+				 vi.granted := '0';
             END IF;
 				
 			-- setting outputs
@@ -140,12 +152,9 @@ ARCHITECTURE rtl OF ppwa IS
 				ri <= ri_next;
 			END IF;
 		END PROCESS reg_process;
-
-		--------------------------------------------
-		-- output assignment
-		--------------------------------------------
-		ousig_period_count <= ri.usig_counter_period;
-		ousig_hightime_count <= ri.usig_counter_high;
+		
+		osl_granted <= ri.granted;
+		osl_counter_val <= ri.counter;
 		
 END ARCHITECTURE rtl;
 
