@@ -12,8 +12,10 @@ proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "C_S00_AXI_BASEADDR" -parent ${Page_0}
   ipgui::add_param $IPINST -name "C_S00_AXI_HIGHADDR" -parent ${Page_0}
 
-  ipgui::add_param $IPINST -name "unique_id"
   ipgui::add_param $IPINST -name "base_clk"
+  set sclk_frequency [ipgui::add_param $IPINST -name "sclk_frequency"]
+  set_property tooltip {0.8 MHz < SCLK < 16 MHz} ${sclk_frequency}
+  ipgui::add_param $IPINST -name "unique_id"
 
 }
 
@@ -23,6 +25,15 @@ proc update_PARAM_VALUE.base_clk { PARAM_VALUE.base_clk } {
 
 proc validate_PARAM_VALUE.base_clk { PARAM_VALUE.base_clk } {
 	# Procedure called to validate base_clk
+	return true
+}
+
+proc update_PARAM_VALUE.sclk_frequency { PARAM_VALUE.sclk_frequency } {
+	# Procedure called to update sclk_frequency when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.sclk_frequency { PARAM_VALUE.sclk_frequency } {
+	# Procedure called to validate sclk_frequency
 	return true
 }
 
@@ -169,6 +180,11 @@ proc update_MODELPARAM_VALUE.C_S00_AXI_BUSER_WIDTH { MODELPARAM_VALUE.C_S00_AXI_
 proc update_MODELPARAM_VALUE.base_clk { MODELPARAM_VALUE.base_clk PARAM_VALUE.base_clk } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.base_clk}] ${MODELPARAM_VALUE.base_clk}
+}
+
+proc update_MODELPARAM_VALUE.sclk_frequency { MODELPARAM_VALUE.sclk_frequency PARAM_VALUE.sclk_frequency } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.sclk_frequency}] ${MODELPARAM_VALUE.sclk_frequency}
 }
 
 proc update_MODELPARAM_VALUE.unique_id { MODELPARAM_VALUE.unique_id PARAM_VALUE.unique_id } {

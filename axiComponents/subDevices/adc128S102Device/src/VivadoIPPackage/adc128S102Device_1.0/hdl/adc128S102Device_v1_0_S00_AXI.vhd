@@ -2,12 +2,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.flink_definitions.all;
-use work.watchdog_pkg.all;
+use work.adc128S102_pkg.all;
 
-entity watchdogDevice_v1_0_S00_AXI is
+entity adc128S102Device_v1_0_S00_AXI is
 	generic (
 		-- Users to add parameters here
-        base_clk : INTEGER := 125000000;
+        base_clk : INTEGER := 33000000;
+        sclk_frequency : INTEGER := 8000000;
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
@@ -31,7 +32,10 @@ entity watchdogDevice_v1_0_S00_AXI is
 	);
 	port (
 		-- Users to add ports here
-        S_osl_wd_fired : OUT STD_LOGIC;
+        osl_mosi : OUT STD_LOGIC;
+        isl_miso : IN STD_LOGIC;
+        osl_sclk : OUT STD_LOGIC;
+        osl_Ss : OUT STD_LOGIC;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -166,9 +170,9 @@ entity watchdogDevice_v1_0_S00_AXI is
     -- accept the read data and response information.
 		S_AXI_RREADY	: in std_logic
 	);
-end watchdogDevice_v1_0_S00_AXI;
+end adc128S102Device_v1_0_S00_AXI;
 
-architecture arch_imp of watchdogDevice_v1_0_S00_AXI is
+architecture arch_imp of adc128S102Device_v1_0_S00_AXI is
 
 	-- AXI4FULL signals
 	signal axi_awaddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -218,41 +222,35 @@ architecture arch_imp of watchdogDevice_v1_0_S00_AXI is
 	constant USER_NUM_MEM: integer := 1;
 	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := (OTHERS => '0');
 	
+	CONSTANT c_resolution : INTEGER := 8;
+	
 	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_number_of_channels_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_configuration_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4, C_S_AXI_ADDR_WIDTH));
 	
-	CONSTANT c_usig_base_clk_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4, C_S_AXI_ADDR_WIDTH));
-	CONSTANT c_usig_status_reg_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_base_clk_address)+4);
-	CONSTANT c_usig_counter_val_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_status_reg_address)+4);
-	CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_counter_val_address)+4);
-	
-	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_watchdog_id, 16));
-	CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-	CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+	CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers, C_S_AXI_ADDR_WIDTH));
+	CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address));
+	CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_channel_value_address) + 4*NUMBER_OF_CHANNELS);
 	
 	TYPE t_internal_reg IS RECORD
-	         counter_set : UNSIGNED(C_S_AXI_DATA_WIDTH-1 DOWNTO 0);
-	         counter_change : STD_LOGIC;
-	         rearm : STD_LOGIC;
-	         counter_val : UNSIGNED(C_S_AXI_DATA_WIDTH-1 DOWNTO 0);
-	         granted : STD_LOGIC;
-	         conf_reg : STD_LOGIC;
+	       value_registers : t_value_regs;
+	       conf_reg    : STD_LOGIC;
 	END RECORD;
 	
 	CONSTANT INTERNAL_REG_RESET : t_internal_reg := (
-	         counter_set => (OTHERS => '0'),
-	         counter_change => '0',
-	         rearm => '0',
-	         counter_val => (OTHERS => '0'),
-	         granted => '0',
-	         conf_reg => '0'
+	       value_registers => (OTHERS => (OTHERS =>'0')),
+	       conf_reg => '0'
 	);
 	
+	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_input_id, 16));
+	CONSTANT subtype_id : STD_LOGIC_VECTOR( 7 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1, 8));
+	CONSTANT interface_version : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
+	
 	SIGNAL ri, ri_next : t_internal_reg := INTERNAL_REG_RESET;
-	SIGNAL wd_reset : STD_LOGIC := '1';
+	
+	SIGNAL adc_reset : STD_LOGIC := '1';
 	
 	------------------------------------------------
 	---- Signals for user logic memory space example
@@ -514,108 +512,74 @@ begin
 	      end  if;      
 	    end if;
 	  end if;
-	  
-	  ri <= ri_next;
-	  case (ri.granted) is
-           when '0' => S_osl_wd_fired <= '1';
-           when '1' => S_osl_wd_fired <= '0';
-        end case;
 	end  process;
 	-- ------------------------------------------
 	-- -- Example code to access user logic memory region
 	-- ------------------------------------------
+
+    --read
     --read data
-        process( axi_rvalid,axi_araddr,ri ) is
-        begin
-          if (axi_rvalid = '1') then
-            -- output the read dada 
-            IF(axi_araddr = c_usig_typdef_address) THEN
-               axi_rdata(31 DOWNTO 16) <= id;
-               axi_rdata(15 DOWNTO 8) <= subtype_id;
-               axi_rdata(7 DOWNTO 0) <= interface_version;
-            ELSIF(axi_araddr = c_usig_mem_size_address)THEN
-               axi_rdata <= (others => '0');
-               axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
-            ELSIF(axi_araddr = c_usig_number_of_channels_address)THEN
-               axi_rdata <= (others => '0');
-            ELSIF(axi_araddr = c_usig_unique_id_address) THEN
-                axi_rdata <= unique_id;
-            ELSIF(axi_araddr = c_usig_configuration_address) THEN
-                axi_rdata <= (OTHERS => '0');
-                axi_rdata(c_fLink_reset_bit_num) <= wd_reset;    
-            ELSIF(axi_araddr = c_usig_base_clk_address) THEN
-                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,axi_rdata'length));
-            ELSIF (axi_araddr >= c_usig_status_reg_address AND axi_araddr < c_usig_counter_val_address) THEN
-                axi_rdata <= (OTHERS => '0');
-                --axi_rdata(1) <= ri.rearm;
-                axi_rdata(0) <= ri.granted;
-            ELSIF (axi_araddr >= c_usig_counter_val_address AND axi_araddr < c_usig_max_address) THEN 
-                axi_rdata <= STD_LOGIC_VECTOR(ri.counter_val);
-            ELSE
-              axi_rdata <= (others => '0');
-            END IF;
-          else
-            axi_rdata <= (others => '0');
-          end if;  
-          
-        end process;
-        
-      --write  
-      process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
-         VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
-      BEGIN
-         vi := ri;
-         vi.counter_change := '0';
-         vi.rearm := '0';
-         
-         IF(axi_wready = '1') THEN
-             IF(axi_awaddr >= c_usig_status_reg_address AND axi_awaddr < c_usig_counter_val_address) THEN
-                 IF(S_AXI_WSTRB(0) = '1')THEN
-                      vi.rearm := S_AXI_WDATA(1);
-                 END IF;
-              ELSIF(axi_awaddr = c_usig_configuration_address) THEN
-                     IF(S_AXI_WSTRB(0) = '1')THEN
-                          vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
-                     END IF;
-              ELSIF(axi_awaddr >= c_usig_counter_val_address AND axi_awaddr < c_usig_max_address) THEN
-                    IF(S_AXI_WSTRB(0) = '1')THEN
-                              vi.counter_set(7 DOWNTO 0) := unsigned(S_AXI_WDATA(7 DOWNTO 0));
-                              vi.counter_change := '1';
-                    END IF;
-                    IF(S_AXI_WSTRB(1) = '1')THEN
-                              vi.counter_set(15 DOWNTO 8) := unsigned(S_AXI_WDATA(15 DOWNTO 8));
-                              vi.counter_change := '1';
-                    END IF;
-                    IF(S_AXI_WSTRB(2) = '1')THEN
-                              vi.counter_set(23 DOWNTO 16) := unsigned(S_AXI_WDATA(23 DOWNTO 16));
-                              vi.counter_change := '1';
-                    END IF;               
-                    IF(S_AXI_WSTRB(3) = '1')THEN
-                              vi.counter_set(31 DOWNTO 24) := unsigned(S_AXI_WDATA(31 DOWNTO 24));
-                              vi.counter_change := '1';
-                    END IF;
-              END IF;
-         END IF;
-         
-         
-         IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
-              vi := INTERNAL_REG_RESET;
-              wd_reset <= '0';
-         ELSE
-             wd_reset <= '1';
-         END IF;
-		 
-		 ri_next <= vi;
-        
-        END PROCESS;
-        
-        
-	
-	gen_wd: watchdog GENERIC MAP(gi_counter_resolution => C_S_AXI_DATA_WIDTH)
-	                 PORT MAP(S_AXI_ACLK, wd_reset, ri.counter_set, ri.counter_change, ri.rearm, ri.counter_val, ri.granted);
+            process( axi_rvalid,axi_araddr,ri ) is
+               VARIABLE reg_number: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0; 
+            begin
+              if (axi_rvalid = '1') then
+                -- output the read dada 
+                IF(axi_araddr = c_usig_typdef_address) THEN
+                   axi_rdata(31 DOWNTO 16) <= id;
+                   axi_rdata(15 DOWNTO 8) <= subtype_id;
+                   axi_rdata(7 DOWNTO 0) <= interface_version;
+                ELSIF(axi_araddr = c_usig_mem_size_address)THEN
+                   axi_rdata <= (others => '0');
+                   axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
+                ELSIF(axi_araddr = c_usig_number_of_channels_address)THEN
+                   axi_rdata <= std_logic_vector(to_unsigned(NUMBER_OF_CHANNELS, axi_rdata'length));
+                ELSIF(axi_araddr = c_usig_unique_id_address) THEN
+                    axi_rdata <= unique_id;
+                ELSIF(axi_araddr = c_usig_configuration_address) THEN
+                    axi_rdata <= (others => '0');
+                    axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg;    
+                ELSIF(axi_araddr >= c_usig_resolution_address AND axi_araddr <= c_usig_channel_value_address) THEN
+                    axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution,axi_rdata'length));
+                ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
+                    axi_rdata <= STD_LOGIC_VECTOR(ri.value_registers(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
+                ELSE
+                  axi_rdata <= (others => '0');
+                END IF;
+              else
+                axi_rdata <= (others => '0');
+              end if;  
+            end process;
+    
+
+	--write
+	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
+             VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
+          BEGIN
+             vi := ri;
+             
+             IF(axi_wready = '1') THEN
+                  IF(axi_awaddr = c_usig_configuration_address) THEN
+                         IF(S_AXI_WSTRB(0) = '1')THEN
+                              vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
+                         END IF;
+                  END IF;
+             END IF;
+             
+             
+             IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
+                  vi := INTERNAL_REG_RESET;
+                  adc_reset <= '0';
+             ELSE
+                 adc_reset <= '1';
+             END IF;
+         END PROCESS;
+            
 
 	-- Add user logic here
-
+    gen_adc: adc128S102 GENERIC MAP(BASE_CLK => base_clk, SCLK_FREQUENCY => sclk_frequency)
+                        PORT MAP(S_AXI_ACLK, adc_reset, ri.value_registers, osl_sclk, osl_Ss, osl_mosi, isl_miso);
 	-- User logic ends
+	
+	
 
 end arch_imp;

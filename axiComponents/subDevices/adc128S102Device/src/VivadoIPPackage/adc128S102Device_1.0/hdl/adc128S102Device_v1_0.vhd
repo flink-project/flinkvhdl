@@ -2,10 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity watchdogDevice_v1_0 is
+entity adc128S102Device_v1_0 is
 	generic (
 		-- Users to add parameters here
-        base_clk : INTEGER := 125000000;
+        base_clk : INTEGER := 33000000;
+        sclk_frequency : INTEGER := 8000000;
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
@@ -23,7 +24,10 @@ entity watchdogDevice_v1_0 is
 	);
 	port (
 		-- Users to add ports here
-        osl_wd_fired : OUT STD_LOGIC;
+        osl_mosi : OUT STD_LOGIC;
+        isl_miso : IN STD_LOGIC;
+        osl_sclk : OUT STD_LOGIC;
+        osl_Ss : OUT STD_LOGIC;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -76,15 +80,16 @@ entity watchdogDevice_v1_0 is
 		s00_axi_rvalid	: out std_logic;
 		s00_axi_rready	: in std_logic
 	);
-end watchdogDevice_v1_0;
+end adc128S102Device_v1_0;
 
-architecture arch_imp of watchdogDevice_v1_0 is
+architecture arch_imp of adc128S102Device_v1_0 is
 
 	-- component declaration
-	component watchdogDevice_v1_0_S00_AXI is
+	component adc128S102Device_v1_0_S00_AXI is
 		generic (
-		base_clk : INTEGER := 125000000;
-		unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
+		base_clk : INTEGER := 33000000;
+        sclk_frequency : INTEGER := 8000000;
+        unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 		C_S_AXI_ID_WIDTH	: integer	:= 1;
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
 		C_S_AXI_ADDR_WIDTH	: integer	:= 12;
@@ -95,7 +100,10 @@ architecture arch_imp of watchdogDevice_v1_0 is
 		C_S_AXI_BUSER_WIDTH	: integer	:= 0
 		);
 		port (
-		S_osl_wd_fired : OUT STD_LOGIC;
+		osl_mosi : OUT STD_LOGIC;
+        isl_miso : IN STD_LOGIC;
+        osl_sclk : OUT STD_LOGIC;
+        osl_Ss : OUT STD_LOGIC;
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWID	: in std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
@@ -143,15 +151,16 @@ architecture arch_imp of watchdogDevice_v1_0 is
 		S_AXI_RVALID	: out std_logic;
 		S_AXI_RREADY	: in std_logic
 		);
-	end component watchdogDevice_v1_0_S00_AXI;
+	end component adc128S102Device_v1_0_S00_AXI;
 
 begin
 
 -- Instantiation of Axi Bus Interface S00_AXI
-watchdogDevice_v1_0_S00_AXI_inst : watchdogDevice_v1_0_S00_AXI
+adc128S102Device_v1_0_S00_AXI_inst : adc128S102Device_v1_0_S00_AXI
 	generic map (
 	    base_clk => base_clk,
-	    unique_id => unique_id,
+        sclk_frequency => sclk_frequency,
+        unique_id => unique_id,
 		C_S_AXI_ID_WIDTH	=> C_S00_AXI_ID_WIDTH,
 		C_S_AXI_DATA_WIDTH	=> C_S00_AXI_DATA_WIDTH,
 		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH,
@@ -162,7 +171,10 @@ watchdogDevice_v1_0_S00_AXI_inst : watchdogDevice_v1_0_S00_AXI
 		C_S_AXI_BUSER_WIDTH	=> C_S00_AXI_BUSER_WIDTH
 	)
 	port map (
-	    S_osl_wd_fired => osl_wd_fired,
+	    isl_miso => isl_miso,
+	    osl_mosi => osl_mosi,
+	    osl_sclk => osl_sclk,
+	    osl_Ss => osl_Ss,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWID	=> s00_axi_awid,
