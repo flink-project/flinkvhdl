@@ -1496,11 +1496,11 @@
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>src/flink_definitions.vhd</spirit:name>
+        <spirit:name>../../../../../../flink/core/flink_definitions.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>src/ppwa.m.vhd</spirit:name>
+        <spirit:name>../../../../../../functionalBlocks/ppwa/src/ppwa.m.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -1516,11 +1516,11 @@
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>src/flink_definitions.vhd</spirit:name>
+        <spirit:name>../../../../../../flink/core/flink_definitions.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>src/ppwa.m.vhd</spirit:name>
+        <spirit:name>../../../../../../functionalBlocks/ppwa/src/ppwa.m.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>

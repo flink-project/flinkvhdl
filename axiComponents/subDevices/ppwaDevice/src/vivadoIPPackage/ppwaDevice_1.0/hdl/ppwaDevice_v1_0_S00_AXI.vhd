@@ -552,8 +552,8 @@ begin
             ELSIF(axi_araddr = c_configuration_reg_address) THEN
                 axi_rdata <= (others => '0');
                 axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);    
-            ELSIF(axi_araddr = c_usig_base_clk_address) THEN
-                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,C_S_AXI_DATA_WIDTH));
+            ELSIF(axi_araddr >= c_usig_base_clk_address AND axi_araddr <= c_usig_period_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(base_clk,axi_rdata'length));
             ELSIF (axi_araddr >= c_usig_period_address AND axi_araddr < c_usig_hightime_address) THEN
 				axi_rdata <= STD_LOGIC_VECTOR(ri.period_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_period_address))/4));
             ELSIF (axi_araddr >= c_usig_hightime_address AND axi_araddr < c_usig_max_address) THEN 
