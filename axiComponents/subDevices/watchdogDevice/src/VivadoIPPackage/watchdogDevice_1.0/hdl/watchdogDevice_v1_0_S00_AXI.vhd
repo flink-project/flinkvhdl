@@ -517,8 +517,8 @@ begin
 	  
 	  ri <= ri_next;
 	  case (ri.granted) is
-           when '0' => S_osl_wd_fired <= '1';
-           when '1' => S_osl_wd_fired <= '0';
+           when '0' => S_osl_wd_fired <= '0';
+           when '1' => S_osl_wd_fired <= '1';
         end case;
 	end  process;
 	-- ------------------------------------------
