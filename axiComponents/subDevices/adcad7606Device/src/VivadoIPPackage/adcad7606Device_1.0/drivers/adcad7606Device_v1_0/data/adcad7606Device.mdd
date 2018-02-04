@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER adcad7606Device
+	OPTION supported_peripherals = (adcad7606Device);
+	OPTION copyfiles = all;
+	OPTION VERSION = 1.0;
+	OPTION NAME = adcad7606Device;
+END DRIVER
