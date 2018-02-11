@@ -32,6 +32,10 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 
+-------------------------------------------------------------------------------
+-- PACKAGE DEFINITION
+-------------------------------------------------------------------------------
+
 PACKAGE adjustable_pwm_pkg IS
 	
 	COMPONENT adjustable_pwm IS
@@ -52,6 +56,10 @@ USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE work.adjustable_pwm_pkg.ALL;
 
+-------------------------------------------------------------------------------
+-- ENTITIY
+-------------------------------------------------------------------------------
+
 ENTITY adjustable_pwm IS
 	GENERIC(frequency_resolution : INTEGER := 32);
 	PORT (
@@ -63,6 +71,10 @@ ENTITY adjustable_pwm IS
 	);
 	
 END ENTITY adjustable_pwm;
+
+-------------------------------------------------------------------------------
+-- ARCHITECTURE
+-------------------------------------------------------------------------------
 
 ARCHITECTURE rtl OF adjustable_pwm IS
 	

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
---  _________     _____      _____    ____  _____    ___  ____               --
+--  _________    _____       _____    ____  _____    ___  ____               --
 -- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
 --   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
 --   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
@@ -34,8 +34,8 @@ USE IEEE.math_real.ALL;
 USE work.fLink_definitions.ALL;
 
 PACKAGE avalon_pwm_interface_pkg IS
-	CONSTANT c_max_number_of_PWMs : INTEGER := 16; --Depens off the address with and the number of registers per pwm
-	CONSTANT c_pwm_interface_address_width				: INTEGER := 6;
+	CONSTANT c_max_number_of_PWMs 			: INTEGER := 16; --Depends off the address with and the number of registers per pwm
+	CONSTANT c_pwm_interface_address_width	: INTEGER := 6;
 	
 	COMPONENT avalon_pwm_interface IS
 			GENERIC (
@@ -97,7 +97,6 @@ ENTITY avalon_pwm_interface IS
 END ENTITY avalon_pwm_interface;
 
 ARCHITECTURE rtl OF avalon_pwm_interface IS
-
 	Type t_pwm_regs IS ARRAY(number_of_pwms-1 DOWNTO 0) OF UNSIGNED(c_fLink_avs_data_width-1 DOWNTO 0);
 
 	TYPE t_internal_register IS RECORD
@@ -120,6 +119,7 @@ BEGIN
 	-- combinatorial process
 	comb_proc : PROCESS (isl_reset_n,ri,isl_avs_write,islv_avs_address,isl_avs_read,islv_avs_write_data,islv_avs_byteenable)
 		VARIABLE vi :	t_internal_register;
+		
 	BEGIN
 		-- keep variables stable
 		vi := ri;	

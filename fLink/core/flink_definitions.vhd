@@ -59,15 +59,15 @@ PACKAGE fLink_definitions IS
 	
 	-- Interface IDs:
 	CONSTANT c_fLink_info_id							: INTEGER RANGE 0 TO 65535 := 0;
-	CONSTANT c_fLink_analog_input_id							: INTEGER RANGE 0 TO 65535 := 1;
-	CONSTANT c_fLink_analog_output_id							: INTEGER RANGE 0 TO 65535 := 2;
-	CONSTANT c_fLink_digital_io_id							: INTEGER RANGE 0 TO 65535 := 5;
+	CONSTANT c_fLink_analog_input_id					: INTEGER RANGE 0 TO 65535 := 1;
+	CONSTANT c_fLink_analog_output_id					: INTEGER RANGE 0 TO 65535 := 2;
+	CONSTANT c_fLink_digital_io_id						: INTEGER RANGE 0 TO 65535 := 5;
 	CONSTANT c_fLink_counter_id							: INTEGER RANGE 0 TO 65535 := 6;
 	CONSTANT c_fLink_timer_id							: INTEGER RANGE 0 TO 65535 := 7;
 	CONSTANT c_fLink_memory_id							: INTEGER RANGE 0 TO 65535 := 8;
 	CONSTANT c_fLink_pwm_out_id							: INTEGER RANGE 0 TO 65535 := 12;
 	CONSTANT c_fLink_ppwa_id							: INTEGER RANGE 0 TO 65535 := 13;
-	CONSTANT c_fLink_watchdog_id							: INTEGER RANGE 0 TO 65535 := 16;
+	CONSTANT c_fLink_watchdog_id						: INTEGER RANGE 0 TO 65535 := 16;
 	CONSTANT c_fLink_sensor_id							: INTEGER RANGE 0 TO 65535 := 17;
  
  END PACKAGE fLink_definitions; 
