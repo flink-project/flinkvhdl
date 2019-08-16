@@ -490,7 +490,7 @@ begin
 	        axi_rdata <= unique_id;
 	   ELSIF(axi_araddr = c_usig_dev_size_address) THEN    
 	         axi_rdata <= std_logic_vector(to_unsigned(dev_size, axi_rdata'length));
-	    ELSIF axi_araddr >= c_usig_description_address AND axi_araddr <= c_usig_max_address THEN
+	    ELSIF axi_araddr >= c_usig_description_address AND axi_araddr < c_usig_max_address THEN
              description_part := to_integer(unsigned(axi_araddr)/4 - unsigned(c_usig_description_address)/4); 
              axi_rdata <= description(((7-description_part))*32-1 DOWNTO (7-description_part-1)*32);      
 	    ELSE
