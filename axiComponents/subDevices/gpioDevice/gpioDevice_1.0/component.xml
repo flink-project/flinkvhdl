@@ -2,7 +2,7 @@
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>www.ntb.ch</spirit:vendor>
   <spirit:library>fLink</spirit:library>
-  <spirit:name>outGPIODevice</spirit:name>
+  <spirit:name>gpioDevice</spirit:name>
   <spirit:version>1.0</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
@@ -309,6 +309,38 @@
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>slv_gpios</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="gpio" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="gpio_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TRI_O</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>slv_gpios_io_o</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TRI_T</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>slv_gpios_io_t</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>TRI_I</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>slv_gpios_io_i</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+    </spirit:busInterface>
   </spirit:busInterfaces>
   <spirit:memoryMaps>
     <spirit:memoryMap>
@@ -339,14 +371,14 @@
         <spirit:displayName>VHDL Synthesis</spirit:displayName>
         <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
         <spirit:language>vhdl</spirit:language>
-        <spirit:modelName>outGPIODevice_v1_0</spirit:modelName>
+        <spirit:modelName>gpioDevice_v1_0</spirit:modelName>
         <spirit:fileSetRef>
           <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
         </spirit:fileSetRef>
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>baeb9749</spirit:value>
+            <spirit:value>b7dc20bb</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -360,7 +392,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>ff5efc0e</spirit:value>
+            <spirit:value>f05c86dc</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -374,14 +406,46 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>52c06d8d</spirit:value>
+            <spirit:value>d47be580</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
     </spirit:views>
     <spirit:ports>
       <spirit:port>
-        <spirit:name>oslv_gpios</spirit:name>
+        <spirit:name>slv_gpios_io_i</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_gpios&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>slv_gpios_io_o</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_gpios&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>slv_gpios_io_t</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
@@ -904,7 +968,7 @@
       <spirit:modelParameter spirit:dataType="STD_LOGIC_VECTOR(31 downto 0)">
         <spirit:name>unique_id</spirit:name>
         <spirit:displayName>Unique Id</spirit:displayName>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.unique_id" spirit:bitStringLength="32">0x00000000</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.unique_id" spirit:bitStringLength="32">0x00000020</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
@@ -933,25 +997,25 @@
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>../../../../../../fLink/core/flink_definitions.vhd</spirit:name>
+        <spirit:name>../../../../fLink/core/flink_definitions.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/outGPIODevice_v1_0_S00_AXI.vhd</spirit:name>
+        <spirit:name>hdl/gpioDevice_v1_0_S00_AXI.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/outGPIODevice_v1_0.vhd</spirit:name>
+        <spirit:name>hdl/gpioDevice_v1_0.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_88cbd56c</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_487098f7</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/outGPIODevice_v1_0.tcl</spirit:name>
+        <spirit:name>xgui/gpioDevice_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_ba20fa00</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_f05c86dc</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -963,7 +1027,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>fLink Output only GPIO</spirit:description>
+  <spirit:description>flink GPIO Device</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
@@ -1023,7 +1087,7 @@
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">outGPIODevice_v1_0</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">gpioDevice_v1_0</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>number_of_gpios</spirit:name>
@@ -1033,11 +1097,12 @@
     <spirit:parameter>
       <spirit:name>unique_id</spirit:name>
       <spirit:displayName>Unique Id</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="32">0x00000000</spirit:value>
+      <spirit:description>Unique ID to identify different flink components</spirit:description>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="32">0x00000020</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>C_S00_AXI_WUSER_WIDTH</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_WUSER_WIDTH"/>
+      <spirit:name>C_S00_AXI_AWUSER_WIDTH</spirit:name>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_AWUSER_WIDTH"/>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_RUSER_WIDTH</spirit:name>
@@ -1048,44 +1113,44 @@
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_BUSER_WIDTH"/>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>C_S00_AXI_AWUSER_WIDTH</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_AWUSER_WIDTH"/>
-    </spirit:parameter>
-    <spirit:parameter>
       <spirit:name>C_S00_AXI_ARUSER_WIDTH</spirit:name>
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_ARUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_WUSER_WIDTH</spirit:name>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_WUSER_WIDTH"/>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
       <xilinx:supportedFamilies>
-        <xilinx:family xilinx:lifeCycle="Pre-Production">zynq</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">zynq</xilinx:family>
       </xilinx:supportedFamilies>
       <xilinx:taxonomies>
         <xilinx:taxonomy>/fLink/SubDevices</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>outGPIODevice</xilinx:displayName>
+      <xilinx:displayName>gpioDevice</xilinx:displayName>
       <xilinx:vendorDisplayName>www.ntb.ch</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.flink-project.ch/</xilinx:vendorURL>
-      <xilinx:coreRevision>15</xilinx:coreRevision>
+      <xilinx:coreRevision>55</xilinx:coreRevision>
       <xilinx:upgrades>
-        <xilinx:canUpgradeFrom>ntb.ch:user:outGPIODevice:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>ntb.ch:user:gpioDevice:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2016-05-30T06:20:05Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-01-27T15:06:41Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="ntb.ch:user:outGPIODevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/outGPIODevice_1.0</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:user:outGPIODevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/outGPIODevice_1.0</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:fLink:outGPIODevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/outGPIODevice_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:fLink:gpioDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice/gpioDevice_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2016.1</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="11a5f977"/>
-      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="76bc4ff9"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="3325c6b0"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="840e53f7"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="54931470"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="58db1188"/>
+      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="bf9aaa50"/>
+      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="2eecc45c"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="171b90fc"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="2c55b76e"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="19b803e8"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>
