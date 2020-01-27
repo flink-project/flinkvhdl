@@ -20,7 +20,9 @@ entity gpioDevice_v1_0_S00_AXI is
 	);
 	port (
 		-- Users to add ports here
-         oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_i : IN STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_o : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_t : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -162,46 +164,36 @@ architecture arch_imp of gpioDevice_v1_0_S00_AXI is
 	constant USER_NUM_MEM: integer := 1;
 	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := (OTHERS => '0');
 	
-	
-	
-	
-	
 	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_number_of_channels_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address*4,C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4,C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_configuration_reg_address: STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4,C_S_AXI_ADDR_WIDTH));
 	
-	
-	
-	CONSTANT c_usig_number_of_regs: INTEGER := (number_of_gpios-1)/C_S_AXI_DATA_WIDTH+1;
-    CONSTANT c_int_nr_of_gpio_reg: INTEGER := number_of_gpios/C_S_AXI_DATA_WIDTH;
+	CONSTANT c_usig_nof_regs: INTEGER := (number_of_gpios - 1) / C_S_AXI_DATA_WIDTH + 1;   -- nof registers for data and direction bits
+    CONSTANT c_int_nof_gpio_reg: INTEGER := number_of_gpios / C_S_AXI_DATA_WIDTH;
     
-    CONSTANT c_usig_dir_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4,C_S_AXI_ADDR_WIDTH)); 
-    CONSTANT c_usig_value_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_dir_regs_address) + c_usig_number_of_regs*4); 
-    CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_value_regs_address) + c_usig_number_of_regs*4); 
+    CONSTANT c_usig_dir_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers * 4, C_S_AXI_ADDR_WIDTH)); 
+    CONSTANT c_usig_value_regs_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_dir_regs_address) + c_usig_nof_regs * 4); 
+    CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_value_regs_address) + c_usig_nof_regs * 4); 
 
-
-	 CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_digital_io_id,16));
-     CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
-     CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-     
-    
+	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_digital_io_id,16));
+    CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0'); 
+    CONSTANT interface_version : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
      
     TYPE t_internal_register IS RECORD
-                 conf_reg            : STD_LOGIC_VECTOR(0 DOWNTO 0);
-                 dir_reg                : STD_LOGIC_VECTOR(127 DOWNTO 0);
-                 value_reg            : STD_LOGIC_VECTOR(127 DOWNTO 0);
+                 conf_reg   : STD_LOGIC_VECTOR(0 DOWNTO 0);
+                 dir_reg    : STD_LOGIC_VECTOR(127 DOWNTO 0);
+                 value_reg  : STD_LOGIC_VECTOR(127 DOWNTO 0);
     END RECORD;
      
     CONSTANT INTERNAL_REG_RESET : t_internal_register := (
-                                  conf_reg=> (OTHERS=>'0'),
+                                   conf_reg=> (OTHERS=>'0'),
                                    dir_reg=> (OTHERS=>'0'),
                                    value_reg=> (OTHERS=>'0')
                                   );
      
-     SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
-     
+    SIGNAL ri,ri_next : t_internal_register := INTERNAL_REG_RESET;
      
 	------------------------------------------------
 	---- Signals for user logic memory space example
@@ -481,16 +473,10 @@ begin
 	  end if;
 	end  process;
 
-
-
-
 	--read data
 	process( axi_rvalid,axi_araddr,ri ) is
-	   VARIABLE gpio_part_nr: INTEGER := 0;
+	   VARIABLE reg_nr: INTEGER := 0;
 	begin
-	
-	
-	
 	  if (axi_rvalid = '1') then
 	    -- output the read dada 
 	    IF(axi_araddr = c_usig_typdef_address) THEN
@@ -508,89 +494,80 @@ begin
 	        axi_rdata <= (others => '0');
             axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);   
         ELSIF axi_araddr >= c_usig_dir_regs_address AND axi_araddr < c_usig_value_regs_address THEN
-            gpio_part_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_dir_regs_address))/4;
-            IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
-                axi_rdata <= ri.dir_reg((gpio_part_nr+1) * C_S_AXI_DATA_WIDTH -1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH);
-            ELSE
-                axi_rdata <= (OTHERS => '0');
-                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
-                    axi_rdata(i) <= ri.dir_reg(i+gpio_part_nr*C_S_AXI_DATA_WIDTH);
-                END LOOP;
-            END IF;
-        ELSIF axi_araddr >= c_usig_value_regs_address AND axi_araddr< c_usig_max_address THEN
-            gpio_part_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_value_regs_address))/4;
-            IF gpio_part_nr <c_int_nr_of_gpio_reg  THEN
-                axi_rdata <= ri.value_reg((gpio_part_nr+1) * C_S_AXI_DATA_WIDTH -1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH);
-            ELSE
-                axi_rdata <= (OTHERS => '0');
-                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
-                    axi_rdata(i) <= ri.value_reg(i+gpio_part_nr*C_S_AXI_DATA_WIDTH);
-                END LOOP;
-            END IF;
+            reg_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_dir_regs_address)) / 4;
+--            IF reg_nr < c_int_nof_gpio_reg THEN
+                axi_rdata <= ri.dir_reg(C_S_AXI_DATA_WIDTH - 1 DOWNTO 0);
+--                axi_rdata <= ri.dir_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
+--            ELSE
+--                axi_rdata <= (OTHERS => '0');
+--                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
+--                    axi_rdata(i) <= ri.dir_reg(i+reg_nr*C_S_AXI_DATA_WIDTH);
+--                END LOOP;
+--            END IF;
+        ELSIF axi_araddr >= c_usig_value_regs_address AND axi_araddr < c_usig_max_address THEN
+            reg_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_value_regs_address)) / 4;
+ --           IF reg_nr < c_int_nof_gpio_reg THEN
+--                axi_rdata <= ri.value_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
+               axi_rdata <= ri.value_reg(C_S_AXI_DATA_WIDTH - 1 DOWNTO 0);
+--            ELSE
+-- --               axi_rdata <= (OTHERS => '0');
+--                axi_rdata(31 DOWNTO 16) <= x"5555";
+--                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
+--                    axi_rdata(i) <= ri.value_reg(i+reg_nr*C_S_AXI_DATA_WIDTH);
+--                END LOOP;
+--            END IF;
 	    ELSE
 	      axi_rdata <= (others => '0');
 	    END IF;
 	  else
 	    axi_rdata <= (others => '0');
 	  end if;  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-
-	  
 	end process;
 	
-	
-	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN,oslv_gpios)  
+	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN,slv_gpios_io_i)  
 	   VARIABLE vi: t_internal_register := INTERNAL_REG_RESET;
-	   VARIABLE gpio_part_nr: INTEGER := 0;
+	   VARIABLE reg_nr: INTEGER := 0;
 	BEGIN
 	   vi := ri;
 	   IF(axi_wready = '1') THEN
 	   
 	   -- Write to direction registers
           IF axi_awaddr >= c_usig_dir_regs_address AND axi_awaddr < c_usig_value_regs_address THEN
-               gpio_part_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_dir_regs_address))/4;
+--               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_dir_regs_address)) / 4;
                
-               FOR i IN 0 TO C_S_AXI_DATA_WIDTH/8-1 LOOP
-                   IF S_AXI_WSTRB(i) = '1' THEN
-                       vi.dir_reg(gpio_part_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH + i * 8)     :=    S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
-                   END IF;
-               END LOOP;
+--               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
+--                   IF S_AXI_WSTRB(i) = '1' THEN
+--                       vi.dir_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
+--                   END IF;
+--               END LOOP;
+               vi.dir_reg(31 DOWNTO 0) := S_AXI_WDATA;
            
            -- Write to value registers
-           ELSIF axi_awaddr>= c_usig_value_regs_address AND axi_awaddr< c_usig_max_address THEN
-               gpio_part_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_value_regs_address))/4;
-               FOR i IN 0 TO C_S_AXI_DATA_WIDTH/8-1 LOOP
-                   IF S_AXI_WSTRB(i) = '1' THEN
-                       vi.value_reg(gpio_part_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO gpio_part_nr * C_S_AXI_DATA_WIDTH + i * 8)     :=    S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
-                   END IF;
-               END LOOP;
+           ELSIF axi_awaddr >= c_usig_value_regs_address AND axi_awaddr< c_usig_max_address THEN
+--               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_value_regs_address)) / 4;
+--               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
+--                   IF S_AXI_WSTRB(i) = '1' THEN
+--                       vi.value_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
+--                   END IF;
+--               END LOOP;
+               vi.value_reg(31 DOWNTO 0) := S_AXI_WDATA;
            END IF;
-
 	   END IF;
 	   
-	  FOR i IN 0 TO number_of_gpios-1 LOOP
-           IF ri.dir_reg(i) = '1' THEN --output
-               oslv_gpios(i) <= ri.value_reg(i);
-           ELSE --input
-               oslv_gpios(i) <= 'Z';
-               vi.value_reg(i) := oslv_gpios(i);
+	   FOR i IN 0 TO number_of_gpios - 1 LOOP
+           IF ri.dir_reg(i) = '1' THEN -- output
+               slv_gpios_io_t(i) <= '0';                --  Vermuting: IO Tri-State Control is active low
+               slv_gpios_io_o(i) <= ri.value_reg(i);
+           ELSE -- input
+               slv_gpios_io_t(i) <= '1';                --  Vermuting: IO Tri-State Control is active low
+               vi.value_reg(i) := slv_gpios_io_i(i);
            END IF;
        END LOOP;
 	  
-	   
-	   
-	   
 	   ri_next <= vi;
 	END PROCESS;
 	
 	-- Add user logic here
-	
 	
 	reg_proc : PROCESS (S_AXI_ACLK)
     BEGIN
@@ -598,8 +575,6 @@ begin
             ri <= ri_next;
         END IF;
     END PROCESS reg_proc;
-	
-	
 
 	-- User logic ends
 

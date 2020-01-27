@@ -18,7 +18,9 @@ entity gpioDevice_v1_0 is
 	);
 	port (
 		-- Users to add ports here
-        oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_i : IN STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_o : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_t : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -70,7 +72,10 @@ architecture arch_imp of gpioDevice_v1_0 is
 		C_S_AXI_ADDR_WIDTH	: integer	:= 12
 		);
 		port (
-		oslv_gpios				: INOUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+		slv_gpios_io_i : IN STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_o : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+        slv_gpios_io_t : OUT STD_LOGIC_VECTOR(number_of_gpios-1 DOWNTO 0);
+
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWID	: in std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
@@ -117,7 +122,9 @@ gpioDevice_v1_0_S00_AXI_inst : gpioDevice_v1_0_S00_AXI
 		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH
 	)
 	port map (
-	    oslv_gpios => oslv_gpios,
+	    slv_gpios_io_i => slv_gpios_io_i,
+	    slv_gpios_io_o => slv_gpios_io_o,
+	    slv_gpios_io_t => slv_gpios_io_t,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWID	=> s00_axi_awid,
