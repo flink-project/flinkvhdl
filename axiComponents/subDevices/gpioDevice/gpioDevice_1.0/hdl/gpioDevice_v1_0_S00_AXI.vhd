@@ -495,27 +495,24 @@ begin
             axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg(c_fLink_reset_bit_num);   
         ELSIF axi_araddr >= c_usig_dir_regs_address AND axi_araddr < c_usig_value_regs_address THEN
             reg_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_dir_regs_address)) / 4;
---            IF reg_nr < c_int_nof_gpio_reg THEN
-                axi_rdata <= ri.dir_reg(C_S_AXI_DATA_WIDTH - 1 DOWNTO 0);
---                axi_rdata <= ri.dir_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
---            ELSE
---                axi_rdata <= (OTHERS => '0');
---                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
---                    axi_rdata(i) <= ri.dir_reg(i+reg_nr*C_S_AXI_DATA_WIDTH);
---                END LOOP;
---            END IF;
+            IF reg_nr < c_int_nof_gpio_reg THEN
+                axi_rdata <= ri.dir_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
+            ELSE
+                axi_rdata <= (OTHERS => '0');
+                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH) - 1 LOOP
+                    axi_rdata(i) <= ri.dir_reg(i + reg_nr * C_S_AXI_DATA_WIDTH);
+                END LOOP;
+            END IF;
         ELSIF axi_araddr >= c_usig_value_regs_address AND axi_araddr < c_usig_max_address THEN
             reg_nr := to_integer(unsigned(axi_araddr) - unsigned(c_usig_value_regs_address)) / 4;
- --           IF reg_nr < c_int_nof_gpio_reg THEN
---                axi_rdata <= ri.value_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
-               axi_rdata <= ri.value_reg(C_S_AXI_DATA_WIDTH - 1 DOWNTO 0);
---            ELSE
--- --               axi_rdata <= (OTHERS => '0');
---                axi_rdata(31 DOWNTO 16) <= x"5555";
---                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH)-1 LOOP
---                    axi_rdata(i) <= ri.value_reg(i+reg_nr*C_S_AXI_DATA_WIDTH);
---                END LOOP;
---            END IF;
+            IF reg_nr < c_int_nof_gpio_reg THEN
+                axi_rdata <= ri.value_reg((reg_nr + 1) * C_S_AXI_DATA_WIDTH - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH);
+            ELSE
+                axi_rdata <= (OTHERS => '0');
+                FOR i IN 0 TO (number_of_gpios mod C_S_AXI_DATA_WIDTH) - 1 LOOP
+                    axi_rdata(i) <= ri.value_reg(i + reg_nr * C_S_AXI_DATA_WIDTH);
+                END LOOP;
+            END IF;
 	    ELSE
 	      axi_rdata <= (others => '0');
 	    END IF;
@@ -530,27 +527,25 @@ begin
 	BEGIN
 	   vi := ri;
 	   IF(axi_wready = '1') THEN
-	   
-	   -- Write to direction registers
-          IF axi_awaddr >= c_usig_dir_regs_address AND axi_awaddr < c_usig_value_regs_address THEN
---               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_dir_regs_address)) / 4;
-               
---               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
---                   IF S_AXI_WSTRB(i) = '1' THEN
---                       vi.dir_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
---                   END IF;
---               END LOOP;
-               vi.dir_reg(31 DOWNTO 0) := S_AXI_WDATA;
-           
+	      -- Write to config register
+	      IF axi_awaddr = c_configuration_reg_address THEN
+              vi.conf_reg(0) := S_AXI_WDATA(0);
+	      -- Write to direction registers
+          ELSIF axi_awaddr >= c_usig_dir_regs_address AND axi_awaddr < c_usig_value_regs_address THEN
+               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_dir_regs_address)) / 4;
+               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
+                   IF S_AXI_WSTRB(i) = '1' THEN
+                       vi.dir_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
+                   END IF;
+               END LOOP;
            -- Write to value registers
            ELSIF axi_awaddr >= c_usig_value_regs_address AND axi_awaddr< c_usig_max_address THEN
---               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_value_regs_address)) / 4;
---               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
---                   IF S_AXI_WSTRB(i) = '1' THEN
---                       vi.value_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
---                   END IF;
---               END LOOP;
-               vi.value_reg(31 DOWNTO 0) := S_AXI_WDATA;
+               reg_nr := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_value_regs_address)) / 4;
+               FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
+                   IF S_AXI_WSTRB(i) = '1' THEN
+                       vi.value_reg(reg_nr * C_S_AXI_DATA_WIDTH + (i + 1) * 8 - 1 DOWNTO reg_nr * C_S_AXI_DATA_WIDTH + i * 8) := S_AXI_WDATA((i + 1) * 8 - 1 DOWNTO i * 8);
+                   END IF;
+               END LOOP;
            END IF;
 	   END IF;
 	   
@@ -564,7 +559,14 @@ begin
            END IF;
        END LOOP;
 	  
+	   IF S_AXI_ARESETN = '0' OR  vi.conf_reg(c_fLink_reset_bit_num) = '1' THEN
+           vi.conf_reg := (OTHERS =>'0');
+           vi.value_reg := (OTHERS =>'0');
+           vi.dir_reg := (OTHERS =>'0');
+       END IF;
+
 	   ri_next <= vi;
+	   
 	END PROCESS;
 	
 	-- Add user logic here
