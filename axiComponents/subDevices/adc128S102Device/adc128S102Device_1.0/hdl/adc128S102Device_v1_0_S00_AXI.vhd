@@ -541,7 +541,8 @@ begin
                 ELSIF(axi_araddr >= c_usig_resolution_address AND axi_araddr <= c_usig_channel_value_address) THEN
                     axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution,axi_rdata'length));
                 ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
-                    axi_rdata <= STD_LOGIC_VECTOR(ri.value_registers(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
+                    axi_rdata <= (others => '0');
+                    axi_rdata((RESOLUTION - 1) DOWNTO 0) <= STD_LOGIC_VECTOR(ri.value_registers(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
                 ELSE
                   axi_rdata <= (others => '0');
                 END IF;
