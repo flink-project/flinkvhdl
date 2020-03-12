@@ -467,9 +467,6 @@ begin
 	  end if;
 	end  process;
 
-
-
-
 	--read data
 	process( axi_rvalid,axi_araddr ) is
 	  VARIABLE description_part: INTEGER := 0;
