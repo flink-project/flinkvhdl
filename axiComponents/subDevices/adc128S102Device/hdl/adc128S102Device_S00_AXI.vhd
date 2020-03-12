@@ -1,3 +1,31 @@
+-------------------------------------------------------------------------------
+--  _________    _____       _____    ____  _____    ___  ____               --
+-- |_   ___  |  |_   _|     |_   _|  |_   \|_   _|  |_  ||_  _|              --
+--   | |_  \_|    | |         | |      |   \ | |      | |_/ /                --
+--   |  _|        | |   _     | |      | |\ \| |      |  __'.                --
+--  _| |_        _| |__/ |   _| |_    _| |_\   |_    _| |  \ \_              --
+-- |_____|      |________|  |_____|  |_____|\____|  |____||____|             --
+--                                                                           --
+-------------------------------------------------------------------------------
+--                                                                           --
+-- Avalon MM interface for ADC128S102                                        --
+--                                                                           --
+-------------------------------------------------------------------------------
+-- Copyright 2014 NTB University of Applied Sciences in Technology           --
+--                                                                           --
+-- Licensed under the Apache License, Version 2.0 (the "License");           --
+-- you may not use this file except in compliance with the License.          --
+-- You may obtain a copy of the License at                                   --
+--                                                                           --
+-- http://www.apache.org/licenses/LICENSE-2.0                                --
+--                                                                           --
+-- Unless required by applicable law or agreed to in writing, software       --
+-- distributed under the License is distributed on an "AS IS" BASIS,         --
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  --
+-- See the License for the specific language governing permissions and       --
+-- limitations under the License.                                            --
+-------------------------------------------------------------------------------
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -7,9 +35,9 @@ use work.adc128S102_pkg.all;
 entity adc128S102Device_v1_0_S00_AXI is
 	generic (
 		-- Users to add parameters here
-        base_clk : INTEGER := 33000000;
-        sclk_frequency : INTEGER := 8000000;
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
+        base_clk : INTEGER := 33000000;--clock frequency which is used on the clock input signal of this block
+        sclk_frequency : INTEGER := 8000000;--SPI clock frequency 
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -18,24 +46,14 @@ entity adc128S102Device_v1_0_S00_AXI is
 		-- Width of S_AXI data bus
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
 		-- Width of S_AXI address bus
-		C_S_AXI_ADDR_WIDTH	: integer	:= 12;
-		-- Width of optional user defined signal in write address channel
-		C_S_AXI_AWUSER_WIDTH	: integer	:= 0;
-		-- Width of optional user defined signal in read address channel
-		C_S_AXI_ARUSER_WIDTH	: integer	:= 0;
-		-- Width of optional user defined signal in write data channel
-		C_S_AXI_WUSER_WIDTH	: integer	:= 0;
-		-- Width of optional user defined signal in read data channel
-		C_S_AXI_RUSER_WIDTH	: integer	:= 0;
-		-- Width of optional user defined signal in write response channel
-		C_S_AXI_BUSER_WIDTH	: integer	:= 0
+		C_S_AXI_ADDR_WIDTH	: integer	:= 12
 	);
 	port (
 		-- Users to add ports here
         osl_mosi : OUT STD_LOGIC;
         isl_miso : IN STD_LOGIC;
         osl_sclk : OUT STD_LOGIC;
-        osl_Ss : OUT STD_LOGIC;
+        osl_ss   : OUT STD_LOGIC;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -52,122 +70,81 @@ entity adc128S102Device_v1_0_S00_AXI is
 		-- Burst size. This signal indicates the size of each transfer in the burst
 		S_AXI_AWSIZE	: in std_logic_vector(2 downto 0);
 		-- Burst type. The burst type and the size information, 
-    -- determine how the address for each transfer within the burst is calculated.
+        -- determine how the address for each transfer within the burst is calculated.
 		S_AXI_AWBURST	: in std_logic_vector(1 downto 0);
-		-- Lock type. Provides additional information about the
-    -- atomic characteristics of the transfer.
-		S_AXI_AWLOCK	: in std_logic;
-		-- Memory type. This signal indicates how transactions
-    -- are required to progress through a system.
-		S_AXI_AWCACHE	: in std_logic_vector(3 downto 0);
-		-- Protection type. This signal indicates the privilege
-    -- and security level of the transaction, and whether
-    -- the transaction is a data access or an instruction access.
-		S_AXI_AWPROT	: in std_logic_vector(2 downto 0);
-		-- Quality of Service, QoS identifier sent for each
-    -- write transaction.
-		S_AXI_AWQOS	: in std_logic_vector(3 downto 0);
-		-- Region identifier. Permits a single physical interface
-    -- on a slave to be used for multiple logical interfaces.
-		S_AXI_AWREGION	: in std_logic_vector(3 downto 0);
-		-- Optional User-defined signal in the write address channel.
-		S_AXI_AWUSER	: in std_logic_vector(C_S_AXI_AWUSER_WIDTH-1 downto 0);
+		
 		-- Write address valid. This signal indicates that
-    -- the channel is signaling valid write address and
-    -- control information.
+        -- the channel is signaling valid write address and
+        -- control information.
 		S_AXI_AWVALID	: in std_logic;
 		-- Write address ready. This signal indicates that
-    -- the slave is ready to accept an address and associated
-    -- control signals.
+        -- the slave is ready to accept an address and associated
+        -- control signals.
 		S_AXI_AWREADY	: out std_logic;
 		-- Write Data
 		S_AXI_WDATA	: in std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
 		-- Write strobes. This signal indicates which byte
-    -- lanes hold valid data. There is one write strobe
-    -- bit for each eight bits of the write data bus.
+        -- lanes hold valid data. There is one write strobe
+        -- bit for each eight bits of the write data bus.
 		S_AXI_WSTRB	: in std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto 0);
 		-- Write last. This signal indicates the last transfer
-    -- in a write burst.
+        -- in a write burst.
 		S_AXI_WLAST	: in std_logic;
-		-- Optional User-defined signal in the write data channel.
-		S_AXI_WUSER	: in std_logic_vector(C_S_AXI_WUSER_WIDTH-1 downto 0);
 		-- Write valid. This signal indicates that valid write
-    -- data and strobes are available.
+        -- data and strobes are available.
 		S_AXI_WVALID	: in std_logic;
 		-- Write ready. This signal indicates that the slave
-    -- can accept the write data.
+        -- can accept the write data.
 		S_AXI_WREADY	: out std_logic;
 		-- Response ID tag. This signal is the ID tag of the
-    -- write response.
+        -- write response.
 		S_AXI_BID	: out std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
 		-- Write response. This signal indicates the status
-    -- of the write transaction.
+        -- of the write transaction.
 		S_AXI_BRESP	: out std_logic_vector(1 downto 0);
-		-- Optional User-defined signal in the write response channel.
-		S_AXI_BUSER	: out std_logic_vector(C_S_AXI_BUSER_WIDTH-1 downto 0);
 		-- Write response valid. This signal indicates that the
-    -- channel is signaling a valid write response.
+        -- channel is signaling a valid write response.
 		S_AXI_BVALID	: out std_logic;
 		-- Response ready. This signal indicates that the master
-    -- can accept a write response.
+        -- can accept a write response.
 		S_AXI_BREADY	: in std_logic;
 		-- Read address ID. This signal is the identification
-    -- tag for the read address group of signals.
+        -- tag for the read address group of signals.
 		S_AXI_ARID	: in std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
 		-- Read address. This signal indicates the initial
-    -- address of a read burst transaction.
+        -- address of a read burst transaction.
 		S_AXI_ARADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
 		-- Burst length. The burst length gives the exact number of transfers in a burst
 		S_AXI_ARLEN	: in std_logic_vector(7 downto 0);
 		-- Burst size. This signal indicates the size of each transfer in the burst
 		S_AXI_ARSIZE	: in std_logic_vector(2 downto 0);
 		-- Burst type. The burst type and the size information, 
-    -- determine how the address for each transfer within the burst is calculated.
+        -- determine how the address for each transfer within the burst is calculated.
 		S_AXI_ARBURST	: in std_logic_vector(1 downto 0);
-		-- Lock type. Provides additional information about the
-    -- atomic characteristics of the transfer.
-		S_AXI_ARLOCK	: in std_logic;
-		-- Memory type. This signal indicates how transactions
-    -- are required to progress through a system.
-		S_AXI_ARCACHE	: in std_logic_vector(3 downto 0);
-		-- Protection type. This signal indicates the privilege
-    -- and security level of the transaction, and whether
-    -- the transaction is a data access or an instruction access.
-		S_AXI_ARPROT	: in std_logic_vector(2 downto 0);
-		-- Quality of Service, QoS identifier sent for each
-    -- read transaction.
-		S_AXI_ARQOS	: in std_logic_vector(3 downto 0);
-		-- Region identifier. Permits a single physical interface
-    -- on a slave to be used for multiple logical interfaces.
-		S_AXI_ARREGION	: in std_logic_vector(3 downto 0);
-		-- Optional User-defined signal in the read address channel.
-		S_AXI_ARUSER	: in std_logic_vector(C_S_AXI_ARUSER_WIDTH-1 downto 0);
 		-- Write address valid. This signal indicates that
-    -- the channel is signaling valid read address and
-    -- control information.
+        -- the channel is signaling valid read address and
+        -- control information.
 		S_AXI_ARVALID	: in std_logic;
 		-- Read address ready. This signal indicates that
-    -- the slave is ready to accept an address and associated
-    -- control signals.
+        -- the slave is ready to accept an address and associated
+        -- control signals.
 		S_AXI_ARREADY	: out std_logic;
 		-- Read ID tag. This signal is the identification tag
-    -- for the read data group of signals generated by the slave.
+        -- for the read data group of signals generated by the slave.
 		S_AXI_RID	: out std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
 		-- Read Data
 		S_AXI_RDATA	: out std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
 		-- Read response. This signal indicates the status of
-    -- the read transfer.
+        -- the read transfer.
 		S_AXI_RRESP	: out std_logic_vector(1 downto 0);
 		-- Read last. This signal indicates the last transfer
-    -- in a read burst.
+        -- in a read burst.
 		S_AXI_RLAST	: out std_logic;
-		-- Optional User-defined signal in the read address channel.
-		S_AXI_RUSER	: out std_logic_vector(C_S_AXI_RUSER_WIDTH-1 downto 0);
 		-- Read valid. This signal indicates that the channel
-    -- is signaling the required read data.
+        -- is signaling the required read data.
 		S_AXI_RVALID	: out std_logic;
 		-- Read ready. This signal indicates that the master can
-    -- accept the read data and response information.
+        -- accept the read data and response information.
 		S_AXI_RREADY	: in std_logic
 	);
 end adc128S102Device_v1_0_S00_AXI;
@@ -178,15 +155,11 @@ architecture arch_imp of adc128S102Device_v1_0_S00_AXI is
 	signal axi_awaddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
 	signal axi_awready	: std_logic;
 	signal axi_wready	: std_logic;
-	signal axi_bresp	: std_logic_vector(1 downto 0);
-	signal axi_buser	: std_logic_vector(C_S_AXI_BUSER_WIDTH-1 downto 0);
 	signal axi_bvalid	: std_logic;
 	signal axi_araddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
 	signal axi_arready	: std_logic;
 	signal axi_rdata	: std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
-	signal axi_rresp	: std_logic_vector(1 downto 0);
 	signal axi_rlast	: std_logic;
-	signal axi_ruser	: std_logic_vector(C_S_AXI_RUSER_WIDTH-1 downto 0);
 	signal axi_rvalid	: std_logic;
 	-- aw_wrap_en determines wrap boundary and enables wrapping
 	signal  aw_wrap_en : std_logic; 
@@ -234,19 +207,19 @@ architecture arch_imp of adc128S102Device_v1_0_S00_AXI is
 	CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address));
 	CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_channel_value_address) + 4*NUMBER_OF_CHANNELS);
 	
+	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_input_id, 16));
+	CONSTANT subtype_id : STD_LOGIC_VECTOR(7 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1, 8));
+	CONSTANT interface_version : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
+	
 	TYPE t_internal_reg IS RECORD
-	       value_registers : t_value_regs;
-	       conf_reg    : STD_LOGIC;
+	       value_regs : t_value_regs;
+	       conf_reg   : STD_LOGIC;
 	END RECORD;
 	
 	CONSTANT INTERNAL_REG_RESET : t_internal_reg := (
-	       value_registers => (OTHERS => (OTHERS =>'0')),
+	       value_regs => (OTHERS => (OTHERS =>'0')),
 	       conf_reg => '0'
 	);
-	
-	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_input_id, 16));
-	CONSTANT subtype_id : STD_LOGIC_VECTOR( 7 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1, 8));
-	CONSTANT interface_version : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
 	
 	SIGNAL ri, ri_next : t_internal_reg := INTERNAL_REG_RESET;
 	
@@ -269,14 +242,12 @@ begin
 
 	S_AXI_AWREADY	<= axi_awready;
 	S_AXI_WREADY	<= axi_wready;
-	S_AXI_BRESP	<= axi_bresp;
-	S_AXI_BUSER	<= axi_buser;
+	S_AXI_BRESP	<= (OTHERS => '0');
 	S_AXI_BVALID	<= axi_bvalid;
 	S_AXI_ARREADY	<= axi_arready;
 	S_AXI_RDATA	<= axi_rdata;
-	S_AXI_RRESP	<= axi_rresp;
+	S_AXI_RRESP	<= (OTHERS => '0');
 	S_AXI_RLAST	<= axi_rlast;
-	S_AXI_RUSER	<= axi_ruser;
 	S_AXI_RVALID	<= axi_rvalid;
 	S_AXI_BID <= S_AXI_AWID;
 	S_AXI_RID <= S_AXI_ARID;
@@ -341,8 +312,21 @@ begin
 	            axi_awaddr     <= axi_awaddr;       ----for awsize = 4 bytes (010)
 	          when "01" => --incremental burst
 	            -- The write address for all the beats in the transaction are increments by awsize
-	            axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB)) + 1);--awaddr aligned to 4 byte boundary
-	            axi_awaddr(ADDR_LSB-1 downto 0)  <= (others => '0');  ----for awsize = 4 bytes (010)
+	            
+	            IF(S_AXI_AWSIZE = "000") THEN
+                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 1);
+	            ELSIF(S_AXI_AWSIZE = "001") THEN
+                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 2);
+	            ELSIF(S_AXI_AWSIZE = "010") THEN
+                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 4);
+                ELSIF(S_AXI_AWSIZE = "011") THEN
+                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 8);
+                ELSIF(S_AXI_AWSIZE = "100") THEN
+                    axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_awaddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 16);
+                ELSE
+                     axi_awaddr     <= axi_awaddr;
+	            END IF;
+	            
 	          when "10" => --Wrapping burst
 	            -- The write address wraps when the address reaches wrap boundary 
 	            if (aw_wrap_en = '1') then
@@ -393,12 +377,9 @@ begin
 	  if rising_edge(S_AXI_ACLK) then 
 	    if S_AXI_ARESETN = '0' then
 	      axi_bvalid  <= '0';
-	      axi_bresp  <= "00"; --need to work more on the responses
-	      axi_buser <= (others => '0');
 	    else
 	      if (axi_awv_awr_flag = '1' and axi_wready = '1' and S_AXI_WVALID = '1' and axi_bvalid = '0' and S_AXI_WLAST = '1' ) then
 	        axi_bvalid <= '1';
-	        axi_bresp  <= "00"; 
 	      elsif (S_AXI_BREADY = '1' and axi_bvalid = '1') then  
 	      --check if bready is asserted while bvalid is high)
 	        axi_bvalid <= '0';                      
@@ -446,7 +427,6 @@ begin
 	      axi_arlen <= (others => '0'); 
 	      axi_arlen_cntr <= (others => '0');
 	      axi_rlast <= '0';
-	      axi_ruser <= (others => '0');
 	    else
 	      if (axi_arready = '0' and S_AXI_ARVALID = '1' and axi_arv_arr_flag = '0') then
 	        -- address latching 
@@ -465,8 +445,19 @@ begin
 	            axi_araddr     <= axi_araddr;      ----for arsize = 4 bytes (010)
 	          when "01" =>  --incremental burst
 	            -- The read address for all the beats in the transaction are increments by awsize
-	            axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto ADDR_LSB)) + 1); --araddr aligned to 4 byte boundary
-	            axi_araddr(ADDR_LSB-1 downto 0)  <= (others => '0');  ----for awsize = 4 bytes (010)
+                    IF(S_AXI_ARSIZE = "000") THEN
+                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 1);
+                    ELSIF(S_AXI_ARSIZE = "001") THEN
+                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 2);
+                    ELSIF(S_AXI_ARSIZE = "010") THEN
+                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 4);
+                    ELSIF(S_AXI_ARSIZE = "011") THEN
+                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 8);
+                    ELSIF(S_AXI_ARSIZE = "100") THEN
+                        axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0) <= std_logic_vector (unsigned(axi_araddr(C_S_AXI_ADDR_WIDTH - 1 downto 0)) + 16);
+                    ELSE
+                        axi_araddr  <= axi_araddr;
+                    END IF;
 	          when "10" =>  --Wrapping burst
 	            -- The read address wraps when the address reaches wrap boundary 
 	            if (ar_wrap_en = '1') then   
@@ -502,85 +493,85 @@ begin
 	  if rising_edge(S_AXI_ACLK) then
 	    if S_AXI_ARESETN = '0' then
 	      axi_rvalid <= '0';
-	      axi_rresp  <= "00";
 	    else
 	      if (axi_arv_arr_flag = '1' and axi_rvalid = '0') then
 	        axi_rvalid <= '1';
-	        axi_rresp  <= "00"; -- 'OKAY' response
 	      elsif (axi_rvalid = '1' and S_AXI_RREADY = '1') then
 	        axi_rvalid <= '0';
 	      end  if;      
 	    end if;
 	  end if;
 	end  process;
-	-- ------------------------------------------
-	-- -- Example code to access user logic memory region
-	-- ------------------------------------------
 
-    --read
+
+
+
+
     --read data
-            process( axi_rvalid,axi_araddr,ri ) is
-               VARIABLE reg_number: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0; 
-            begin
-              if (axi_rvalid = '1') then
-                -- output the read dada 
-                IF(axi_araddr = c_usig_typdef_address) THEN
-                   axi_rdata(31 DOWNTO 16) <= id;
-                   axi_rdata(15 DOWNTO 8) <= subtype_id;
-                   axi_rdata(7 DOWNTO 0) <= interface_version;
-                ELSIF(axi_araddr = c_usig_mem_size_address)THEN
-                   axi_rdata <= (others => '0');
-                   axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
-                ELSIF(axi_araddr = c_usig_number_of_channels_address)THEN
-                   axi_rdata <= std_logic_vector(to_unsigned(NUMBER_OF_CHANNELS, axi_rdata'length));
-                ELSIF(axi_araddr = c_usig_unique_id_address) THEN
-                    axi_rdata <= unique_id;
-                ELSIF(axi_araddr = c_usig_configuration_address) THEN
-                    axi_rdata <= (others => '0');
-                    axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg;    
-                ELSIF(axi_araddr >= c_usig_resolution_address AND axi_araddr <= c_usig_channel_value_address) THEN
-                    axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution,axi_rdata'length));
-                ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
-                    axi_rdata <= (others => '0');
-                    axi_rdata((RESOLUTION - 1) DOWNTO 0) <= STD_LOGIC_VECTOR(ri.value_registers(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
-                ELSE
-                  axi_rdata <= (others => '0');
-                END IF;
-              else
+    process( axi_rvalid,axi_araddr,ri ) is
+        VARIABLE reg_number: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0; 
+    begin
+        if (axi_rvalid = '1') then
+            -- output the read dada
+            IF(axi_araddr = c_usig_typdef_address) THEN
+                axi_rdata(31 DOWNTO 16) <= id;
+                axi_rdata(15 DOWNTO 8) <= subtype_id;
+                axi_rdata(7 DOWNTO 0) <= interface_version;
+            ELSIF(axi_araddr = c_usig_mem_size_address)THEN
                 axi_rdata <= (others => '0');
-              end if;  
-            end process;
+                axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
+            ELSIF(axi_araddr = c_usig_number_of_channels_address)THEN
+                axi_rdata <= std_logic_vector(to_unsigned(NUMBER_OF_CHANNELS, axi_rdata'length));
+            ELSIF(axi_araddr = c_usig_unique_id_address) THEN
+                axi_rdata <= unique_id;
+            ELSIF(axi_araddr = c_usig_configuration_address) THEN
+                axi_rdata <= (others => '0');
+                axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg;    
+            ELSIF(axi_araddr >= c_usig_resolution_address AND axi_araddr <= c_usig_channel_value_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution,axi_rdata'length));
+            ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
+                axi_rdata <= (others => '0');
+                axi_rdata((RESOLUTION - 1) DOWNTO 0) <= STD_LOGIC_VECTOR(ri.value_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
+            ELSE
+                axi_rdata <= (others => '0');
+            END IF;
+        else
+            axi_rdata <= (others => '0');
+        end if;  
+    end process;
     
 
 	--write
 	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
-             VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
-          BEGIN
-             vi := ri;
-             
-             IF(axi_wready = '1') THEN
-                  IF(axi_awaddr = c_usig_configuration_address) THEN
-                         IF(S_AXI_WSTRB(0) = '1')THEN
-                              vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
-                         END IF;
-                  END IF;
-             END IF;
-             
-             
-             IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
-                  vi := INTERNAL_REG_RESET;
-                  adc_reset <= '0';
-             ELSE
-                 adc_reset <= '1';
-             END IF;
-         END PROCESS;
+        VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
+    BEGIN
+        vi := ri;
+        IF(axi_wready = '1') THEN
+            IF(axi_awaddr = c_usig_configuration_address) THEN
+                IF(S_AXI_WSTRB(0) = '1')THEN
+                    vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
+                END IF;
+            END IF;
+        END IF;
+                   
+        IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
+            vi := INTERNAL_REG_RESET;
+            adc_reset <= '0';
+        ELSE
+            adc_reset <= '1';
+        END IF;
+		
+        ri_next <= vi;
+    END PROCESS;
             
-
-	-- Add user logic here
     gen_adc: adc128S102 GENERIC MAP(BASE_CLK => base_clk, SCLK_FREQUENCY => sclk_frequency)
-                        PORT MAP(S_AXI_ACLK, adc_reset, ri.value_registers, osl_sclk, osl_Ss, osl_mosi, isl_miso);
-	-- User logic ends
+                        PORT MAP(S_AXI_ACLK, adc_reset, ri.value_regs, osl_sclk, osl_Ss, osl_mosi, isl_miso);
 	
-	
+	reg_proc : PROCESS (S_AXI_ACLK)
+    BEGIN
+        IF rising_edge(S_AXI_ACLK) THEN
+            ri <= ri_next;
+        END IF;
+    END PROCESS reg_proc;
 
 end arch_imp;

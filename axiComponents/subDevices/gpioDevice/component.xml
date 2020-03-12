@@ -1133,12 +1133,12 @@
       <xilinx:displayName>gpioDevice</xilinx:displayName>
       <xilinx:vendorDisplayName>www.ntb.ch</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.flink-project.ch/</xilinx:vendorURL>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>ntb.ch:user:gpioDevice:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:gpioDevice:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2020-03-12T16:18:11Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-03-12T18:04:10Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
