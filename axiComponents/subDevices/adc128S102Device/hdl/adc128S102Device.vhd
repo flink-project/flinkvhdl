@@ -22,7 +22,7 @@ entity adc128S102Device_v1_0 is
         osl_mosi : OUT STD_LOGIC;
         isl_miso : IN STD_LOGIC;
         osl_sclk : OUT STD_LOGIC;
-        osl_Ss : OUT STD_LOGIC;
+        osl_ss   : OUT STD_LOGIC;
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -78,7 +78,7 @@ architecture arch_imp of adc128S102Device_v1_0 is
 		osl_mosi : OUT STD_LOGIC;
         isl_miso : IN STD_LOGIC;
         osl_sclk : OUT STD_LOGIC;
-        osl_ss : OUT STD_LOGIC;
+        osl_ss   : OUT STD_LOGIC;
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWID	: in std_logic_vector(C_S_AXI_ID_WIDTH-1 downto 0);
@@ -129,7 +129,7 @@ adc128S102Device_v1_0_S00_AXI_inst : adc128S102Device_v1_0_S00_AXI
 	    isl_miso => isl_miso,
 	    osl_mosi => osl_mosi,
 	    osl_sclk => osl_sclk,
-	    osl_Ss => osl_Ss,
+	    osl_ss   => osl_ss,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWID	=> s00_axi_awid,

@@ -195,16 +195,16 @@ architecture arch_imp of adc128S102Device_v1_0_S00_AXI is
 	constant USER_NUM_MEM: integer := 1;
 	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := (OTHERS => '0');
 	
-	CONSTANT c_resolution : INTEGER := 8;
+	CONSTANT c_resolution : INTEGER := 4096;
 	
-	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address, C_S_AXI_ADDR_WIDTH));
+	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_number_of_channels_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_channels_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4, C_S_AXI_ADDR_WIDTH));
 	CONSTANT c_usig_configuration_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4, C_S_AXI_ADDR_WIDTH));
 	
-	CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers, C_S_AXI_ADDR_WIDTH));
-	CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address));
+	CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4, C_S_AXI_ADDR_WIDTH));
+	CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address) + 4);
 	CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_channel_value_address) + 4*NUMBER_OF_CHANNELS);
 	
 	CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_input_id, 16));
@@ -224,6 +224,7 @@ architecture arch_imp of adc128S102Device_v1_0_S00_AXI is
 	SIGNAL ri, ri_next : t_internal_reg := INTERNAL_REG_RESET;
 	
 	SIGNAL adc_reset : STD_LOGIC := '1';
+	SIGNAL adc_values : t_value_regs;
 	
 	------------------------------------------------
 	---- Signals for user logic memory space example
@@ -503,10 +504,6 @@ begin
 	  end if;
 	end  process;
 
-
-
-
-
     --read data
     process( axi_rvalid,axi_araddr,ri ) is
         VARIABLE reg_number: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0; 
@@ -527,11 +524,11 @@ begin
             ELSIF(axi_araddr = c_usig_configuration_address) THEN
                 axi_rdata <= (others => '0');
                 axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg;    
-            ELSIF(axi_araddr >= c_usig_resolution_address AND axi_araddr <= c_usig_channel_value_address) THEN
-                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution,axi_rdata'length));
+            ELSIF(axi_araddr = c_usig_resolution_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution, axi_rdata'length));
             ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
                 axi_rdata <= (others => '0');
-                axi_rdata((RESOLUTION - 1) DOWNTO 0) <= STD_LOGIC_VECTOR(ri.value_regs(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address))/4));
+                axi_rdata((RESOLUTION - 1) DOWNTO 0) <= adc_values(to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address)) / 4);
             ELSE
                 axi_rdata <= (others => '0');
             END IF;
@@ -539,7 +536,6 @@ begin
             axi_rdata <= (others => '0');
         end if;  
     end process;
-    
 
 	--write
 	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
@@ -564,8 +560,20 @@ begin
         ri_next <= vi;
     END PROCESS;
             
-    gen_adc: adc128S102 GENERIC MAP(BASE_CLK => base_clk, SCLK_FREQUENCY => sclk_frequency)
-                        PORT MAP(S_AXI_ACLK, adc_reset, ri.value_regs, osl_sclk, osl_Ss, osl_mosi, isl_miso);
+    gen_adc : adc128S102 
+        GENERIC MAP (
+            BASE_CLK => base_clk, 
+            SCLK_FREQUENCY => sclk_frequency
+        )
+        PORT MAP (
+            isl_clk  => S_AXI_ACLK, 
+            isl_reset_n   => adc_reset, 
+            ot_values  => adc_values, 
+            osl_sclk    => osl_sclk, 
+            osl_ss      => osl_ss, 
+            osl_mosi    => osl_mosi, 
+            isl_miso    => isl_miso
+         );
 	
 	reg_proc : PROCESS (S_AXI_ACLK)
     BEGIN

@@ -61,7 +61,7 @@ PACKAGE spi_master_pkg IS
 			islv_ss_activ  			: IN STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0);
 			
 			osl_sclk				: OUT STD_LOGIC;
-			oslv_Ss					: OUT STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0);
+			oslv_ss					: OUT STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0);
 			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC
 		);
@@ -83,7 +83,7 @@ ENTITY spi_master IS
 		GENERIC(
 			BASE_CLK : INTEGER := 33000000; -- frequency of the isl_clk signal
 			SCLK_FREQUENCY : INTEGER := 10000; -- frequency of the osl_sclk signal can not be bigger than BASE_CLK/2;
-			CS_SETUP_CYLES : INTEGER := 10; -- number of isl_clk cycles till the first osl_sclk edge is coming out after oslv_Ss is asserted. 
+			CS_SETUP_CYLES : INTEGER := 10; -- number of isl_clk cycles till the first osl_sclk edge is coming out after oslv_ss is asserted. 
 			TRANSFER_WIDTH : INTEGER := 32; -- number of bits per transfer
 			NR_OF_SS 	   : INTEGER := 1; -- number of slave selects
 			CPOL: STD_LOGIC := '0'; -- clock polarity: 0 = The inactive state of SCK is logic zero, 1 = The inactive state of SCK is logic one. 
@@ -102,7 +102,7 @@ ENTITY spi_master IS
 			islv_ss_activ  			: IN STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0); -- decides which ss line should be active always write a logic high to set the ss active. the block itselve handles the logic level of the ss depending on the sspol value
 			
 			osl_sclk				: OUT STD_LOGIC;
-			oslv_Ss					: OUT STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0);
+			oslv_ss					: OUT STD_LOGIC_VECTOR(NR_OF_SS-1 DOWNTO 0);
 			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC
 		);
@@ -276,7 +276,7 @@ ARCHITECTURE rtl OF spi_master IS
 		
 		--output assignement 
 		osl_sclk <= ri.sclk;
-		oslv_Ss <= ri.ss;
+		oslv_ss <= ri.ss;
 		osl_mosi <= ri.mosi;
 		osl_rx_done <= ri.rx_done;
 		oslv_rx_data <= ri.rx_data_buf;

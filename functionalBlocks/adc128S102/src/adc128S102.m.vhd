@@ -54,7 +54,7 @@ PACKAGE adc128S102_pkg IS
 			ot_values				: OUT t_value_regs;
 			
 			osl_sclk				: OUT STD_LOGIC;
-			oslv_Ss					: OUT STD_LOGIC;
+			osl_ss					: OUT STD_LOGIC;
 			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC
 		);
@@ -85,7 +85,7 @@ ENTITY adc128S102 IS
 			ot_values				: OUT t_value_regs;
 			
 			osl_sclk				: OUT STD_LOGIC;
-			oslv_Ss					: OUT STD_LOGIC;
+			osl_ss					: OUT STD_LOGIC;
 			osl_mosi				: OUT STD_LOGIC;
 			isl_miso				: IN STD_LOGIC
 		);
@@ -145,7 +145,7 @@ ARCHITECTURE rtl OF adc128S102 IS
 			islv_ss_activ(0)  		=> '1',
 			
 			osl_sclk				=> osl_sclk,
-			oslv_Ss(0)				=> oslv_Ss,
+			oslv_ss(0)				=> osl_ss,
 			osl_mosi				=> osl_mosi,
 			isl_miso				=> isl_miso
 		);
