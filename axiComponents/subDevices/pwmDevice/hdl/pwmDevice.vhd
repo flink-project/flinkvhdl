@@ -30,7 +30,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity pwmDevice_v1_0 is
+entity pwmDevice is
 	generic (
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
@@ -86,12 +86,12 @@ entity pwmDevice_v1_0 is
 		s00_axi_rready	: in std_logic
 		
 	);
-end pwmDevice_v1_0;
+end pwmDevice;
 
-architecture arch_imp of pwmDevice_v1_0 is
+architecture arch_imp of pwmDevice is
 
 	-- component declaration
-	component pwmDevice_v1_0_S00_AXI is
+	component pwmDevice_S00_AXI is
 		generic (
 		unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 		number_of_pwms: INTEGER RANGE 0 TO 16 := 1;--number of pwms which will be generated
@@ -134,12 +134,12 @@ architecture arch_imp of pwmDevice_v1_0 is
 		S_AXI_RREADY	: in std_logic;
 		S_oslv_pwm		: OUT STD_LOGIC_VECTOR(number_of_pwms-1 DOWNTO 0)
 		);
-	end component pwmDevice_v1_0_S00_AXI;
+	end component pwmDevice_S00_AXI;
 
 begin
 
 -- Instantiation of Axi Bus Interface S00_AXI
-pwmDevice_v1_0_S00_AXI_inst : pwmDevice_v1_0_S00_AXI
+pwmDevice_S00_AXI_inst : pwmDevice_S00_AXI
 	generic map (
 	    unique_id => unique_id,
 	    number_of_pwms => number_of_pwms,

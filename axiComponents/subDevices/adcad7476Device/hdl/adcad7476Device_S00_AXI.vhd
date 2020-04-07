@@ -550,9 +550,9 @@ begin
                    
         IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
             vi := INTERNAL_REG_RESET;
-            adc_reset <= '0';
-        ELSE
             adc_reset <= '1';
+        ELSE
+            adc_reset <= '0';
         END IF;
 		
         ri_next <= vi;

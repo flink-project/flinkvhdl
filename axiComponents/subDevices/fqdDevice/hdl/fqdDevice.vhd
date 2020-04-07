@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity fqdDevice_v1_0 is
+entity fqdDevice is
 	generic (
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
@@ -56,12 +56,12 @@ entity fqdDevice_v1_0 is
 		s00_axi_rready	: in std_logic
 		
 	);
-end fqdDevice_v1_0;
+end fqdDevice;
 
-architecture arch_imp of fqdDevice_v1_0 is
+architecture arch_imp of fqdDevice is
 
 	-- component declaration
-	component fqdDevice_v1_0_S00_AXI is
+	component fqdDevice_S00_AXI is
 		generic (
 		unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 		number_of_fqds: INTEGER RANGE 0 TO 16 := 1;--number of fqds which will be generated
@@ -104,12 +104,12 @@ architecture arch_imp of fqdDevice_v1_0 is
 		islv_enc_A : IN  STD_LOGIC_VECTOR(number_of_fqds-1 DOWNTO 0); 
 		islv_enc_B : IN  STD_LOGIC_VECTOR(number_of_fqds-1 DOWNTO 0)
 		);
-	end component fqdDevice_v1_0_S00_AXI;
+	end component fqdDevice_S00_AXI;
 
 begin
 
 -- Instantiation of Axi Bus Interface S00_AXI
-fqdDevice_v1_0_S00_AXI_inst : fqdDevice_v1_0_S00_AXI
+fqdDevice_S00_AXI_inst : fqdDevice_S00_AXI
 	generic map (
 	    unique_id => unique_id,
 	    number_of_fqds => number_of_fqds,

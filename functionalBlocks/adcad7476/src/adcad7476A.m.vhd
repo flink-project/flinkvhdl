@@ -120,13 +120,16 @@ ARCHITECTURE rtl OF adcad7476A IS
 		fsm_state			: t_fsm_state;
 		usig2_clk_div_count	: unsigned(1 DOWNTO 0);
 		usig4_bit_count		: unsigned(3 DOWNTO 0);
-		slv_rx_data	        : std_logic_vector(cint_rx_bitcount - 1 DOWNTO 0);
+		slv_rx_tmp_data		: std_logic_vector(cint_rx_bitcount - 1 DOWNTO 0);
+		slv_rx_out_data		: std_logic_vector(cint_rx_bitcount - 1 DOWNTO 0);
 	END RECORD;
 	
-	SIGNAL r, r_next		: t_adc_signals;	
+	SIGNAL r, r_next		: t_adc_signals;
+	
 	SIGNAL sl_reset			: std_logic;
 
-BEGIN		
+BEGIN
+			
 	adc_comb_proc : PROCESS (isl_reset, isl_adc_sdata, r)
 		VARIABLE v			: t_adc_signals;
 	BEGIN
@@ -135,12 +138,13 @@ BEGIN
 		CASE r.fsm_state IS
 			WHEN INIT		=>	v.sl_chip_select_bar		:= '1';
 								v.sl_serial_clock			:= '1';
+								v.slv_rx_out_data           := r.slv_rx_tmp_data;
 								v.fsm_state					:= CS_START;
 		
 			WHEN CS_START	=>	v.sl_chip_select_bar		:= '0';
-								v.fsm_state					:= READ_Z3;
 								v.usig4_bit_count			:= to_unsigned(cint_rx_bitcount - 1,4);
 								v.usig2_clk_div_count		:= "10";
+								v.fsm_state					:= READ_Z3;
 								
 			WHEN READ_Z3	=>	v.sl_serial_clock			:= '0';
 								v.fsm_state					:= SCLK_LOW;
@@ -171,8 +175,8 @@ BEGIN
 		END CASE;
 		
 		--	Sample Serial Data Values
-		IF r.fsm_state = SCLK_LOW AND r.usig2_clk_div_count = 2 THEN
-			v.slv_rx_data(to_integer(r.usig4_bit_count)) := isl_adc_sdata;
+		IF r.fsm_state = SCLK_HIGH AND r.usig2_clk_div_count = 2 THEN
+			v.slv_rx_tmp_data(to_integer(r.usig4_bit_count)) := isl_adc_sdata;
 		END IF;
 		
 		--	Reset State
@@ -191,8 +195,8 @@ BEGIN
 		END IF;
 	END PROCESS adc_reg_proc;
 
-	osl_adc_sclk <= r.sl_serial_clock;
-	osl_adc_csn <= r.sl_chip_select_bar;
-	oslv12_hex_data	<= r.slv_rx_data(oslv12_hex_data'LENGTH - 1 DOWNTO 0);
+	osl_adc_sclk		<= r.sl_serial_clock;		--	ADC_SCLK
+	osl_adc_csn			<= r.sl_chip_select_bar;	--	ADC_CSN
+	oslv12_hex_data	    <= r.slv_rx_out_data(oslv12_hex_data'LENGTH - 1 DOWNTO 0);
 	
 END ARCHITECTURE rtl;
