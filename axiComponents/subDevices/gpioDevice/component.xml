@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <spirit:vendor>www.ntb.ch</spirit:vendor>
+  <spirit:vendor>www.ost.ch</spirit:vendor>
   <spirit:library>flink</spirit:library>
   <spirit:name>gpioDevice</spirit:name>
   <spirit:version>1.1</spirit:version>
@@ -1027,7 +1027,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>flink GPIO Device</spirit:description>
+  <spirit:description>flink GPIO subdevice</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
@@ -1131,24 +1131,49 @@
         <xilinx:taxonomy>/flink/SubDevices</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>gpioDevice</xilinx:displayName>
-      <xilinx:vendorDisplayName>www.ntb.ch</xilinx:vendorDisplayName>
-      <xilinx:vendorURL>http://www.flink-project.ch/</xilinx:vendorURL>
-      <xilinx:coreRevision>5</xilinx:coreRevision>
+      <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
+      <xilinx:vendorURL>https://flink-project.ch/</xilinx:vendorURL>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>ntb.ch:user:gpioDevice:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:gpioDevice:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>www.ntb.ch:flink:gpioDevice:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2020-03-12T18:04:10Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-12-18T12:52:18Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:user:gpioDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/gpioDevice/src/vivadoIPPackage/gpioDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:fLink:gpioDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice/gpioDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:gpioDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice/gpioDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:gpioDevice:1.1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6258caf5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63dfbce8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3bc66444_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1eda0260_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b5b702e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44a822e3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7db3b19_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4829bbf3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@377d5b2d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fa0221e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@10bfcb7b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d193ab6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64f79226_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b06aca2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6831726a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1523cfed_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17867df1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a18647a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4de97416_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3095f2bf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ecc3e98_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30b0b2f5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f8748db_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48254b1e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/gpioDevice</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2019.1.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="bf9aaa50"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="16dae664"/>

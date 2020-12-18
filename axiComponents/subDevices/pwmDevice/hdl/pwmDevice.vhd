@@ -34,8 +34,8 @@ entity pwmDevice is
 	generic (
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-        number_of_pwms: INTEGER RANGE 0 TO 16 := 1;--number of pwms which will be generated
-        base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
+        number_of_pwms: INTEGER RANGE 0 TO 64 := 1;--number of pwms which will be generated
+        base_clk: INTEGER := 100000000;--clock frequency which is used on the clock input signal of this block
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -94,7 +94,7 @@ architecture arch_imp of pwmDevice is
 	component pwmDevice_S00_AXI is
 		generic (
 		unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-		number_of_pwms: INTEGER RANGE 0 TO 16 := 1;--number of pwms which will be generated
+		number_of_pwms: INTEGER RANGE 0 TO 64 := 1;--number of pwms which will be generated
         base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
 		C_S_AXI_ID_WIDTH	: integer	:= 1;
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;

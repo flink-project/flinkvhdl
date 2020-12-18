@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <spirit:vendor>www.ntb.ch</spirit:vendor>
+  <spirit:vendor>www.ost.ch</spirit:vendor>
   <spirit:library>flink</spirit:library>
   <spirit:name>adc128S102Device</spirit:name>
   <spirit:version>1.1</spirit:version>
@@ -1009,7 +1009,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>adc128S102 subdevice for flink</spirit:description>
+  <spirit:description>flink ADC subdevice for adc128S102</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
@@ -1121,24 +1121,43 @@
         <xilinx:taxonomy>/flink/SubDevices</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>adc128S102Device</xilinx:displayName>
-      <xilinx:vendorDisplayName>www.ntb.ch</xilinx:vendorDisplayName>
-      <xilinx:vendorURL>http://flink_project.ch</xilinx:vendorURL>
-      <xilinx:coreRevision>33</xilinx:coreRevision>
+      <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
+      <xilinx:vendorURL>https://flink_project.ch</xilinx:vendorURL>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>xilinx.com:user:adc128S102Device:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:adc128S102Device:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>www.ntb.ch:flink:adc128S102Device:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2020-03-30T13:45:49Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-12-18T12:47:01Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:user:adc128S102Device:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/adc128S102Device_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:user:adc128S102Device:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/adc128S102Device_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:fLink:adc128S102Device:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:adc128S102Device:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:adc128S102Device:1.1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@42cc0d50_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67a19214_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ebe78a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a8b63d2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64f63a95_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5148a902_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2570e929_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2553ccd5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44620598_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3de36b66_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b49f917_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@680b2b5c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ee7899f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48e27cf4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5dfec883_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@685e00b0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2332b4a0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46bc980b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/adc128S102Device</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2019.1.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="f1ae6239"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="4e7e1d10"/>

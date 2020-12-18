@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <spirit:vendor>www.ntb.ch</spirit:vendor>
+  <spirit:vendor>www.ost.ch</spirit:vendor>
   <spirit:library>flink</spirit:library>
   <spirit:name>infoDevice</spirit:name>
   <spirit:version>1.1</spirit:version>
@@ -952,7 +952,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>Info Device for flink</spirit:description>
+  <spirit:description>flink Info subdevice</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
@@ -1062,23 +1062,37 @@
         <xilinx:taxonomy>/flink/SubDevices</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>infoDevice</xilinx:displayName>
-      <xilinx:vendorDisplayName>www.ntb.ch</xilinx:vendorDisplayName>
-      <xilinx:vendorURL>http://www.flink-project.ch/</xilinx:vendorURL>
-      <xilinx:coreRevision>6</xilinx:coreRevision>
+      <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
+      <xilinx:vendorURL>https://flink-project.ch/</xilinx:vendorURL>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:infoDevice:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>www.ntb.ch:flink:infoDevice:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2020-03-12T15:52:24Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-12-18T12:53:25Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ntb.ch:user:infoDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/infoDevice/src/vivadoIPPackage/infoDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:user:infoDevice:1.0_ARCHIVE_LOCATION">D:/flinkvhdl/axiComponents/subDevices/infoDevice/src/vivadoIPPackage/infoDevice_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:fLink:infoDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:infoDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
         <xilinx:tag xilinx:name="www.ntb.ch:flink:infoDevice:1.1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@449ca25_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49899c01_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2cf0815b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d42825_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1aead295_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f542c2d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21af100f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@191e6dd0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9c9ced4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46b3dbb1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a88b783_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27c63a64_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@187861ba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/infoDevice</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2019.1.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="f1ae6239"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="481d6358"/>

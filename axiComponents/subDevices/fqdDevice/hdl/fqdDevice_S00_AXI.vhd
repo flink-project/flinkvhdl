@@ -8,7 +8,7 @@ entity fqdDevice_S00_AXI is
 	generic (
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-        number_of_fqds: INTEGER RANGE 0 TO 16 := 1;--number of fqds which will be generated
+        number_of_fqds: INTEGER RANGE 0 TO 64 := 1;--number of fqds which will be generated
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
