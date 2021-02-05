@@ -1,0 +1,1964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>www.ost.ch</spirit:vendor>
+  <spirit:library>flink</spirit:library>
+  <spirit:name>uartDevice</spirit:name>
+  <spirit:version>1.1</spirit:version>
+  <spirit:busInterfaces>
+    <spirit:busInterface>
+      <spirit:name>S00_AXI</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm_rtl" spirit:version="1.0"/>
+      <spirit:slave>
+        <spirit:memoryMapRef spirit:memoryMapRef="S00_AXI"/>
+      </spirit:slave>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWADDR</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awaddr</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWLEN</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awlen</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWSIZE</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awsize</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWBURST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awburst</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_awready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_wdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WSTRB</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_wstrb</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_wlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_wvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_wready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_bid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BRESP</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_bresp</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_bvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_bready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARADDR</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_araddr</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARLEN</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arlen</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARSIZE</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arsize</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARBURST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arburst</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_arready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RRESP</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rresp</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_rready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>S00_AXI_RST</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_aresetn</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>POLARITY</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXI_RST.POLARITY" spirit:choiceRef="choice_list_9d8b0d81">ACTIVE_LOW</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>S00_AXI_CLK</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_aclk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXI_CLK.ASSOCIATED_BUSIF">S00_AXI</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_RESET</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXI_CLK.ASSOCIATED_RESET">s00_axi_aresetn</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+  </spirit:busInterfaces>
+  <spirit:memoryMaps>
+    <spirit:memoryMap>
+      <spirit:name>S00_AXI</spirit:name>
+      <spirit:addressBlock>
+        <spirit:name>S00_AXI_mem</spirit:name>
+        <spirit:baseAddress spirit:format="long" spirit:resolve="user">0</spirit:baseAddress>
+        <spirit:range spirit:format="long">4096</spirit:range>
+        <spirit:width spirit:format="long">32</spirit:width>
+        <spirit:usage>memory</spirit:usage>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>OFFSET_BASE_PARAM</spirit:name>
+            <spirit:value spirit:id="ADDRBLOCKPARAM_VALUE.S00_AXI.S00_AXI_MEM.OFFSET_BASE_PARAM">C_S00_AXI_BASEADDR</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>OFFSET_HIGH_PARAM</spirit:name>
+            <spirit:value spirit:id="ADDRBLOCKPARAM_VALUE.S00_AXI.S00_AXI_MEM.OFFSET_HIGH_PARAM">C_S00_AXI_HIGHADDR</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:addressBlock>
+    </spirit:memoryMap>
+  </spirit:memoryMaps>
+  <spirit:model>
+    <spirit:views>
+      <spirit:view>
+        <spirit:name>xilinx_xpgui</spirit:name>
+        <spirit:displayName>UI Layout</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:xgui.ui</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_xpgui_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>ba744ab5</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_vhdlsynthesis</spirit:name>
+        <spirit:displayName>VHDL Synthesis</spirit:displayName>
+        <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
+        <spirit:language>vhdl</spirit:language>
+        <spirit:modelName>uartDevice</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_vhdlsynthesis_xilinx_com_ip_fifo_generator_13_2__ref_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>6425e974</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>xilinx_anylanguagebehavioralsimulation</spirit:name>
+        <spirit:displayName>Simulation</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:simulation</spirit:envIdentifier>
+        <spirit:modelName>uartDevice</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_anylanguagebehavioralsimulation_xilinx_com_ip_fifo_generator_13_2__ref_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>6425e974</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+      <spirit:view>
+        <spirit:name>Block_Diagram</spirit:name>
+        <spirit:displayName>Block_Diagram</spirit:displayName>
+        <spirit:envIdentifier>:vivado.xilinx.com:block.diagram</spirit:envIdentifier>
+        <spirit:fileSetRef>
+          <spirit:localName>Block_Diagram_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>d47be580</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+    </spirit:views>
+    <spirit:ports>
+      <spirit:port>
+        <spirit:name>islv_rx</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_uarts&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>oslv_tx</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_uarts&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_aclk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_aresetn</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s00_axi_awid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awaddr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ADDR_WIDTH&apos;)) - 1)">11</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awlen</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">7</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awsize</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">2</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awburst</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">1</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_awready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_wdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_DATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_wstrb</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_DATA_WIDTH&apos;)) / 8) - 1)">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_wlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_wvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_wready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_bid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s00_axi_bid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_bresp</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">1</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_bvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_bready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s00_axi_arid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_araddr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ADDR_WIDTH&apos;)) - 1)">11</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arlen</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">7</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arsize</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">2</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arburst</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">1</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_arready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s00_axi_rid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S00_AXI_DATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rresp</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">1</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>s00_axi_rready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+    </spirit:ports>
+    <spirit:modelParameters>
+      <spirit:modelParameter xsi:type="spirit:nameValueTypeType" spirit:dataType="STD_LOGIC_VECTOR(31 downto 0)">
+        <spirit:name>unique_id</spirit:name>
+        <spirit:displayName>Unique Id</spirit:displayName>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.unique_id" spirit:bitStringLength="32">0x000000b0</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
+        <spirit:displayName>C S00 AXI ID WIDTH</spirit:displayName>
+        <spirit:description>Width of ID for for write address, write data, read address and read data</spirit:description>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S00_AXI_ID_WIDTH" spirit:dependency="((spirit:decode(id(&apos;PARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;)) &lt;= 0 ) + (spirit:decode(id(&apos;PARAM_VALUE.C_S00_AXI_ID_WIDTH&apos;))))" spirit:order="3" spirit:minimum="0" spirit:maximum="32" spirit:rangeType="long">1</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>C_S00_AXI_DATA_WIDTH</spirit:name>
+        <spirit:displayName>C S00 Axi Data Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S00_AXI_DATA_WIDTH" spirit:order="4" spirit:rangeType="long">32</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>C_S00_AXI_ADDR_WIDTH</spirit:name>
+        <spirit:displayName>C S00 Axi Addr Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S00_AXI_ADDR_WIDTH" spirit:order="5" spirit:rangeType="long">12</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="INTEGER">
+        <spirit:name>number_of_uarts</spirit:name>
+        <spirit:displayName>Number Of Uarts</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.number_of_uarts" spirit:minimum="0" spirit:maximum="16" spirit:rangeType="long">1</spirit:value>
+      </spirit:modelParameter>
+    </spirit:modelParameters>
+  </spirit:model>
+  <spirit:choices>
+    <spirit:choice>
+      <spirit:name>choice_list_6fc15197</spirit:name>
+      <spirit:enumeration>32</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
+      <spirit:name>choice_list_9d8b0d81</spirit:name>
+      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
+      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
+    </spirit:choice>
+  </spirit:choices>
+  <spirit:fileSets>
+    <spirit:fileSet>
+      <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>xgui/uartDevice_v1_1.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_ba744ab5</spirit:userFileType>
+        <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>src/fifo_1k_x_8_dual_port/fifo_1k_x_8_dual_port.xci</spirit:name>
+        <spirit:userFileType>xci</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/RX_UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/TX_UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../fLink/core/flink_definitions.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/uartDevice_S00_AXI.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/uartDevice.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_190a6135</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_vhdlsynthesis_xilinx_com_ip_fifo_generator_13_2__ref_view_fileset</spirit:name>
+      <spirit:vendorExtensions>
+        <xilinx:subCoreRef>
+          <xilinx:componentRef xilinx:vendor="xilinx.com" xilinx:library="ip" xilinx:name="fifo_generator" xilinx:version="13.2">
+            <xilinx:mode xilinx:name="create_mode"/>
+          </xilinx:componentRef>
+        </xilinx:subCoreRef>
+      </spirit:vendorExtensions>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>src/fifo_1k_x_8_dual_port/fifo_1k_x_8_dual_port.xci</spirit:name>
+        <spirit:userFileType>xci</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/RX_UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/TX_UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../functionalBlocks/uart/src/UART.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>../../../fLink/core/flink_definitions.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/uartDevice_S00_AXI.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/uartDevice.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>xilinx_anylanguagebehavioralsimulation_xilinx_com_ip_fifo_generator_13_2__ref_view_fileset</spirit:name>
+      <spirit:vendorExtensions>
+        <xilinx:subCoreRef>
+          <xilinx:componentRef xilinx:vendor="xilinx.com" xilinx:library="ip" xilinx:name="fifo_generator" xilinx:version="13.2">
+            <xilinx:mode xilinx:name="create_mode"/>
+          </xilinx:componentRef>
+        </xilinx:subCoreRef>
+      </spirit:vendorExtensions>
+    </spirit:fileSet>
+    <spirit:fileSet>
+      <spirit:name>Block_Diagram_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>bd/bd.tcl</spirit:name>
+        <spirit:fileType>tclSource</spirit:fileType>
+      </spirit:file>
+    </spirit:fileSet>
+  </spirit:fileSets>
+  <spirit:description>flink UART subdevice</spirit:description>
+  <spirit:parameters>
+    <spirit:parameter>
+      <spirit:name>unique_id</spirit:name>
+      <spirit:displayName>Unique Id</spirit:displayName>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="32">0x000000b0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI ID WIDTH</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_ID_WIDTH" spirit:minimum="0" spirit:maximum="32" spirit:rangeType="long">1</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_DATA_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI DATA WIDTH</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_ADDR_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI ADDR WIDTH</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_ADDR_WIDTH">12</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>Component_Name</spirit:name>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">fqdDevice_v1_0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>number_of_uarts</spirit:name>
+      <spirit:displayName>Number Of Uarts</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.number_of_uarts" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">1</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_BASEADDR</spirit:name>
+      <spirit:displayName>C S00 AXI BASEADDR</spirit:displayName>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_BASEADDR" spirit:bitStringLength="32">0xFFFFFFFF</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_HIGHADDR</spirit:name>
+      <spirit:displayName>C S00 AXI HIGHADDR</spirit:displayName>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_HIGHADDR" spirit:bitStringLength="32">0x00000000</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_AWUSER_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI AWUSER WIDTH</spirit:displayName>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_AWUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_RUSER_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI RUSER WIDTH</spirit:displayName>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_RUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_BUSER_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI BUSER WIDTH</spirit:displayName>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_BUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_ARUSER_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI ARUSER WIDTH</spirit:displayName>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_ARUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>C_S00_AXI_WUSER_WIDTH</spirit:name>
+      <spirit:displayName>C S00 AXI WUSER WIDTH</spirit:displayName>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_S00_AXI_WUSER_WIDTH"/>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>base_clk</spirit:name>
+      <spirit:displayName>Base Clk</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.base_clk">100000000</spirit:value>
+    </spirit:parameter>
+  </spirit:parameters>
+  <spirit:vendorExtensions>
+    <xilinx:coreExtensions>
+      <xilinx:supportedFamilies>
+        <xilinx:family xilinx:lifeCycle="Production">zynq</xilinx:family>
+      </xilinx:supportedFamilies>
+      <xilinx:taxonomies>
+        <xilinx:taxonomy>/flink/SubDevices</xilinx:taxonomy>
+      </xilinx:taxonomies>
+      <xilinx:displayName>uartDevice</xilinx:displayName>
+      <xilinx:definitionSource>package_project</xilinx:definitionSource>
+      <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
+      <xilinx:vendorURL>https://flink-project.ch/</xilinx:vendorURL>
+      <xilinx:coreRevision>11</xilinx:coreRevision>
+      <xilinx:upgrades>
+        <xilinx:canUpgradeFrom>ost.ch:user:uartDevice:1.0</xilinx:canUpgradeFrom>
+      </xilinx:upgrades>
+      <xilinx:coreCreationDateTime>2021-02-02T16:13:32Z</xilinx:coreCreationDateTime>
+      <xilinx:tags>
+        <xilinx:tag xilinx:name="nopcore"/>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4cbb38d3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59acd45a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62ec0d44_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ac8f746_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14c4c64c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2cf7635e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bfd02ec_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d9b56ac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7a00f2bc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c5b51e1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@500f1f96_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@73d48227_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22c9ff21_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c6c4b9b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ec18117_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@41221964_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a802b7c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ce56127_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43bdb79c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@866e79_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@283cf836_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17184a98_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29421996_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f7e6512_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47ea2357_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bc25164_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3baea6c5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30ab4a31_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b349d27_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7910875d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6854bdc9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e3d9150_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@269123b0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b5e8ff0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29b64998_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c48b739_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76f93fbd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7351d59_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8f03670_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@507b0b4e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51e51dee_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@592789a2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2a193bf6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@78595c8d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@13907d42_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63f25e97_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6aeac79d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6dcbd05_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ea02170_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ceda1ae_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ca1060d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d5f5164_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f79733f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b295759_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c139078_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@191640b8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70ed2b43_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d71b597_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@181b322f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ad5d5c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@72217288_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@aacebed_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25dac281_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@337809ac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1af0d589_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@282811c1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2bb2ed99_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d48c2d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c8c04f6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6da3666f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bffef60_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@58439579_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d1d5526_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@526122e4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a2a3da6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@521a8f4f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@32367f9c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@270023bb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60a4bb4e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@39e8f883_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@902d096_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@114b74de_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12668c5f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63510ecb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28c65dac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d8079ce_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17f03647_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@77a689f4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4fad497c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e9e318d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1949d9d1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@245affba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d22cbf3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b058019_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ccba1f7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c886f8b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74f05ad1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d1552f2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@66a04d74_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3234b337_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22725bcc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2febd12e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e22e9b3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@82dfc3f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74310c99_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37a823e4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b269007_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d17a6a4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@77bbe22_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@643c3802_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a5b58d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@a530d25_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f125025_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6398651e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@759d757b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@afb3c99_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49642e8c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bc9b778_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3497097f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5375c329_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61e5996c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1837054d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@45d09f22_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@55a5fa5b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f73f6d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6acc20d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@53fa440b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74a529b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61e8d178_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e70881d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bcffede_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7246a14e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@683b4137_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ba0f5e4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@296c4090_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bcab2f7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@360aa0b6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64be5455_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@559bcbeb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29b7b87_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51b227be_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@324957c0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c84c45a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@217d2b26_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5be157b5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d202873_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67bb02ce_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@762edf81_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@19e75c45_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@71040ca7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5dc63ae2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1247e40b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2910b190_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@647f584c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6604e54d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ffc76b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25110f2a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@bacebe0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1c533150_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59fca98a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f9dd6e4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64ea3ab9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@57533dee_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76a22b5a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69ce0acf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15bfdfbc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@211a184f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44fe4798_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@23b4e923_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f26e6c5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d1d87ec_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d2058d8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c0e234e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b7b7757_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46238cd4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63884948_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e9cf361_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51ce180e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d86f253_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@782da2ed_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c6cbea3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@136885c7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1dfca7ef_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@73d3e339_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ef269ff_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e62a906_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1bfc652a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44fc26c9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7f7de889_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c258dfd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@276d206c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@138fcf29_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3aeab45c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33e8706_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6be3c45b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b0b5b08_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@79010ab5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@377568fc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49796edd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b182e0f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@618c6c6f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7115d30f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67e79d47_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@526a2471_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17ba80f2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3bd4ef97_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e6c255d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b887a1e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56ab2606_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15d0a631_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f623af6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69338ba4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37c5a78c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@142bf87c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48ff9f16_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@98f6f63_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33dff1ba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b1a94b4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b8087b6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ad5cd57_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d083470_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f531a77_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6850be86_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@42e5627c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37f29828_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6afda5fd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f1b97dd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@276636cc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4fd38cd8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@197a9cf8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69b253c4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d9d4765_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a99cde1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1db0612e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5cae28b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d59f028_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@428c0c73_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e87903d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6eeac831_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d3c90f8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@13e3ba79_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b200f4b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@522651cf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c218cb6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@32d0d0be_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e0be906_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68670a1d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27ec30ac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d80218a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f8ddab8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61ba06c4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@45d3af7b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@641f6fe9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1418804e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4cce2fe7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@619fd8b5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b41bb10_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34f0bcbc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67320576_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21fae4e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4cbe73fb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b230cf1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@238d5411_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1287864d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@580d49a3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@104afcb3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f4b95fe_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63636ac7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65a75840_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61f6bb72_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a4395dd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1533d90b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5af19cea_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5fee89c0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6b882731_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5422f8bc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70e06dbf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ab05422_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1474a369_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74dcc2c4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f690854_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b36875a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@a5bc5ac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5267312f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@71b49617_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2eba5fbf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@35c3cb2a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a396709_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76c3f67b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21ae0a54_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@382acd4a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12d2b24c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a4a7f46_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2a09f94d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@305394c5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e284b9a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1cb2a50e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e10f42e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@133ad4ab_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43bcb6d6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1c864b6c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70480b30_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@524b750b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@e879739_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7da4a77_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@635df3c5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a43fc0f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e71f4bc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6aa9b639_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bbcceda_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c39162d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4702dae4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14fffc65_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5236a979_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27694365_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6dbd07c5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7dbd2eb6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ef09b57_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b3e3e3c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75ceded6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b8ad740_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5024fcd2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1e270f77_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f6b44fb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4cf91636_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2cf087_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@470044b5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f7018e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ec9c88a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@72a8c08f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e47d76d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4c7f32bf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46248bc9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7f79885f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7903db0f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@35c17f36_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@35810a33_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1bc9a3ff_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@e4e948e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e2fcd75_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@38760235_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60413a96_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6c2721f4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2437ac72_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b6949b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75dd03b6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@19ff7c6a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fbc6891_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e874a72_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e071cdf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@54b5ee21_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@153291fb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e27df0c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1cfc2eb1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@169b1f0e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14667b7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@52ea3116_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@432d89d4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43705ad_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3567537b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@394e1e6a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5fcaf214_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29561687_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2a670c2f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@78fce2ce_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1236ece6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@361b542c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c93cf6b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f894827_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f6940f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1fc6cb3b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f8c70b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e22eeac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69b50e7e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37461e12_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1eb78181_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@182bb890_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62d4c2b8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f8b9f97_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ba7664d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ea9119a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@31f4ccec_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@748d680c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6dacba28_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f8ce2a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56b70dc1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@204884b2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61b73c54_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@627d76f1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@cc291eb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ac8f532_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@767022b0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f69402b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b255a59_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@692cef7a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bd4d6e9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37429dd9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d56876b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c5f3ab_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27056d9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48d77b9c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@392c24c2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@24ac79d8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6db796c1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fbb8bb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46343b69_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3277b65c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@72fafacd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@168f37de_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43577f44_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e810f26_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e90738e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@58d3447_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51f00b7c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49057c0b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6edef5f2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@77557c28_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7a501765_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6b4b78eb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@619a343b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4824291f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@31422063_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f9c973d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@530b724d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75dfb860_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25932260_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5cfebbb5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9acdbdc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b67e2b9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@394e5f7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7aecd9f4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34aa7113_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60758812_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ed9ca4f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4638745c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60043dc7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@53f1a479_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25923d1a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d21f191_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f965c7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ecce1f7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7aa971ae_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f0ab550_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@699cbceb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8e00e4c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@645cd77e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@360b61db_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f7db532_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d2102d9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48a8e45d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65c6df32_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@690cd148_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4fd4e438_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b14eb5b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69974ef_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f7e8ce9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f889546_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@461bd7fc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d33db12_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b7df6e4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15a58994_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a3a512c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b9df32_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@777818f5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b3e4e6b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30062c2c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@626c5b0f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@747c564a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5df35671_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fa4c875_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75426499_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17514e98_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1697f1ed_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@698e755f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15ff68a4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3337b0a2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b8f0ee1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ab75862_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@132b150f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a6de47_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ffee6e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@417ba5ff_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9a2c824_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9f59c17_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@162438e7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f8cd622_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a53b73_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@473f4691_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@cfe4447_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4884714c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ff76b7a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ed74e1c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@659ee69e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e20b2b4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c53f840_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4060239_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@118f9a40_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62811c99_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76bca142_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2dc44c01_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@348151b5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59d26ec4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@250d13e3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d734bb2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@71225007_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c44a68b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2430ad46_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61bbedf6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d0c351e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@54ffb32d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47d2844b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6b10fd36_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29dcc06f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1bd60ca9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56598ebb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14a893b8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63fdbe90_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@57c9e191_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5eb0c771_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6732870e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14979012_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a856089_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@307dfeb8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c46d380_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f2f2f0c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69fb73e3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46ad60bd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@204e5e72_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@73e8e73c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@567d64a8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@35937cda_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ece100b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a1ab5de_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44997df4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@847ca7b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b03abc0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@418ee7c4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63b154d1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ee789_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3765797e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@92eb1aa_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f122a74_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c303af0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4629239_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@77a82ac3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3858b7d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6db3c01_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5d594969_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2cc10c8d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64b6a4ef_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1fa6537a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33cc8654_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3dfc8580_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2859a8c7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@750e7cd9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4300546_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f460522_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e6e73f6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d5ab04a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a4cafe5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2bdb3475_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@420db99d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@94d0284_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f6005c3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6b3e4e9e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5d1976f3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a0096db_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@621778bd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b2cde57_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b2f6c9e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62855078_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44220da6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@679dd0ad_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27465b1a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fd9caf8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6efcb4eb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ff93784_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63319691_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@78e0fcf9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a75785d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c28dde0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@295c5b27_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2fac5e1f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34816879_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@38b4a9b7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@a087c16_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@20c96832_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a36aef3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29787196_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1de8338f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e7481fc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28829b92_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5338593d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@52b06c38_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49f8f856_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75c5219_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c3ad1ec_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ca9f329_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f73ff6f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@302bd0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c39401d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@41b6c29f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e97f348_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@19511f7f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@57fa5a26_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2be0ee32_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@678a1aeb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6492ef40_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7bd6820_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@605ca894_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26e3f354_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@bd8e6bb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15ec8781_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@55d5987f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2468ce42_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@387e25e0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f2f51b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33c29ad9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a8a175b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@538fdec6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@69e84956_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@e637658_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12ba4c90_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@749425f6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1360471e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@987ff34_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4cacd10d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22fb0daf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7f80574c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4319e7a8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@323338e7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d33c879_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fb6b042_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f0ce4fb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a822beb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e88aa96_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68c1d0f4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4bcc93e0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d3447bf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22b411f0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@349bc784_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7aebcc1f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3901a705_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@32334b8c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@251ab4d6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@35b09a9e_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@716efb91_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@378b92bf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b54860_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@58ab00a7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1327a42d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e9e4c43_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43aabb87_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@728c0362_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59c6583a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5874df76_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1df6a03b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7395105b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d88bd34_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e0a2d51_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9370201_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4692ffb4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46f36cf9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60fc526b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@593d2a9f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6462f089_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@16cd720b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75d50f44_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a6298e3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@320c5593_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c49031a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@679fc7d3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f06963c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1005880_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74fa6856_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f0b9746_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@42794366_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@224e113f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@54361e4b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51f44662_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48d3b3fc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4468feaf_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@666a8e04_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d9671a9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c1c5434_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28884b66_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3099fe91_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6aa2c5e6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@55025b9_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12d28a9a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@251b6d7d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@443ea94f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@187482b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30390ff5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2abdf5ba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@16252e13_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8d832ce_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7da90c9d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@419d3e70_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@421c94cb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@168c0229_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@631a5eed_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@a4d90ac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4daadc77_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e232f2f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@575218c0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c458b03_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3dd85f26_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e2fca75_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@38604fac_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f788c76_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@16a645b1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1bdf2ca8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@533b4bc5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b3ad8b6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a2a09a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bbdb7be_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@dc7c508_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@57d9daa5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5fb20e70_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b5034e3_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@697bae9d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33fd203d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44b878a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b484e10_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1101a2e7_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ddca64_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3be5013d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d507f47_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1bcf1284_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60ef41ba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fcbb10d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17e486ba_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65d94391_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5311d34f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3695a5da_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@709095eb_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@49419623_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12c60ce1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4abdd110_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c2a52c0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@335d96b4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62c42725_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ac7612_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@57c335ab_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@92dff03_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6601ff7c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3847bcab_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7dcddae_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7cd20d99_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3715b235_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6603040b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@31048dae_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48b68cc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ccef223_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@417c78df_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@468861cc_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@38e33845_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21733bb1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ee9b4a1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d8091f5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@775601af_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65c1a88b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@338608c2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47820192_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28e2faaa_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@423c805_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@588ba2dd_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3addf250_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1854c4d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@16720b13_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9a438fa_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d84f784_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b31f754_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@10147c79_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@71d9ebae_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1e74b219_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6308d3a6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@a12f93c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a584df8_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@87b6b3d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@592f2a43_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63e34e04_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6172f2d6_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/uartDevice</xilinx:tag>
+      </xilinx:tags>
+    </xilinx:coreExtensions>
+    <xilinx:packagingInfo>
+      <xilinx:xilinxVersion>2019.1.3</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="4309044e"/>
+      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="8ba4a896"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="fa2eeb7c"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="558f6721"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="b46d13e2"/>
+    </xilinx:packagingInfo>
+  </spirit:vendorExtensions>
+</spirit:component>

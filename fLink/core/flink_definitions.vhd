@@ -67,6 +67,7 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_memory_id							: INTEGER RANGE 0 TO 65535 := 8;
 	CONSTANT c_fLink_pwm_out_id							: INTEGER RANGE 0 TO 65535 := 12;
 	CONSTANT c_fLink_ppwa_id							: INTEGER RANGE 0 TO 65535 := 13;
+	CONSTANT c_fLink_uart_id							: INTEGER RANGE 0 TO 65535 := 15;
 	CONSTANT c_fLink_watchdog_id						: INTEGER RANGE 0 TO 65535 := 16;
 	CONSTANT c_fLink_sensor_id							: INTEGER RANGE 0 TO 65535 := 17;
  
