@@ -36,7 +36,7 @@ entity ppwaDevice_v1_0_S00_AXI is
 		-- Users to add parameters here
         number_of_ppwas: INTEGER RANGE 1 TO 64 := 1;
         unique_id: STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-        base_clk: INTEGER  := 100000000;--clock frequency which is used on the clock input signal of this block
+        base_clk: INTEGER;--clock frequency which is used on the clock input signal of this block
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 

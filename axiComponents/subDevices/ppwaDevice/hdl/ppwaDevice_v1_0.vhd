@@ -34,7 +34,7 @@ entity ppwaDevice_v1_0 is
 		-- Users to add parameters here
         unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
         number_of_ppwas: INTEGER RANGE 0 TO 64 := 1;--number of ppwas which will be generated
-        base_clk: INTEGER := 125000000;--clock frequency which is used on the clock input signal of this block
+        base_clk: INTEGER;--clock frequency which is used on the clock input signal of this block
 		-- User parameters ends
 		-- Do not modify the parameters beyond this line
 
@@ -113,7 +113,7 @@ architecture arch_imp of ppwaDevice_v1_0 is
 		generic (
 		unique_id : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
         number_of_ppwas: INTEGER RANGE 0 TO 64 := 1;--number of ppwas which will be generated
-        base_clk: INTEGER := 100000000;--clock frequency which is used on the clock input signal of this block
+        base_clk: INTEGER;--clock frequency which is used on the clock input signal of this block
 		C_S_AXI_ID_WIDTH	: integer	:= 1;
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
 		C_S_AXI_ADDR_WIDTH	: integer	:= 12;
