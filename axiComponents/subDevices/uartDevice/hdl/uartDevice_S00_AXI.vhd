@@ -601,7 +601,7 @@ begin
 	    
 	    --   Generate signal to advance RX FIFO
         FOR i IN 0 TO number_of_uarts-1 LOOP
-	        IF vi.uart(i).sl_read_strobe = '1' AND vi.uart(i).sl_read_strobe_d1 = '0' THEN
+	        IF vi.uart(i).sl_read_strobe = '0' AND vi.uart(i).sl_read_strobe_d1 = '1' THEN
      	        vi.uart(i).sl_rx_read_data := '1';
 	        ELSE
 	            vi.uart(i).sl_rx_read_data := '0';

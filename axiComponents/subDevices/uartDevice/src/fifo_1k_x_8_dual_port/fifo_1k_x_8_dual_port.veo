@@ -55,18 +55,17 @@
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
 fifo_1k_x_8_dual_port your_instance_name (
-  .rst(rst),                      // input wire rst
-  .wr_clk(wr_clk),                // input wire wr_clk
-  .rd_clk(rd_clk),                // input wire rd_clk
-  .din(din),                      // input wire [7 : 0] din
-  .wr_en(wr_en),                  // input wire wr_en
-  .rd_en(rd_en),                  // input wire rd_en
-  .dout(dout),                    // output wire [7 : 0] dout
-  .full(full),                    // output wire full
-  .empty(empty),                  // output wire empty
-  .rd_data_count(rd_data_count),  // output wire [9 : 0] rd_data_count
-  .wr_rst_busy(wr_rst_busy),      // output wire wr_rst_busy
-  .rd_rst_busy(rd_rst_busy)      // output wire rd_rst_busy
+  .clk(clk),                  // input wire clk
+  .rst(rst),                  // input wire rst
+  .din(din),                  // input wire [7 : 0] din
+  .wr_en(wr_en),              // input wire wr_en
+  .rd_en(rd_en),              // input wire rd_en
+  .dout(dout),                // output wire [7 : 0] dout
+  .full(full),                // output wire full
+  .empty(empty),              // output wire empty
+  .data_count(data_count),    // output wire [10 : 0] data_count
+  .wr_rst_busy(wr_rst_busy),  // output wire wr_rst_busy
+  .rd_rst_busy(rd_rst_busy)  // output wire rd_rst_busy
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

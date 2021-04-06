@@ -54,27 +54,23 @@
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module fifo_1k_x_8_dual_port (
+  clk,
   rst,
-  wr_clk,
-  rd_clk,
   din,
   wr_en,
   rd_en,
   dout,
   full,
   empty,
-  rd_data_count,
+  data_count,
   wr_rst_busy,
   rd_rst_busy
 );
 
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME core_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 core_clk CLK" *)
+input wire clk;
 input wire rst;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
-input wire wr_clk;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 read_clk CLK" *)
-input wire rd_clk;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *)
 input wire [7 : 0] din;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *)
@@ -87,15 +83,15 @@ output wire [7 : 0] dout;
 output wire full;
 (* X_INTERFACE_INFO = "xilinx.com:interface:fifo_read:1.0 FIFO_READ EMPTY" *)
 output wire empty;
-output wire [9 : 0] rd_data_count;
+output wire [10 : 0] data_count;
 output wire wr_rst_busy;
 output wire rd_rst_busy;
 
   fifo_generator_v13_2_4 #(
-    .C_COMMON_CLOCK(0),
+    .C_COMMON_CLOCK(1),
     .C_SELECT_XPM(0),
     .C_COUNT_TYPE(0),
-    .C_DATA_COUNT_WIDTH(10),
+    .C_DATA_COUNT_WIDTH(11),
     .C_DEFAULT_VALUE("BlankString"),
     .C_DIN_WIDTH(8),
     .C_DOUT_RST_VAL("0"),
@@ -106,11 +102,11 @@ output wire rd_rst_busy;
     .C_HAS_ALMOST_EMPTY(0),
     .C_HAS_ALMOST_FULL(0),
     .C_HAS_BACKUP(0),
-    .C_HAS_DATA_COUNT(0),
+    .C_HAS_DATA_COUNT(1),
     .C_HAS_INT_CLK(0),
     .C_HAS_MEMINIT_FILE(0),
     .C_HAS_OVERFLOW(0),
-    .C_HAS_RD_DATA_COUNT(1),
+    .C_HAS_RD_DATA_COUNT(0),
     .C_HAS_RD_RST(0),
     .C_HAS_RST(1),
     .C_HAS_SRST(0),
@@ -119,7 +115,7 @@ output wire rd_rst_busy;
     .C_HAS_WR_ACK(0),
     .C_HAS_WR_DATA_COUNT(0),
     .C_HAS_WR_RST(0),
-    .C_IMPLEMENTATION_TYPE(2),
+    .C_IMPLEMENTATION_TYPE(0),
     .C_INIT_WR_PNTR_VAL(0),
     .C_MEMORY_TYPE(1),
     .C_MIF_FILE_NAME("BlankString"),
@@ -134,7 +130,7 @@ output wire rd_rst_busy;
     .C_PROG_FULL_THRESH_ASSERT_VAL(1023),
     .C_PROG_FULL_THRESH_NEGATE_VAL(1022),
     .C_PROG_FULL_TYPE(0),
-    .C_RD_DATA_COUNT_WIDTH(10),
+    .C_RD_DATA_COUNT_WIDTH(11),
     .C_RD_DEPTH(1024),
     .C_RD_FREQ(1),
     .C_RD_PNTR_WIDTH(10),
@@ -145,10 +141,10 @@ output wire rd_rst_busy;
     .C_USE_PIPELINE_REG(0),
     .C_POWER_SAVING_MODE(0),
     .C_USE_FIFO16_FLAGS(0),
-    .C_USE_FWFT_DATA_COUNT(0),
+    .C_USE_FWFT_DATA_COUNT(1),
     .C_VALID_LOW(0),
     .C_WR_ACK_LOW(0),
-    .C_WR_DATA_COUNT_WIDTH(10),
+    .C_WR_DATA_COUNT_WIDTH(11),
     .C_WR_DEPTH(1024),
     .C_WR_FREQ(1),
     .C_WR_PNTR_WIDTH(10),
@@ -204,10 +200,10 @@ output wire rd_rst_busy;
     .C_RACH_TYPE(0),
     .C_RDCH_TYPE(0),
     .C_AXIS_TYPE(0),
-    .C_IMPLEMENTATION_TYPE_WACH(1),
+    .C_IMPLEMENTATION_TYPE_WACH(2),
     .C_IMPLEMENTATION_TYPE_WDCH(1),
-    .C_IMPLEMENTATION_TYPE_WRCH(1),
-    .C_IMPLEMENTATION_TYPE_RACH(1),
+    .C_IMPLEMENTATION_TYPE_WRCH(2),
+    .C_IMPLEMENTATION_TYPE_RACH(2),
     .C_IMPLEMENTATION_TYPE_RDCH(1),
     .C_IMPLEMENTATION_TYPE_AXIS(1),
     .C_APPLICATION_TYPE_WACH(0),
@@ -297,12 +293,12 @@ output wire rd_rst_busy;
   ) inst (
     .backup(1'D0),
     .backup_marker(1'D0),
-    .clk(1'D0),
+    .clk(clk),
     .rst(rst),
     .srst(1'D0),
-    .wr_clk(wr_clk),
+    .wr_clk(1'D0),
     .wr_rst(1'D0),
-    .rd_clk(rd_clk),
+    .rd_clk(1'D0),
     .rd_rst(1'D0),
     .din(din),
     .wr_en(wr_en),
@@ -326,8 +322,8 @@ output wire rd_rst_busy;
     .almost_empty(),
     .valid(),
     .underflow(),
-    .data_count(),
-    .rd_data_count(rd_data_count),
+    .data_count(data_count),
+    .rd_data_count(),
     .wr_data_count(),
     .prog_full(),
     .prog_empty(),
