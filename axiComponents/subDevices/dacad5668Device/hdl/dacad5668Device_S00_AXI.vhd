@@ -197,6 +197,8 @@ architecture arch_imp of dacad5668Device_v1_0_S00_AXI is
 	constant OPT_MEM_ADDR_BITS : integer := 3;
 	constant USER_NUM_MEM: integer := 1;
 	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := (OTHERS =>'0');
+
+	CONSTANT c_resolution : INTEGER := 65536;
 	
 	CONSTANT c_usig_typdef_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_typdef_address, C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_mem_size_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_mem_size_address*4, C_S_AXI_ADDR_WIDTH));
@@ -204,8 +206,8 @@ architecture arch_imp of dacad5668Device_v1_0_S00_AXI is
     CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4, C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_configuration_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4, C_S_AXI_ADDR_WIDTH));
     
-    CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers, C_S_AXI_ADDR_WIDTH));
-    CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address));
+    CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4, C_S_AXI_ADDR_WIDTH));
+    CONSTANT c_usig_channel_value_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_resolution_address) + 4);
     CONSTANT c_usig_max_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(unsigned(c_usig_channel_value_address) + 4*NUMBER_OF_CHANNELS);
     
     TYPE t_internal_reg IS RECORD
@@ -219,7 +221,7 @@ architecture arch_imp of dacad5668Device_v1_0_S00_AXI is
     );
     
     CONSTANT id : STD_LOGIC_VECTOR(15 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_analog_output_id, 16));
-    CONSTANT subtype_id : STD_LOGIC_VECTOR( 7 DOWNTO 0) := (OTHERS => '0');
+    CONSTANT subtype_id : STD_LOGIC_VECTOR( 7 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(1, 8));
     CONSTANT interface_version : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
     
     SIGNAL ri, ri_next : t_internal_reg := INTERNAL_REG_RESET;
@@ -504,41 +506,95 @@ begin
 	  end if;
 	end  process;
 	
+    --read data
+    process( axi_rvalid,axi_araddr,ri ) is
+        VARIABLE regNum: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0; 
+    begin
+        if (axi_rvalid = '1') then
+            -- output the read dada
+            IF(axi_araddr = c_usig_typdef_address) THEN
+                axi_rdata(31 DOWNTO 16) <= id;
+                axi_rdata(15 DOWNTO 8) <= subtype_id;
+                axi_rdata(7 DOWNTO 0) <= interface_version;
+            ELSIF(axi_araddr = c_usig_mem_size_address)THEN
+                axi_rdata <= (others => '0');
+                axi_rdata(C_S_AXI_ADDR_WIDTH) <= '1';
+            ELSIF(axi_araddr = c_usig_number_of_channels_address)THEN
+                axi_rdata <= std_logic_vector(to_unsigned(NUMBER_OF_CHANNELS, axi_rdata'length));
+            ELSIF(axi_araddr = c_usig_unique_id_address) THEN
+                axi_rdata <= unique_id;
+            ELSIF(axi_araddr = c_usig_configuration_address) THEN
+                axi_rdata <= (others => '0');
+                axi_rdata(c_fLink_reset_bit_num) <= ri.conf_reg;    
+            ELSIF(axi_araddr = c_usig_resolution_address) THEN
+                axi_rdata <= STD_LOGIC_VECTOR(to_unsigned(c_resolution, axi_rdata'length));
+            ELSIF (axi_araddr >= c_usig_channel_value_address AND axi_araddr < c_usig_max_address) THEN 
+                regNum := to_integer(unsigned(axi_araddr) - unsigned(c_usig_channel_value_address)) / 4;
+                axi_rdata <= (others => '0');
+                axi_rdata((RESOLUTION - 1) DOWNTO 0) <= ri.value_registers(regNum);
+            ELSE
+                axi_rdata <= (others => '0');
+            END IF;
+        else
+            axi_rdata <= (others => '0');
+        end if;  
+    end process;
 
 	--write
 	process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
          VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
+         VARIABLE regNum: INTEGER RANGE 0 TO NUMBER_OF_CHANNELS := 0;
       BEGIN
          vi := ri;
          
          IF(axi_wready = '1') THEN
-              IF(axi_awaddr = c_usig_configuration_address) THEN
-                     IF(S_AXI_WSTRB(0) = '1')THEN
-                          vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
-                     END IF;
-              ELSIF(axi_awaddr >= c_usig_channel_value_address AND axi_awaddr <= c_usig_max_address) THEN
-                     IF(S_AXI_WSTRB(0) = '1')THEN
-                          vi.value_registers(to_integer(unsigned(axi_awaddr)-unsigned(c_usig_channel_value_address)/4))(7 DOWNTO 0) := S_AXI_WDATA(7 DOWNTO 0);
-                     ELSIF(S_AXI_WSTRB(1) = '1') THEN
-                          vi.value_registers(to_integer(unsigned(axi_awaddr)-unsigned(c_usig_channel_value_address)/4))(15 DOWNTO 8) := S_AXI_WDATA(15 DOWNTO 8);
---                     ELSIF(S_AXI_WSTRB(2) = '1') THEN
---                          vi.value_registers(to_integer(unsigned(axi_awaddr)-unsigned(c_usig_channel_value_address)/4))(23 DOWNTO 16) := S_AXI_WDATA(23 DOWNTO 16);
---                     ELSIF(S_AXI_WSTRB(3) = '1') THEN
---                         vi.value_registers(to_integer(unsigned(axi_awaddr)-unsigned(c_usig_channel_value_address)/4))(31 DOWNTO 24) := S_AXI_WDATA(31 DOWNTO 24);  
-                     END IF;
-              END IF;
+             IF(axi_awaddr = c_usig_configuration_address) THEN
+                 IF(S_AXI_WSTRB(0) = '1')THEN
+                     vi.conf_reg := S_AXI_WDATA(c_fLink_reset_bit_num);
+                 END IF;
+             ELSIF(axi_awaddr >= c_usig_channel_value_address AND axi_awaddr < c_usig_max_address) THEN
+                 regNum := to_integer(unsigned(axi_awaddr) - unsigned(c_usig_channel_value_address)) / 4;
+                 IF(S_AXI_WSTRB(0) = '1')THEN
+                     vi.value_registers(regNum)(7 DOWNTO 0) := S_AXI_WDATA(7 DOWNTO 0);
+                 END IF;
+                 IF(S_AXI_WSTRB(1) = '1') THEN
+                     vi.value_registers(regNum)(15 DOWNTO 8) := S_AXI_WDATA(15 DOWNTO 8);
+                 END IF;
+             END IF;
          END IF;
          
-         
          IF(S_AXI_ARESETN = '0' OR vi.conf_reg = '1' )THEN
-              vi := INTERNAL_REG_RESET;
-              dac_reset <= '0';
+             vi := INTERNAL_REG_RESET;
+             dac_reset <= '0';
          ELSE
              dac_reset <= '1';
          END IF;
+         
+         ri_next <= vi;
      END PROCESS;
 
-gen_dac: dacad5668 GENERIC MAP(BASE_CLK => base_clk, SCLK_FREQUENCY => sclk_frequency, INTERNAL_REFERENCE => internal_reference)
-                   PORT MAP(S_AXI_ACLK, dac_reset, ri.value_registers, osl_LDAC_n, osl_CLR_n, osl_sclk, osl_ss, osl_mosi);
+     gen_dac: dacad5668 
+         GENERIC MAP (
+             BASE_CLK => base_clk, 
+             SCLK_FREQUENCY => sclk_frequency, 
+             INTERNAL_REFERENCE => internal_reference
+         )
+         PORT MAP (
+             isl_clk => S_AXI_ACLK, 
+             isl_reset_n => dac_reset, 
+             it_set_values => ri.value_registers, 
+             osl_LDAC_n => osl_LDAC_n, 
+             osl_CLR_n => osl_CLR_n, 
+             osl_sclk => osl_sclk, 
+             oslv_Ss => osl_ss, 
+             osl_mosi => osl_mosi
+         );
+
+     reg_proc : PROCESS (S_AXI_ACLK)
+     BEGIN
+         IF rising_edge(S_AXI_ACLK) THEN
+             ri <= ri_next;
+         END IF;
+     END PROCESS reg_proc;
 
 end arch_imp;
