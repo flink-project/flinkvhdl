@@ -920,12 +920,12 @@
       <spirit:modelParameter spirit:dataType="INTEGER">
         <spirit:name>base_clk</spirit:name>
         <spirit:displayName>Module Clk (HZ)</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.base_clk">10000000</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.base_clk">100000000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
         <spirit:name>i_clock_frequency_divider</spirit:name>
         <spirit:displayName>Sub-Module clock divider (max internal frequency is 100kHz)</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.i_clock_frequency_divider">1000</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.i_clock_frequency_divider">1</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
         <spirit:name>number_of_motors</spirit:name>
@@ -1072,7 +1072,7 @@
       <spirit:name>i_clock_frequency_divider</spirit:name>
       <spirit:displayName>Sub-Module clock divider (max internal frequency is 100kHz)</spirit:displayName>
       <spirit:description>Divider for the Submodule (max internal frequency is 100kHz)</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.i_clock_frequency_divider">1000</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.i_clock_frequency_divider">1</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>number_of_motors</spirit:name>

@@ -38,8 +38,8 @@ PACKAGE irq_gen_pkg IS
             isl_clk           : IN STD_LOGIC;
             isl_reset         : IN STD_LOGIC;
             islv_value        : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
-            islv_upper_hys    : IN STD_LOGIC_VECTOR(i_bus_width-1 DOWNTO 0);
-            islv_lower_hys    : IN STD_LOGIC_VECTOR(i_bus_width-1 DOWNTO 0);
+            islv_upper_hys    : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+            islv_lower_hys    : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
             osl_interrupt_low : OUT STD_LOGIC;
             osl_interrupt_up  : OUT STD_LOGIC
         );
@@ -64,8 +64,8 @@ ENTITY irq_gen IS
         isl_clk           : IN STD_LOGIC;
         isl_reset         : IN STD_LOGIC;
         islv_value        : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
-        islv_upper_hys    : IN STD_LOGIC_VECTOR(i_bus_width-1 DOWNTO 0);
-        islv_lower_hys    : IN STD_LOGIC_VECTOR(i_bus_width-1 DOWNTO 0);
+        islv_upper_hys    : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+        islv_lower_hys    : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
         osl_interrupt_low : OUT STD_LOGIC;
         osl_interrupt_up  : OUT STD_LOGIC
     );
@@ -95,16 +95,12 @@ BEGIN
     -----------------------------------------
     reg_proc : PROCESS (isl_clk)
     BEGIN
-        IF rising_edge(isl_clk) THEN
-            IF isl_reset = '1' THEN
-                IF islv_value > islv_upper_hys THEN
-                    sl_state <= '0';
-                ELSE 
-                    sl_state <= '1';
-                END IF;
-                osl_interrupt_low <= '0';
-                osl_interrupt_up <= '0';
-            ELSIF (islv_value > islv_upper_hys) AND sl_state = '1' THEN
+        IF isl_reset = '1' THEN
+            sl_state <= '0';
+            osl_interrupt_low <= '0';
+            osl_interrupt_up <= '0';
+        ELSIF rising_edge(isl_clk) THEN
+            IF (islv_value > islv_upper_hys) AND sl_state = '1' THEN
                 sl_state <= '0';
                 osl_interrupt_low <= '0';
                 osl_interrupt_up <= '1';
@@ -117,11 +113,5 @@ BEGIN
                 osl_interrupt_up <= '0';
             END IF;
         END IF;
-    END PROCESS reg_proc;
-
-    -----------------------------------------
-    -- output assignment 
-    -----------------------------------------
-
-    
+    END PROCESS reg_proc;    
 END ARCHITECTURE rtl;
