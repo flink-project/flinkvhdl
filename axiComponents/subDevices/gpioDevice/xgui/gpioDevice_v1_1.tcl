@@ -1,6 +1,7 @@
 # Definitional proc to organize widgets for parameters.
 proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "Component_Name"
+  ipgui::add_param $IPINST -name "base_clk"
   ipgui::add_param $IPINST -name "number_of_gpios"
   ipgui::add_param $IPINST -name "unique_id"
 
@@ -138,5 +139,10 @@ proc update_MODELPARAM_VALUE.number_of_gpios { MODELPARAM_VALUE.number_of_gpios 
 proc update_MODELPARAM_VALUE.unique_id { MODELPARAM_VALUE.unique_id PARAM_VALUE.unique_id } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.unique_id}] ${MODELPARAM_VALUE.unique_id}
+}
+
+proc update_MODELPARAM_VALUE.base_clk { MODELPARAM_VALUE.base_clk PARAM_VALUE.base_clk } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.base_clk}] ${MODELPARAM_VALUE.base_clk}
 }
 
