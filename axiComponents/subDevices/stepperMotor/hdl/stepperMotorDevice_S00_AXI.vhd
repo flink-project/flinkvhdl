@@ -559,8 +559,7 @@ begin
     --write and other control structures
     process( axi_wready,S_AXI_WVALID,S_AXI_WDATA,axi_awaddr,S_AXI_WSTRB,ri,S_AXI_ARESETN) 
     VARIABLE vi: t_internal_reg := INTERNAL_REG_RESET;
-    VARIABLE reg_number: INTEGER RANGE 0 TO c_int_nof_motors_reg := 0;
-    VARIABLE temp_input: STD_LOGIC_VECTOR(C_S_AXI_DATA_WIDTH-1 DOWNTO 0);
+    VARIABLE reg_number: INTEGER RANGE 0 TO 255 := 0;
     BEGIN
         vi := ri;
         IF(axi_wready = '1') THEN
@@ -582,22 +581,18 @@ begin
                 END LOOP;
             ELSIF (axi_awaddr >= c_usig_local_set_configuration_address AND axi_awaddr < c_usig_local_reset_configuration_address) THEN 
                 reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_local_set_configuration_address)))/4;
-                temp_input := (OTHERS => '0');
                 FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
                     IF(S_AXI_WSTRB(i) = '1')THEN
-                        temp_input((i+1)*8-1 DOWNTO i*8) := S_AXI_WDATA((i+1)*8-1 DOWNTO i*8);
+                        vi.t_local_conf_reg(reg_number)((i+1)*8-1 DOWNTO i*8) := ri.t_local_conf_reg(reg_number)((i+1)*8-1 DOWNTO i*8) OR S_AXI_WDATA((i+1)*8-1 DOWNTO i*8);
                     END IF;
                 END LOOP;
-                vi.t_local_conf_reg(reg_number) := ri.t_local_conf_reg(reg_number) OR temp_input;
             ELSIF (axi_awaddr >= c_usig_local_reset_configuration_address AND axi_awaddr < c_usig_prescaler_start_address) THEN 
                 reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_local_reset_configuration_address)))/4;
-                temp_input := (OTHERS => '0');
                 FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
                     IF(S_AXI_WSTRB(i) = '1')THEN
-                        temp_input((i+1)*8-1 DOWNTO i*8) := S_AXI_WDATA((i+1)*8-1 DOWNTO i*8);
+                        vi.t_local_conf_reg(reg_number)((i+1)*8-1 DOWNTO i*8) := ri.t_local_conf_reg(reg_number)((i+1)*8-1 DOWNTO i*8) AND (NOT S_AXI_WDATA((i+1)*8-1 DOWNTO i*8));
                     END IF;
                 END LOOP;
-                vi.t_local_conf_reg(reg_number) := ri.t_local_conf_reg(reg_number) AND (NOT temp_input);
             ELSIF (axi_awaddr >= c_usig_prescaler_start_address AND axi_awaddr < c_usig_prescaler_top_address) THEN 
                 reg_number := (to_integer(unsigned(axi_awaddr)) - to_integer(UNSIGNED(c_usig_prescaler_start_address)))/4;
                 FOR i IN 0 TO C_S_AXI_DATA_WIDTH / 8 - 1 LOOP
@@ -629,16 +624,19 @@ begin
             END IF;
         END IF;
                    
-        -- merge of local and global config register except full reset and autoreset of startbit
+        -- merge of local and global config register
         FOR i IN 0 TO number_of_motors-1 LOOP
             IF slv_start_reset_bit(i) = '1' THEN
                 vi.t_local_conf_reg(i)(I_START) := '0';
             END IF;
             
             vi.t_merged_conf_reg(i) := vi.t_local_conf_reg(i);
-            --vi.t_merged_conf_reg(i)(I_RESET_STEPCOUNTER) := vi.t_local_conf_reg(i)(I_RESET_STEPCOUNTER) OR  vi.slv_global_conf_reg(1); -- merge of step reset
+            vi.t_merged_conf_reg(i)(I_RESET_STEPCOUNTER) := vi.t_local_conf_reg(i)(I_RESET_STEPCOUNTER) OR  vi.slv_global_conf_reg(1); -- merge of step reset
+            --autoreset of the bits after merge
+            vi.t_local_conf_reg(i)(I_RESET_STEPCOUNTER) := '0';
         END LOOP;
-   
+        vi.slv_global_conf_reg(1) := '0';
+        
         IF(S_AXI_ARESETN = '0' OR vi.slv_global_conf_reg(0) = '1' )THEN
             vi := INTERNAL_REG_RESET;
             motor_reset <= '1';
@@ -661,7 +659,7 @@ begin
         PORT MAP( 
             isl_clk => S_AXI_ACLK,
             isl_rst => motor_reset,
-            islv8_config => ri.t_local_conf_reg(i)(7 DOWNTO 0),
+            islv8_config => ri.t_merged_conf_reg(i)(7 DOWNTO 0),
             iusig_prescaler_top_speed => UNSIGNED(ri.t_prescaler_top_reg(i)),
             iusig_prescaler_start_speed => UNSIGNED(ri.t_prescaler_start_reg(i)),
             iusig_acceleration => UNSIGNED(ri.t_acceleration_reg(i)),

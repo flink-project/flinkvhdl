@@ -205,7 +205,7 @@ architecture arch_imp of reflectivesensorDevice_v1_0_S00_AXI is
     CONSTANT c_usig_unique_id_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_unique_id_address*4, C_S_AXI_ADDR_WIDTH));
     CONSTANT c_usig_configuration_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_configuration_address*4, C_S_AXI_ADDR_WIDTH));
     
-    CONSTANT c_i_nof_sensors : INTEGER := (2**nof_decoder_signals)-1;
+    CONSTANT c_i_nof_sensors : INTEGER := (2**nof_decoder_signals);
     CONSTANT c_resolution : INTEGER := 4096;
 
     CONSTANT c_usig_resolution_address : STD_LOGIC_VECTOR(C_S_AXI_ADDR_WIDTH-1 DOWNTO 0) := STD_LOGIC_VECTOR(to_unsigned(c_fLink_number_of_std_registers*4, C_S_AXI_ADDR_WIDTH));
@@ -632,8 +632,8 @@ begin
 			      isl_clk           => S_AXI_ACLK,
 			      isl_reset         => sensor_reset,
 			      islv_value        => r_reflectiv.slav12_hex_data(i),
-			      islv_upper_hys    => ri.t_hys_up(i),
-			      islv_lower_hys    => ri.t_hys_low(i),
+			      islv_upper_hys    => ri.t_hys_up(i)(11 DOWNTO 0),
+			      islv_lower_hys    => ri.t_hys_low(i)(11 DOWNTO 0),
 			      osl_interrupt_low => osl_interrupt_falling(i),
 			      osl_interrupt_up  => osl_interrupt_rising(i)
 		    );

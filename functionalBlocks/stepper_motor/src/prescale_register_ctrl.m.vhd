@@ -131,11 +131,11 @@ BEGIN
     -- Based on the PWM block of Marco Tinner from the AirBotOne project
     clock_gen : PROCESS (isl_clk)
     BEGIN
-    IF rising_edge(isl_clk) THEN
-        IF slv_clock_frequency_divider = 1 THEN
-            sl_submodul_clock <= isl_clk;
-            usig_clock_cycle_counter <= (OTHERS => '0');
-        ELSIF usig_clock_cycle_counter >= slv_clock_frequency_divider THEN
+    IF slv_clock_frequency_divider <= 1 THEN
+        sl_submodul_clock <= isl_clk;
+        usig_clock_cycle_counter <= (OTHERS => '0');
+    ELSIF rising_edge(isl_clk) THEN
+        IF usig_clock_cycle_counter >= slv_clock_frequency_divider THEN
             sl_submodul_clock <= '0';
             usig_clock_cycle_counter <= (OTHERS => '0');
         ELSIF usig_clock_cycle_counter < usig_clock_ratio THEN
@@ -180,19 +180,25 @@ BEGIN
         
         -- Signal buffering (synchronisation) between both frequencies. (mostly reset's)
         -- hold old value until submodul clock has a rising edge
-        IF islv8_config(I_RESET_STEPCOUNTER) = '1' THEN
-            v.slv8_config(I_RESET_STEPCOUNTER) := '1';
-        END IF;
-        IF isl_rst = '1' THEN
-            v.sl_rst := '1';
-        END IF;
-        -- reset values by a rising edge of submodul clock
-        IF ((sl_submodul_clock = '1') AND (ri.sl_last_submodul_clk = '0')) THEN
-            v.slv8_config(I_RESET_STEPCOUNTER) := islv8_config(I_RESET_STEPCOUNTER);
+        -- Only needed if clocks different
+        IF slv_clock_frequency_divider > 1 THEN
+            IF islv8_config(I_RESET_STEPCOUNTER) = '1' THEN
+                v.slv8_config(I_RESET_STEPCOUNTER) := '1';
+            END IF;
+            IF isl_rst = '1' THEN
+                v.sl_rst := '1';
+            END IF;
+            -- reset values by a rising edge of submodul clock
+            IF ((sl_submodul_clock = '1') AND (ri.sl_last_submodul_clk = '0')) THEN
+                v.slv8_config(I_RESET_STEPCOUNTER) := islv8_config(I_RESET_STEPCOUNTER);
+                v.sl_rst := isl_rst;
+            END IF;
+            v.sl_last_submodul_clk := sl_submodul_clock;
+        ELSE
             v.sl_rst := isl_rst;
+            v.slv8_config(I_RESET_STEPCOUNTER) := islv8_config(I_RESET_STEPCOUNTER);
         END IF;
-        v.sl_last_submodul_clk := sl_submodul_clock;
-        
+
         IF isl_rst = '1' THEN
             v := C_RESET_REGISTERS;
         END IF;

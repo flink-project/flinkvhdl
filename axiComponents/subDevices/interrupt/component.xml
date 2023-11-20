@@ -2,7 +2,7 @@
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>www.ost.ch</spirit:vendor>
   <spirit:library>flink</spirit:library>
-  <spirit:name>stepperMotor</spirit:name>
+  <spirit:name>interruptDevice</spirit:name>
   <spirit:version>1.0</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
@@ -339,7 +339,7 @@
         <spirit:displayName>VHDL Synthesis</spirit:displayName>
         <spirit:envIdentifier>vhdlSource:vivado.xilinx.com:synthesis</spirit:envIdentifier>
         <spirit:language>vhdl</spirit:language>
-        <spirit:modelName>stepperMotor_v1_0</spirit:modelName>
+        <spirit:modelName>interruptDevice_v1_0</spirit:modelName>
         <spirit:fileSetRef>
           <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
         </spirit:fileSetRef>
@@ -381,11 +381,11 @@
     </spirit:views>
     <spirit:ports>
       <spirit:port>
-        <spirit:name>oslv_motors</spirit:name>
+        <spirit:name>oslv_out</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_motors&apos;))*4-1)">4</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.nof_outputs&apos;))-1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector> 
           <spirit:wireTypeDefs>
@@ -397,11 +397,11 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>oslv_interrupts</spirit:name>
+        <spirit:name>islv_inputs</spirit:name>
         <spirit:wire>
-          <spirit:direction>out</spirit:direction>
+          <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.number_of_motors&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.nof_inputs&apos;)) - 1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -915,22 +915,27 @@
       <spirit:modelParameter spirit:dataType="STD_LOGIC_VECTOR(31 downto 0)">
         <spirit:name>unique_id</spirit:name>
         <spirit:displayName>Unique Id</spirit:displayName>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.unique_id" spirit:bitStringLength="32">0x000000f0</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.unique_id" spirit:bitStringLength="32">0x000000c3</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
         <spirit:name>base_clk</spirit:name>
-        <spirit:displayName>Module Clk (HZ)</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.base_clk">100000000</spirit:value>
+        <spirit:displayName>Base Clock</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.base_clk">10000000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
-        <spirit:name>i_clock_frequency_divider</spirit:name>
-        <spirit:displayName>Sub-Module clock divider (max internal frequency is 100kHz)</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.i_clock_frequency_divider">1</spirit:value>
+        <spirit:name>nof_inputs</spirit:name>
+        <spirit:displayName>Number of inputs</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.nof_inputs" spirit:minimum="0" spirit:maximum="255" spirit:rangeType="long">1</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="INTEGER">
-        <spirit:name>number_of_motors</spirit:name>
-        <spirit:displayName>Number of Motors</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.number_of_motors" spirit:minimum="1" spirit:maximum="31" spirit:rangeType="long">1</spirit:value>
+        <spirit:name>nof_outputs</spirit:name>
+        <spirit:displayName>Number of outputs</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.nof_outputs" spirit:minimum="1" spirit:maximum="100" spirit:rangeType="long">1</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="STD_LOGIC">
+        <spirit:name>value_interrupt_disabeld</spirit:name>
+        <spirit:displayName>Value of disabeld interrupt</spirit:displayName>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.value_interrupt_disabeld" spirit:bitStringLength="1">0x0</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
@@ -959,15 +964,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>../../../functionalBlocks/stepper_motor/src/prescale_register_ctrl.m.vhd</spirit:name>
-        <spirit:fileType>vhdlSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>../../../functionalBlocks/stepper_motor/src/speedcontroll.m.vhd</spirit:name>
-        <spirit:fileType>vhdlSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>../../../functionalBlocks/stepper_motor/src/driver.m.vhd</spirit:name>
+        <spirit:name>../../../functionalBlocks/interrupt/src/multiplexer.m.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -975,18 +972,18 @@
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/stepperMotorDevice_S00_AXI.vhd</spirit:name>
+        <spirit:name>hdl/interruptDevice_S00_AXI.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/stepperMotorDevice.vhd</spirit:name>
+        <spirit:name>hdl/interruptDevice.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/stepperMotorDevice_v1_0.tcl</spirit:name>
+        <spirit:name>xgui/interruptDevice_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_72306e72</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -1000,7 +997,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>flink Stepper Motor subdevice for stepperMotor</spirit:description>
+  <spirit:description>flink interrupt subdevice for manage interrupts</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_ID_WIDTH</spirit:name>
@@ -1060,19 +1057,13 @@
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">stepperMotorDevice_v1_0</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">interruptDevice_v1_0</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>base_clk</spirit:name>
-      <spirit:displayName>Main Clock (HZ)</spirit:displayName>
-      <spirit:description>Main Clock (HZ)</spirit:description>
+      <spirit:displayName>Base Clock</spirit:displayName>
+      <spirit:description>Base clock of the module</spirit:description>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.base_clk">100000000</spirit:value>
-    </spirit:parameter>
-    <spirit:parameter>
-      <spirit:name>i_clock_frequency_divider</spirit:name>
-      <spirit:displayName>Sub-Module clock divider (max internal frequency is 100kHz)</spirit:displayName>
-      <spirit:description>Divider for the Submodule (max internal frequency is 100kHz)</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.i_clock_frequency_divider">1</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>number_of_motors</spirit:name>
@@ -1084,7 +1075,25 @@
       <spirit:name>unique_id</spirit:name>
       <spirit:displayName>Unique Id</spirit:displayName>
       <spirit:description>Unique ID to identify different flink components</spirit:description>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="32">0x00000060</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="32">0x000000c3</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>nof_inputs</spirit:name>
+      <spirit:displayName>Number of inputs</spirit:displayName>
+      <spirit:description>Number of inputs</spirit:description>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.nof_inputs">1</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>nof_outputs</spirit:name>
+      <spirit:displayName>Number of outputs</spirit:displayName>
+      <spirit:description>Number of outputs</spirit:description>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.nof_outputs">1</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>value_interrupt_disabeld</spirit:name>
+      <spirit:displayName>Value of disabeld interrupt</spirit:displayName>
+      <spirit:description>Value which the interrupt should accept when deactivated</spirit:description>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.unique_id" spirit:bitStringLength="1">0x0</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>C_S00_AXI_WUSER_WIDTH</spirit:name>
@@ -1117,7 +1126,7 @@
       <xilinx:taxonomies>
         <xilinx:taxonomy>/flink/SubDevices</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>stepperMotorDevice</xilinx:displayName>
+      <xilinx:displayName>interruptDevice</xilinx:displayName>
       <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
       <xilinx:vendorURL>https://flink_project.ch</xilinx:vendorURL>
       <xilinx:coreRevision>1</xilinx:coreRevision>
@@ -1128,29 +1137,29 @@
       </xilinx:upgrades>
       <xilinx:coreCreationDateTime>2023-09-24T12:47:01Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="xilinx.com:user:stepperMotorDevice:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/stepperMotorDevice_1.0</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:user:stepperMotorDevice:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/stepperMotorDevice_1.0</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:fLink:stepperMotorDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:flink:stepperMotorDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="www.ntb.ch:flink:stepperMotorDevice:1.1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@42cc0d50_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@67a19214_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ebe78a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a8b63d2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@64f63a95_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5148a902_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2570e929_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2553ccd5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@44620598_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3de36b66_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b49f917_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@680b2b5c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ee7899f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@48e27cf4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5dfec883_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@685e00b0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2332b4a0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@46bc980b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/stepperMotorDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="xilinx.com:user:interruptDevice:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/interruptDevice_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:user:interruptDevice:1.0_ARCHIVE_LOCATION">c:/Users/simon/Documents/MSE/VT-flink/vivado-ws/ip_repo/interruptDevice_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:fLink:interruptDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:flink:interruptDevice:1.0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="www.ntb.ch:flink:interruptDevice:1.1_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@42cc0d50_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67a19214_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ebe78a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a8b63d2_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@64f63a95_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5148a902_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2570e929_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2553ccd5_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44620598_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3de36b66_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b49f917_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@680b2b5c_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ee7899f_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48e27cf4_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5dfec883_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@685e00b0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2332b4a0_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@46bc980b_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/interruptDevice</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
