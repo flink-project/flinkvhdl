@@ -3,7 +3,7 @@
   <spirit:vendor>www.ost.ch</spirit:vendor>
   <spirit:library>flink</spirit:library>
   <spirit:name>gpioDevice</spirit:name>
-  <spirit:version>1.1</spirit:version>
+  <spirit:version>2.0</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>S00_AXI</spirit:name>
@@ -1180,7 +1180,7 @@
       <xilinx:displayName>gpioDevice</xilinx:displayName>
       <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
       <xilinx:vendorURL>https://flink-project.ch/</xilinx:vendorURL>
-      <xilinx:coreRevision>2</xilinx:coreRevision>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>ntb.ch:user:gpioDevice:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:gpioDevice:1.0</xilinx:canUpgradeFrom>
