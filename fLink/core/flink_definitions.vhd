@@ -8,7 +8,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 --                                                                           --
--- fLink definitions                                                         --
+-- flink definitions                                                         --
 --                                                                           --
 --  THIS FILE WAS CREATED AUTOMATICALLY - do not change                      --
 --                                                                           --
@@ -16,9 +16,9 @@
 --                   create_flink_definitions.vhd_flinkVHDL.sh               --
 --                                                                           --
 -------------------------------------------------------------------------------
--- Copyright 2014 NTB University of Applied Sciences in Technology           --
+-- Copyright 2023 OST University of Applied Sciences in Technology           --
 --                                                                           --
--- Licensed under the Apache License, Version 2.0 (the "License");           --
+-- Licensed under the Apache License, Version 2.0 (the "License");         --
 -- you may not use this file except in compliance with the License.          --
 -- You may obtain a copy of the License at                                   --
 --                                                                           --
@@ -58,18 +58,20 @@ PACKAGE fLink_definitions IS
 	CONSTANT c_fLink_reset_bit_num						: INTEGER := 0;
 	
 	-- Interface IDs:
-	CONSTANT c_fLink_info_id							: INTEGER RANGE 0 TO 65535 := 0;
-	CONSTANT c_fLink_analog_input_id					: INTEGER RANGE 0 TO 65535 := 1;
-	CONSTANT c_fLink_analog_output_id					: INTEGER RANGE 0 TO 65535 := 2;
-	CONSTANT c_fLink_digital_io_id						: INTEGER RANGE 0 TO 65535 := 5;
-	CONSTANT c_fLink_counter_id							: INTEGER RANGE 0 TO 65535 := 6;
-	CONSTANT c_fLink_timer_id							: INTEGER RANGE 0 TO 65535 := 7;
-	CONSTANT c_fLink_memory_id							: INTEGER RANGE 0 TO 65535 := 8;
-	CONSTANT c_fLink_pwm_out_id							: INTEGER RANGE 0 TO 65535 := 12;
-	CONSTANT c_fLink_ppwa_id							: INTEGER RANGE 0 TO 65535 := 13;
-	CONSTANT c_fLink_uart_id							: INTEGER RANGE 0 TO 65535 := 15;
-	CONSTANT c_fLink_watchdog_id						: INTEGER RANGE 0 TO 65535 := 16;
-	CONSTANT c_fLink_sensor_id							: INTEGER RANGE 0 TO 65535 := 17;
+	CONSTANT c_fLink_info_id							: INTEGER := 0;
+	CONSTANT c_fLink_analog_input_id							: INTEGER := 1;
+	CONSTANT c_fLink_analog_output_id							: INTEGER := 2;
+	CONSTANT c_fLink_digital_io_id							: INTEGER := 5;
+	CONSTANT c_fLink_counter_id							: INTEGER := 6;
+	CONSTANT c_fLink_timer_id							: INTEGER := 7;
+	CONSTANT c_fLink_memory_id							: INTEGER := 8;
+	CONSTANT c_fLink_pwm_out_id							: INTEGER := 12;
+	CONSTANT c_fLink_ppwa_id							: INTEGER := 13;
+	CONSTANT c_fLink_uart_id							: INTEGER := 15;
+	CONSTANT c_fLink_watchdog_id							: INTEGER := 16;
+	CONSTANT c_fLink_sensor_id							: INTEGER := 17;
+	CONSTANT c_fLink_stepper_motor_id							: INTEGER := 21;
+	CONSTANT c_fLink_irq_multiplexer_id							: INTEGER := 24;
  
  END PACKAGE fLink_definitions; 
 
