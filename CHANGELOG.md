@@ -5,9 +5,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
-(v1.2.0 targeted for 2022-07-30) ([Github compare v1.1.0...master](https://github.com/eeros-project/eeros-framework/compare/v1.1.0...master))
+(v1.3.0 targeted for 2024-07-30) ([Github compare v1.2.0...master](https://github.com/eeros-project/eeros-framework/compare/v1.2.0...master))
 
 ### Added Features
+
+
+
+## v1.2.0
+(2023-12-13) ([Github compare v1.1.0...v1.2.0](https://github.com/flink-project/flinkvhdl/compare/v1.1.0...v1.2.0))
+
+### Added Features
+* Add DAC AD5668 to AXI components
+* Add AXI components TRCT1000 sensor and stepper motor
+* Add interrupt capability to AXI bus components
+* Add base clock register to avalon GPIO component, avalon and axi components must have identical register addresses
+
 
 
 ## v1.1.0
