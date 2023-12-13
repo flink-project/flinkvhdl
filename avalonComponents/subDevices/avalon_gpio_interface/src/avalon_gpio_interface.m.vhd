@@ -40,6 +40,7 @@ PACKAGE avalon_gpio_interface_pkg IS
 	COMPONENT avalon_gpio_interface IS
 			GENERIC (
 				number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+				base_clk: INTEGER := 125000000;
 				unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 			);
 			PORT (
@@ -73,6 +74,7 @@ USE work.fLink_definitions.ALL;
 ENTITY avalon_gpio_interface IS
 	GENERIC (
 		number_of_gpios: INTEGER RANGE 1 TO c_max_number_of_GPIOs := 1;
+		base_clk: INTEGER := 125000000;
 		unique_id: STD_LOGIC_VECTOR (c_fLink_avs_data_width-1 DOWNTO 0) := (OTHERS => '0')
 	);
 	PORT (
@@ -89,7 +91,8 @@ ENTITY avalon_gpio_interface IS
 	);
 	
 	CONSTANT c_configuration_reg_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_configuration_address, c_gpio_interface_address_with);
-	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers,c_gpio_interface_address_with);
+	CONSTANT c_usig_base_clk_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned(c_fLink_number_of_std_registers, c_gpio_interface_address_with);
+	CONSTANT c_usig_dir_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_base_clk_address + 1;
 	CONSTANT c_usig_number_of_regs: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := to_unsigned((number_of_gpios-1)/c_fLink_avs_data_width+1,c_gpio_interface_address_with);
 	CONSTANT c_usig_value_regs_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_dir_regs_address + c_usig_number_of_regs; 
 	CONSTANT c_usig_value_regs_max_address: UNSIGNED(c_gpio_interface_address_with-1 DOWNTO 0) := c_usig_value_regs_address + c_usig_number_of_regs;
@@ -103,8 +106,7 @@ ARCHITECTURE rtl OF avalon_gpio_interface IS
 	TYPE t_internal_register IS RECORD
 			conf_reg			: STD_LOGIC_VECTOR(c_fLink_avs_data_width-1 DOWNTO 0);
 			dir_reg				: STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);
-			value_reg			: STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);
-			
+			value_reg			: STD_LOGIC_VECTOR(c_max_number_of_GPIOs-1 DOWNTO 0);	
 	END RECORD;
 
 	SIGNAL ri,ri_next : t_internal_register;
@@ -192,6 +194,10 @@ BEGIN
 				WHEN to_unsigned(c_fLink_unique_id_address,c_gpio_interface_address_with) => 
 					oslv_avs_read_data <= unique_id;
 				
+				-- Read base clock register
+				WHEN c_usig_base_clk_address => 
+					oslv_avs_read_data <= std_logic_vector(to_unsigned(base_clk,c_fLink_avs_data_width));
+
 				-- Read direction or value register
 				WHEN OTHERS => 
 					IF avs_address >= c_usig_dir_regs_address AND avs_address< c_usig_value_regs_address THEN
