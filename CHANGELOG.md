@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
-(v1.3.0 targeted for 2024-07-30) ([Github compare v1.2.0...master](https://github.com/eeros-project/eeros-framework/compare/v1.2.0...master))
+(v1.3.0 targeted for 2024-07-30) ([Github compare v1.2.0...master](https://github.com/flink-project/flinkvhdl/compare/v1.2.0...master))
 
 ### Added Features
 
