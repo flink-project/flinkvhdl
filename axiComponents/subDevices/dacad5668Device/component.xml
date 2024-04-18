@@ -1147,12 +1147,12 @@
       <xilinx:displayName>dacad5668Device</xilinx:displayName>
       <xilinx:vendorDisplayName>www.ost.ch</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://flink-project.ch</xilinx:vendorURL>
-      <xilinx:coreRevision>27</xilinx:coreRevision>
+      <xilinx:coreRevision>30</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>xilinx.com:user:dacad5668Device:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>www.ntb.ch:fLink:dacad5668Device:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2021-08-24T09:01:20Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2021-09-28T06:51:20Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@5cdeae7a_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device/dacad5668Device_1.1</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@2fd1ceec_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
@@ -1440,10 +1440,31 @@
         <xilinx:tag xilinx:name="ui.data.coregen.dd@3d7b0b05_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@1e655427_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@142afa9d_ARCHIVE_LOCATION">f:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4098bfe0_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b8a4dfe_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61bfa0e4_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c1a41f1_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63553afc_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6dc0900a_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e5ff1ba_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ead5835_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d1d8e3f_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d095e78_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6cdc5d90_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e0014cb_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ffa23d9_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f32df07_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ac416a2_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f4eaa41_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ebe9ce2_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6129add8_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76c7fe8f_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d052707_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@333cd7bf_ARCHIVE_LOCATION">e:/Checkouts/flinkvhdl/axiComponents/subDevices/dacad5668Device</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2019.1.3</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2020.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="72808943"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="6d4dae05"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6a59bf9a"/>
