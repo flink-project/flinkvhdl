@@ -14,6 +14,6 @@ Altera:
 - The TCL scripts added in the repository are only working with Qsys 13.0sp1!
 
 Xilinx:
-- Vivado version 2016.1, 2017.3 and 2017.4 is working
-
+- Tested up to Vivado version 2022.1
+  
 Information about available functions and their register maps can be found in: http://flink-project.ch/subdevices
