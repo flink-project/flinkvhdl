@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## Unreleased
+(v1.3.0 targeted for 2025-01-30) ([Github compare v1.2.1...master](https://github.com/flink-project/flinkvhdl/compare/v1.2.1...master))
+
+### Added Features
+
+
+
 ## v1.2.1
 (2024-05-22) ([Github compare v1.2.0...v1.2.1](https://github.com/flink-project/flinkvhdl/compare/v1.2.0...v1.2.1))
 
